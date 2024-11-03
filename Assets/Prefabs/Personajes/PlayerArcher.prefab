@@ -863,6 +863,7 @@ GameObject:
   - component: {fileID: 3155909941231836139}
   - component: {fileID: 1430857086897192066}
   - component: {fileID: -5686153449871086417}
+  - component: {fileID: -7001157200491885287}
   m_Layer: 5
   m_Name: PlayerArcher
   m_TagString: Untagged
@@ -996,6 +997,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverAmount: 0.25
+--- !u!210 &-7001157200491885287
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154897429256349546}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &154897429287822153
 GameObject:
   m_ObjectHideFlags: 0

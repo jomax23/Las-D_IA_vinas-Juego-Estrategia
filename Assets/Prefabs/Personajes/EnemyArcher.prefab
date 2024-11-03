@@ -2993,6 +2993,7 @@ GameObject:
   - component: {fileID: 899301073741466236}
   - component: {fileID: 8348560703224517466}
   - component: {fileID: 8953931888322410938}
+  - component: {fileID: 6508452111591607837}
   m_Layer: 5
   m_Name: EnemyArcher
   m_TagString: Untagged
@@ -3126,6 +3127,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverAmount: 0.25
+--- !u!210 &6508452111591607837
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6198282042775486887}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &6373447158117170618
 GameObject:
   m_ObjectHideFlags: 0

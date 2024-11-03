@@ -37,6 +37,8 @@ public class Unit : MonoBehaviour
 
     public bool isKing;
 
+    public int layer = 0;
+
     private void Start()
     {
         gm = FindObjectOfType<GameMaster>();
@@ -203,11 +205,14 @@ public class Unit : MonoBehaviour
         while (transform.position.y != tilePos.y)
         {
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, tilePos.y), moveSpeed * Time.deltaTime);
+
             yield return null;
 
         }
 
         hasMoved = true;
+
+        layer = (int)tilePos.y;
 
         ResetWeaponIcons();
 

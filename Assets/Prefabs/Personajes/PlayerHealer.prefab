@@ -3152,6 +3152,7 @@ GameObject:
   - component: {fileID: 5037017908991219367}
   - component: {fileID: 5199886221554255378}
   - component: {fileID: -4307728326477944463}
+  - component: {fileID: -1502597301641933288}
   m_Layer: 5
   m_Name: PlayerHealer
   m_TagString: Untagged
@@ -3285,6 +3286,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverAmount: 0.25
+--- !u!210 &-1502597301641933288
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6765746106348670117}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &6902873617168356133
 GameObject:
   m_ObjectHideFlags: 0
