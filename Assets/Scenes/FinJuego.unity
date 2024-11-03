@@ -1074,7 +1074,7 @@ GameObject:
   - component: {fileID: 1163691924}
   - component: {fileID: 1163691923}
   m_Layer: 0
-  m_Name: RESTART
+  m_Name: START
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1656,7 +1656,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1948923716}
   m_Layer: 0
-  m_Name: MENU FIN
+  m_Name: MENU INICIO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
