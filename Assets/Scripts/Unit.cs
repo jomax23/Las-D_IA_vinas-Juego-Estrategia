@@ -177,6 +177,12 @@ public class Unit : MonoBehaviour
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
             unit.weaponIcon.SetActive(false);
+            /*
+            if (unit.weaponIcon != null)
+            {
+                unit.weaponIcon.SetActive(false);
+            }
+            */
         }
     }
     public void Move(Vector2 tilePos)
