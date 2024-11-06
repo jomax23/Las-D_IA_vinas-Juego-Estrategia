@@ -3008,15 +3008,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6313888290563817257}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.051048}
-  m_LocalScale: {x: 1.509475, y: 1.509475, z: 1.509475}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6583081920402329236}
   - {fileID: 3606620429044448257}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -4.02, y: 1.734}
@@ -3114,6 +3114,7 @@ MonoBehaviour:
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   isKing: 0
+  layer: 0
 --- !u!114 &-1338461566365383831
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2328,7 +2328,7 @@ RectTransform:
   m_GameObject: {fileID: 6542107707085821831}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.051}
-  m_LocalScale: {x: 1.509475, y: 1.509475, z: 1.509475}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4752422130064441657}
@@ -2400,6 +2400,7 @@ MonoBehaviour:
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   isKing: 1
+  layer: 0
 --- !u!61 &3693693147835396869
 BoxCollider2D:
   m_ObjectHideFlags: 0

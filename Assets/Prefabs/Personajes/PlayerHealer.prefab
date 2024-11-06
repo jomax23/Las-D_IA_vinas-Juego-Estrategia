@@ -3169,8 +3169,8 @@ RectTransform:
   m_GameObject: {fileID: 6765746106348670117}
   m_LocalRotation: {x: 0, y: 0.008726558, z: 0, w: 0.999962}
   m_LocalPosition: {x: 0, y: 0, z: 0.03}
-  m_LocalScale: {x: 1.221, y: 1.221, z: 1.221}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6505847866310358887}
   - {fileID: 9073688198038012633}
@@ -3273,6 +3273,7 @@ MonoBehaviour:
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   isKing: 0
+  layer: 0
 --- !u!114 &-4307728326477944463
 MonoBehaviour:
   m_ObjectHideFlags: 0
