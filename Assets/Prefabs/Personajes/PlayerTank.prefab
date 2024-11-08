@@ -2105,10 +2105,10 @@ GameObject:
   - component: {fileID: 7613691367367955192}
   - component: {fileID: 629434583218635327}
   - component: {fileID: 1356861658919090030}
-  - component: {fileID: -1626762475572460964}
+  - component: {fileID: 1922037225604907616}
   - component: {fileID: 5490878576716643069}
   - component: {fileID: 7516361894799211397}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: PlayerTank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2184,7 +2184,7 @@ MonoBehaviour:
   kingHealth: {fileID: 0}
   isKing: 0
   layer: 0
---- !u!61 &-1626762475572460964
+--- !u!61 &1922037225604907616
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2216,7 +2216,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.001662761, y: 0.33735842}
+  m_Offset: {x: 0, y: 0.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2227,7 +2227,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5710735, y: 0.8236433}
+  m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &5490878576716643069
 MonoBehaviour:

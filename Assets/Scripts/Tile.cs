@@ -15,8 +15,8 @@ public class Tile : MonoBehaviour
     public Color highlightedColor;
     public bool isWalkable;
 
-    public GameObject obstaculo;
-
+    public GameObject obstacleTree;
+    public GameObject obstacleRock;
     GameMaster gm;
 
     public Color creatableColor;

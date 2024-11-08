@@ -2309,10 +2309,10 @@ GameObject:
   - component: {fileID: 7082028535188936335}
   - component: {fileID: 7486942105138268568}
   - component: {fileID: 8582888063039083258}
-  - component: {fileID: 3693693147835396869}
+  - component: {fileID: 6342852957541511448}
   - component: {fileID: -8867662789820899933}
   - component: {fileID: -3989557450317870684}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: PlayerKing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2401,7 +2401,7 @@ MonoBehaviour:
   kingHealth: {fileID: 0}
   isKing: 1
   layer: 0
---- !u!61 &3693693147835396869
+--- !u!61 &6342852957541511448
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2433,7 +2433,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0050269365, y: 0.33179092}
+  m_Offset: {x: 0, y: 0.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2444,7 +2444,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5676658, y: 0.808969}
+  m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &-8867662789820899933
 MonoBehaviour:

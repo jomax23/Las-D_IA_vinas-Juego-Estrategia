@@ -860,11 +860,11 @@ GameObject:
   m_Component:
   - component: {fileID: 154897430085399429}
   - component: {fileID: 154897430085399428}
-  - component: {fileID: 3155909941231836139}
+  - component: {fileID: 1888409194418811877}
   - component: {fileID: 1430857086897192066}
   - component: {fileID: -5686153449871086417}
   - component: {fileID: -7001157200491885287}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: PlayerArcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -912,7 +912,7 @@ MonoBehaviour:
   _horse: 0
   _horseString: 
   numAnimation: 0
---- !u!61 &3155909941231836139
+--- !u!61 &1888409194418811877
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -944,7 +944,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.03132038, y: 0.3418632}
+  m_Offset: {x: 0, y: 0.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -955,7 +955,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5823933, y: 0.8277635}
+  m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &1430857086897192066
 MonoBehaviour:
