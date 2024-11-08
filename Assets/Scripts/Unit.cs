@@ -49,7 +49,7 @@ public class Unit : MonoBehaviour
     {
         if (isKing == true)
         {
-            kingHealth.text = health.ToString();
+            //kingHealth.text = health.ToString();
         }
     }
 

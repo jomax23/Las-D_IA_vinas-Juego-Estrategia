@@ -5,86 +5,199 @@ using static UnityEditor.Progress;
 
 public class FieldObstacleGeneration : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-    public int numColumnas; //SERIA X ( DESPLAZAMIENTO COLUMNA )
-    public int numFilas; //SERIA Y ( ALTURA FILA )
+    [Header("DIMENSIONES DEL MAPA")]
+    public GeneradorMapa generadorDelMapa;
 
     private Tile[,] arrayTile;
-    public List<Tile> listOfTiles = new List<Tile>();
 
-    public List<Tile> listOfTilesPlayerCharacters = new List<Tile>();
-    public List<Tile> listOfTilesEnemyCharacters = new List<Tile>();
+    [Header("OBSTACULOS")]
+    public List<GeneradorObstaculos> generadorDeObstaculos;
 
-    int randObstacleIndex;
-
-    public int ObstacleTreeAmount = 3;
-    public int ObstacleRockAmount = 3;
-
-    public GameObject tilePrefab;
-    public GameObject treePrefab;
-    public GameObject rockPrefab;
-
-    private bool esDivisible = false;
+    [Header("PERSONAJES")]
+    public GeneradorPersonajes generadorDePersonajes;
+    
 
 
     void Awake()
     {
-        arrayTile = new Tile[numColumnas, numFilas];
-        GameObject itemTile;
-        
 
-        for (int row = 0; row < numFilas; row++)
+        //GENERACION DEL TERRENO
+
+        arrayTile = new Tile[generadorDelMapa.anchura, generadorDelMapa.altura];
+        GameObject item;
+
+        for (int col = 0; col < generadorDelMapa.anchura; col++)
         {
-            for (int col = 0; col < numColumnas; col++)
+            for (int row = 0; row < generadorDelMapa.altura; row++)
             {
-                //item = Instantiate(tilePrefab, new Vector2(i, listOfTiles[randObstacleIndex].transform.position.y), Quaternion.identity);
-                itemTile = Instantiate(tilePrefab, new Vector2(row, col), Quaternion.identity);
+                item = Instantiate(generadorDelMapa.prefab, new Vector2(col, row), Quaternion.identity);
+                Tile tileScript = item.GetComponent<Tile>();
+                arrayTile[col, row] = tileScript;
             }
         }
 
-        itemTile = Instantiate(tilePrefab, new Vector2(-1, numColumnas / 2), Quaternion.identity);
-        itemTile = Instantiate(tilePrefab, new Vector2(numFilas, numColumnas / 2), Quaternion.identity);
+        //PARA LOS TILES EN LOS QUE SE COLOCAN LOS REYES DE AMBOS JUGADORS, ESTOS NO HARA FALTA INCLUIRLOS EN EL ARRAY
+        item = Instantiate(generadorDelMapa.prefab, new Vector2(-1, generadorDelMapa.altura / 2), Quaternion.identity);
+        item = Instantiate(generadorDelMapa.prefab, new Vector2(generadorDelMapa.anchura, generadorDelMapa.altura / 2), Quaternion.identity);
+
+        //GENERACION DE OBSTACULOS
 
         int i = 0;
 
-        while (i < ObstacleTreeAmount)
+        int randPosY;
+        int randPosX;
+
+        //TRONCOS
+        if(generadorDeObstaculos.Count > 1)
         {
-            randObstacleIndex = Random.Range(1, listOfTiles.Count -1);
-
-            GameObject item;
-            /*
-            Debug.Log("NUMERO RANDOM " + randObstacleIndex);
-            Debug.Log(randObstacleIndex % numColumnas);
-            Debug.Log(randObstacleIndex % (numColumnas - 1));
-            
-            if (listOfTiles[randObstacleIndex].transform.position.y != listOfTiles[0].transform.position.y || listOfTiles[randObstacleIndex].transform.position.y != listOfTiles[numColumnas - 1].transform.position.y)
+            if (generadorDelMapa.anchura > 9 && generadorDelMapa.altura > generadorDeObstaculos[0].cantidad)
             {
-                Debug.Log("ES DIVISIBLE");
-                esDivisible = true;
-            }
-            */
-            //if (esDivisible && listOfTiles[randObstacleIndex].IsClear() == true && listOfTiles[randObstacleIndex + 1].IsClear() == true && listOfTiles[randObstacleIndex + 1].IsClear() == true)
-            if (listOfTiles[randObstacleIndex].IsClear() == true && listOfTiles[randObstacleIndex - 1].IsClear() == true && listOfTiles[randObstacleIndex + 1].IsClear() == true)
-            {
-                item = Instantiate(treePrefab, new Vector2(listOfTiles[randObstacleIndex].transform.position.x, listOfTiles[randObstacleIndex].transform.position.y), Quaternion.identity);
-                i++;
-            }
+                while (i < generadorDeObstaculos[0].cantidad)
+                {
+                    randPosY = Random.Range(0, generadorDelMapa.altura);
+                    randPosX = Random.Range(0, generadorDelMapa.anchura);
 
-            esDivisible = false;
+                    GameObject obstacle;
+
+                    if (randPosX > 3 && randPosX < generadorDelMapa.anchura - 4)
+                    {
+
+                        if (arrayTile[randPosX, randPosY].IsClear() && arrayTile[randPosX - 1, randPosY].IsClear() && arrayTile[randPosX + 1, randPosY].IsClear())
+                        {
+                            obstacle = Instantiate(generadorDeObstaculos[0].prefab, new Vector3(randPosX, randPosY, -5), Quaternion.identity);
+                            i++;
+                        }
+                    }
+                }
+
+                i = 0;
+            }
         }
 
-        i = 0;
+        //ROCAS
 
-        while (i < ObstacleRockAmount)
+        for (int index = 1; index < generadorDeObstaculos.Count; index++)
         {
-            randObstacleIndex = Random.Range(0, listOfTiles.Count);
-            GameObject item;
-            if (listOfTiles[randObstacleIndex].IsClear() == true)
+
+            if (generadorDelMapa.anchura > 6 && generadorDelMapa.altura > generadorDeObstaculos[index].cantidad)
             {
-                item = Instantiate(rockPrefab, new Vector2(listOfTiles[randObstacleIndex].transform.position.x, listOfTiles[randObstacleIndex].transform.position.y), Quaternion.identity);
-                i++;
+
+                while (i < generadorDeObstaculos[index].cantidad)
+                {
+                    randPosY = Random.Range(0, generadorDelMapa.altura);
+                    randPosX = Random.Range(0, generadorDelMapa.anchura);
+
+                    GameObject obstacle;
+
+                    if (randPosX > 3 && randPosX < generadorDelMapa.anchura - 3)
+                    {
+
+                        if (arrayTile[randPosX, randPosY].IsClear())
+                        {
+                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, -5), Quaternion.identity);
+                            i++;
+                        }
+                    }
+                }
+
+                i = 0;
             }
         }
-    }
+
+        //GENERACION DE PERSONAJES
+
+        //ALIADOS
+
+        //REY ALIADO
+
+        item = Instantiate(generadorDePersonajes.prefabReyAliado, new Vector3(-1, generadorDelMapa.altura / 2, -5), Quaternion.identity);
+
+        //INSTANCIAS DEL RESTO DE PERSONAJES ALIADOS
+        for(int indiceAliado = 0; indiceAliado < generadorDePersonajes.listaDeAliados.Count; indiceAliado++)
+        {
+            int cantidadAliadoActual = 0;
+
+            while(cantidadAliadoActual < generadorDePersonajes.listaDeAliados[indiceAliado].cantidad)
+            {
+                randPosY = Random.Range(0, generadorDelMapa.altura);
+                randPosX = Random.Range(0, 3);
+
+                if (arrayTile[randPosX, randPosY].IsClear())
+                {
+                    item = Instantiate(generadorDePersonajes.listaDeAliados[indiceAliado].prefab, new Vector3(randPosX, randPosY, -5), Quaternion.identity);
+                    cantidadAliadoActual++;
+                }
+            }
+        }
+
+
+        //ENEMIGOS
+
+        //REY ENEMIGOS
+
+        item = Instantiate(generadorDePersonajes.prefabReyEnemigo, new Vector3(generadorDelMapa.anchura, generadorDelMapa.altura / 2, -5), Quaternion.identity);
+
+        //INSTANCIAS DEL RESTO DE PERSONAJES ALIADOS
+
+        for (int indiceEnemigo = 0; indiceEnemigo < generadorDePersonajes.listaDeEnemigos.Count; indiceEnemigo++)
+        {
+            int cantidadEnemigoActual = 0;
+
+            while (cantidadEnemigoActual < generadorDePersonajes.listaDeEnemigos[indiceEnemigo].cantidad)
+            {
+                randPosY = Random.Range(0, generadorDelMapa.altura);
+                randPosX = Random.Range(generadorDelMapa.anchura - 3, generadorDelMapa.anchura);
+
+                if (arrayTile[randPosX, randPosY].IsClear())
+                {
+                    item = Instantiate(generadorDePersonajes.listaDeEnemigos[indiceEnemigo].prefab, new Vector3(randPosX, randPosY, -5), Quaternion.identity);
+                    cantidadEnemigoActual++;
+                }
+            }
+        }
+
+        //i = 0;
+
+
+    }   
 }
+[System.Serializable]
+public class GeneradorMapa
+{
+    public int anchura; //SERIA LA MAX COLUMNA y LA MAS A LA DERECHA
+    public int altura; //SERIA LA MAX FILA y LA MAS ALTA
+    public GameObject prefab;
+}
+
+[System.Serializable]
+public class GeneradorObstaculos
+{
+    public GameObject prefab;
+    public int cantidad;
+}
+
+[System.Serializable]
+public class GeneradorPersonajes
+{
+    public GameObject prefabReyAliado;
+    public GameObject prefabReyEnemigo;
+    public List<GeneradorAliados> listaDeAliados;
+    public List<GeneradorEnemigos> listaDeEnemigos;
+}
+
+[System.Serializable]
+public class GeneradorAliados
+{
+    public GameObject prefab;
+    public int cantidad;
+}
+
+[System.Serializable]
+public class GeneradorEnemigos
+{
+    public GameObject prefab;
+    public int cantidad;
+}
+
+
+
