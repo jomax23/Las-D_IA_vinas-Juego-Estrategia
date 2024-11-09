@@ -16,16 +16,20 @@ public class GameMaster : MonoBehaviour
     public Sprite player1Indicator;
     public Sprite player2Indicator;
 
-    public int player1Gold = 100;
-    public int player2Gold = 100;
+    public int player1Gold = 0;
+    public int player2Gold = 0;
+
+    public int goldPerTurn = 10;
 
     public Text player1GoldText;
     public Text player2GoldText;
 
     public BarrackItem purchasedItem;
+
     private void Start()
     {
-        GetGoldIncome(1);
+        //GetGoldIncome(1);
+        UpdateGoldText();
     }
     public void ResetTiles() {
         foreach (Tile tile in FindObjectsOfType<Tile>())
@@ -42,6 +46,7 @@ public class GameMaster : MonoBehaviour
 
     void GetGoldIncome(int playerTurn)
     {
+        /*
         foreach(Village village in FindObjectsOfType<Village>())
         {
             if(village.playerNumber == playerTurn)
@@ -56,6 +61,17 @@ public class GameMaster : MonoBehaviour
                     player2Gold += village.goldPerTurn;
                 }
             }
+        }
+        */
+
+        if (playerTurn == 1)
+        {
+            player1Gold += goldPerTurn;
+        }
+
+        else
+        {
+            player2Gold += goldPerTurn;
         }
 
         UpdateGoldText();

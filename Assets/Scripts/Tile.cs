@@ -21,6 +21,22 @@ public class Tile : MonoBehaviour
 
     public Color creatableColor;
     public bool isCreatable;
+
+    private bool canCreateObstacle = true;
+
+    public bool CanCreateObstacle
+    {
+        get
+        {
+            return canCreateObstacle;
+        }
+
+        set
+        {
+            canCreateObstacle = value;
+        }
+    }
+
     void Start()
     {
         rend = GetComponent<SpriteRenderer>();
@@ -82,7 +98,7 @@ public class Tile : MonoBehaviour
 
         else if (isCreatable == true)
         {
-            BarrackItem item =  Instantiate(gm.purchasedItem, new Vector2(transform.position.x, transform.position.y), Quaternion.identity);
+            BarrackItem item =  Instantiate(gm.purchasedItem, new Vector3(transform.position.x, transform.position.y, -5), Quaternion.identity);
             gm.ResetTiles();
 
             Unit unit = item.GetComponent<Unit>();
