@@ -12,13 +12,13 @@ TagManager:
   - Water
   - UI
   - 
-  - Fila1
-  - Fila2
-  - Fila3
-  - Fila4
-  - Fila5
-  - Fila6
-  - Fila7
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -41,18 +41,66 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Unit
+  - name: 0
     uniqueID: 1622454697
     locked: 0
-  - name: Cursor
+  - name: 1
     uniqueID: 1735554453
     locked: 0
-  - name: Sword
+  - name: 2
     uniqueID: 3628645331
     locked: 0
-  - name: Damage Icons
+  - name: 3
     uniqueID: 131491587
     locked: 0
-  - name: Particle Effect
+  - name: 4
     uniqueID: 3683903239
+    locked: 0
+  - name: 5
+    uniqueID: 2713017659
+    locked: 0
+  - name: 6
+    uniqueID: 3862470301
+    locked: 0
+  - name: 7
+    uniqueID: 4259300771
+    locked: 0
+  - name: 8
+    uniqueID: 4208778597
+    locked: 0
+  - name: 9
+    uniqueID: 3511839135
+    locked: 0
+  - name: 10
+    uniqueID: 1409583243
+    locked: 0
+  - name: 11
+    uniqueID: 4277723369
+    locked: 0
+  - name: 12
+    uniqueID: 1415885009
+    locked: 0
+  - name: 13
+    uniqueID: 2734086733
+    locked: 0
+  - name: 14
+    uniqueID: 3253702407
+    locked: 0
+  - name: 15
+    uniqueID: 3266633697
+    locked: 0
+  - name: 16
+    uniqueID: 2416535003
+    locked: 0
+  - name: 17
+    uniqueID: 3331053255
+    locked: 0
+  - name: 18
+    uniqueID: 881627161
+    locked: 0
+  - name: 19
+    uniqueID: 158138397
+    locked: 0
+  - name: 20
+    uniqueID: 1296604061
     locked: 0

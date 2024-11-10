@@ -100,7 +100,7 @@ public class Unit : MonoBehaviour
     {
         hasAttacked = true;
 
-        int enemyDamage = attackDamage - enemy.armor;
+        int enemyDamage = attackDamage - enemy.armor; // DAÑO QUE HACEMOS AL ENEMIGO
 
         int myDamage = enemy.defenseDamage - armor;
 
@@ -114,6 +114,7 @@ public class Unit : MonoBehaviour
             enemy.UpdateKingHealth();
         }
 
+        
         if(myDamage >= 1)
         {
             DamageIcon instance = Instantiate(damageIcon, transform.position, Quaternion.identity);
@@ -123,18 +124,19 @@ public class Unit : MonoBehaviour
 
             enemy.UpdateKingHealth();
         }
-
+        
         if(enemy.health <= 0)
         {
             Destroy(enemy.gameObject);
             GetWalkableTiles();
         }
-
+        
         if(health <= 0)
         {
             gm.ResetTiles();
             Destroy(this.gameObject);
         }
+        
     }
 
     void GetWalkableTiles()

@@ -8,6 +8,13 @@ public class FieldObstacleGeneration : MonoBehaviour
     [Header("DIMENSIONES DEL MAPA")]
     public GeneradorMapa generadorDelMapa = new GeneradorMapa();
 
+    private int anchura; //ANCHURA DEL MAPA
+    private int altura; //ALTURA DEL MAPA
+
+    private int depth = 5; //Coordenada z que tendran z los tiles y los obstaculos
+
+    private const int columnasPersonajesInicial = 3;
+
     [HideInInspector]
     public Tile[,] arrayTile;
 
@@ -18,33 +25,38 @@ public class FieldObstacleGeneration : MonoBehaviour
     public GeneradorPersonajes generadorDePersonajes;
 
 
+
     void Awake()
     {
 
         //GENERACION DEL TERRENO
         generadorDelMapa.CrearMapa();
-        arrayTile = new Tile[generadorDelMapa.GetAnchura(), generadorDelMapa.GetAltura()];
+
+        anchura = generadorDelMapa.GetAnchura();
+        altura = generadorDelMapa.GetAltura();
+
+        arrayTile = new Tile[anchura, altura];
         GameObject item;
 
-        for (int col = 0; col < generadorDelMapa.GetAnchura(); col++)
+        for (int col = 0; col < anchura; col++)
         {
-            for (int row = 0; row < generadorDelMapa.GetAltura(); row++)
+            for (int row = 0; row < altura; row++)
             {
-                item = Instantiate(generadorDelMapa.prefab, new Vector3(col, row, transform.position.z), Quaternion.identity);
+                item = Instantiate(generadorDelMapa.prefab, new Vector3(col, row, depth), Quaternion.identity);
                 Tile tileScript = item.GetComponent<Tile>();
                 arrayTile[col, row] = tileScript;
             }
         }
 
         //PARA LOS TILES EN LOS QUE SE COLOCAN LOS REYES DE AMBOS JUGADORS, ESTOS NO HARA FALTA INCLUIRLOS EN EL ARRAY
-        item = Instantiate(generadorDelMapa.prefab, new Vector3(-1, generadorDelMapa.GetAltura() / 2, transform.position.z), Quaternion.identity);
-        item = Instantiate(generadorDelMapa.prefab, new Vector3(generadorDelMapa.GetAnchura(), generadorDelMapa.GetAltura() / 2, transform.position.z), Quaternion.identity);
+        item = Instantiate(generadorDelMapa.prefab, new Vector3(-1, altura / 2, depth), Quaternion.identity);
+        item = Instantiate(generadorDelMapa.prefab, new Vector3(anchura, altura / 2, depth), Quaternion.identity);
 
         //GENERACION DE OBSTACULOS
 
-        int midFieldWidth = (generadorDelMapa.GetAnchura() - generadorDelMapa.GetNumColumnasCreacion() * 2);
-        
-        int numCasillasMidField = midFieldWidth * generadorDelMapa.GetAltura();
+        int midFieldWidth = anchura - columnasPersonajesInicial * 2;
+
+        int numCasillasMidField = midFieldWidth * altura;
         int i = 0;
 
         int randPosY;
@@ -53,25 +65,27 @@ public class FieldObstacleGeneration : MonoBehaviour
         int contadorCasillasSinObstaculos = 0;
 
         int casillasQueOcupa = 0;
+
         //OBSTACULOS
+
         for (int index = 0; index < generadorDeObstaculos.Count; index++)
         {
             if (generadorDeObstaculos[index].orientacion == Orientacion.Horizontal)
             {
                 casillasQueOcupa = 3;
 
-                if (casillasQueOcupa <= midFieldWidth && generadorDelMapa.GetAltura() > 0)// && generadorDeObstaculos[index].cantidad < generadorDelMapa.GetAltura())
+                if (casillasQueOcupa <= midFieldWidth && altura > 0)// && generadorDeObstaculos[index].cantidad < altura)
                 {
                     while (i < generadorDeObstaculos[index].cantidad && contadorCasillasSinObstaculos < numCasillasMidField / casillasQueOcupa)
                     {
-                        randPosY = Random.Range(0, generadorDelMapa.GetAltura());
-                        randPosX = Random.Range(generadorDelMapa.GetNumColumnasCreacion() + 1, generadorDelMapa.GetAnchura() - generadorDelMapa.GetNumColumnasCreacion() - 1);
+                        randPosY = Random.Range(0, altura);
+                        randPosX = Random.Range(columnasPersonajesInicial + 1, anchura - columnasPersonajesInicial - 1);
 
                         GameObject obstacle;
 
                         if (arrayTile[randPosX, randPosY].IsClear() && arrayTile[randPosX - 1, randPosY].IsClear() && arrayTile[randPosX + 1, randPosY].IsClear())
                         {
-                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, generadorDeObstaculos[index].GetZCoord()), Quaternion.identity);
+                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, depth), Quaternion.identity);
                             i++;
                         }
 
@@ -90,18 +104,18 @@ public class FieldObstacleGeneration : MonoBehaviour
             {
                 casillasQueOcupa = 3;
 
-                if (casillasQueOcupa <= generadorDelMapa.GetAltura() && generadorDelMapa.GetAnchura() > 0)// && generadorDeObstaculos[index].cantidad < generadorDelMapa.GetAltura())
+                if (casillasQueOcupa <= altura && anchura > 0)// && generadorDeObstaculos[index].cantidad < altura)
                 {
                     while (i < generadorDeObstaculos[index].cantidad && contadorCasillasSinObstaculos < numCasillasMidField / casillasQueOcupa)
                     {
-                        randPosY = Random.Range(1, generadorDelMapa.GetAltura() -1);
-                        randPosX = Random.Range(generadorDelMapa.GetNumColumnasCreacion(), generadorDelMapa.GetAnchura() - generadorDelMapa.GetNumColumnasCreacion());
+                        randPosY = Random.Range(1, altura - 1);
+                        randPosX = Random.Range(columnasPersonajesInicial, anchura - columnasPersonajesInicial);
 
                         GameObject obstacle;
 
                         if (arrayTile[randPosX, randPosY].IsClear() && arrayTile[randPosX, randPosY - 1].IsClear() && arrayTile[randPosX, randPosY + 1].IsClear())
                         {
-                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, generadorDeObstaculos[index].GetZCoord()), Quaternion.identity);
+                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, depth), Quaternion.identity);
                             i++;
                         }
 
@@ -120,18 +134,18 @@ public class FieldObstacleGeneration : MonoBehaviour
             {
                 casillasQueOcupa = 1;
 
-                if(casillasQueOcupa <= midFieldWidth && casillasQueOcupa <= generadorDelMapa.GetAltura())
+                if (casillasQueOcupa <= midFieldWidth && casillasQueOcupa <= altura)
                 {
                     while (contadorCasillasSinObstaculos < numCasillasMidField && i < generadorDeObstaculos[index].cantidad)
                     {
-                        randPosY = Random.Range(0, generadorDelMapa.GetAltura());
-                        randPosX = Random.Range(generadorDelMapa.GetNumColumnasCreacion(), generadorDelMapa.GetAnchura() - generadorDelMapa.GetNumColumnasCreacion());
+                        randPosY = Random.Range(0, altura);
+                        randPosX = Random.Range(columnasPersonajesInicial, anchura - columnasPersonajesInicial);
 
                         GameObject obstacle;
 
                         if (arrayTile[randPosX, randPosY].IsClear())
                         {
-                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, generadorDeObstaculos[index].GetZCoord()), Quaternion.identity);
+                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, depth), Quaternion.identity);
                             i++;
                         }
 
@@ -148,7 +162,7 @@ public class FieldObstacleGeneration : MonoBehaviour
             }
         }
 
-        
+
 
         //GENERACION DE PERSONAJES
 
@@ -156,21 +170,22 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         //REY ALIADO
 
-        item = Instantiate(generadorDePersonajes.prefabReyAliado, new Vector3(-1, generadorDelMapa.GetAltura() / 2, generadorDePersonajes.GetZCoord()), Quaternion.identity);
+        item = Instantiate(generadorDePersonajes.prefabReyAliado, new Vector2(-1, altura / 2), Quaternion.identity);
 
         //INSTANCIAS DEL RESTO DE PERSONAJES ALIADOS
-        for(int indiceAliado = 0; indiceAliado < generadorDePersonajes.listaDeAliados.Count; indiceAliado++)
+        for (int indiceAliado = 0; indiceAliado < generadorDePersonajes.listaDeAliados.Count; indiceAliado++)
         {
             int cantidadAliadoActual = 0;
 
-            while(cantidadAliadoActual < generadorDePersonajes.listaDeAliados[indiceAliado].cantidad)
+            while (cantidadAliadoActual < generadorDePersonajes.listaDeAliados[indiceAliado].cantidad)
             {
-                randPosY = Random.Range(0, generadorDelMapa.GetAltura());
-                randPosX = Random.Range(0, generadorDelMapa.GetNumColumnasCreacion());
+                randPosY = Random.Range(0, altura);
+                randPosX = Random.Range(0, columnasPersonajesInicial);
 
                 if (arrayTile[randPosX, randPosY].IsClear())
                 {
-                    item = Instantiate(generadorDePersonajes.listaDeAliados[indiceAliado].prefab, new Vector3(randPosX, randPosY, generadorDePersonajes.GetZCoord()), Quaternion.identity);
+                    item = Instantiate(generadorDePersonajes.listaDeAliados[indiceAliado].prefab, new Vector2(randPosX, randPosY), Quaternion.identity);
+
                     cantidadAliadoActual++;
                 }
             }
@@ -181,7 +196,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         //REY ENEMIGO
 
-        item = Instantiate(generadorDePersonajes.prefabReyEnemigo, new Vector3(generadorDelMapa.GetAnchura(), generadorDelMapa.GetAltura() / 2, generadorDePersonajes.GetZCoord()), Quaternion.identity);
+        item = Instantiate(generadorDePersonajes.prefabReyEnemigo, new Vector2(anchura, altura / 2), Quaternion.identity);
 
         //INSTANCIAS DEL RESTO DE PERSONAJES ENEMIGOS
 
@@ -191,17 +206,18 @@ public class FieldObstacleGeneration : MonoBehaviour
 
             while (cantidadEnemigoActual < generadorDePersonajes.listaDeEnemigos[indiceEnemigo].cantidad)
             {
-                randPosY = Random.Range(0, generadorDelMapa.GetAltura());
-                randPosX = Random.Range(generadorDelMapa.GetAnchura() - generadorDelMapa.GetNumColumnasCreacion(), generadorDelMapa.GetAnchura());
+                randPosY = Random.Range(0, altura);
+                randPosX = Random.Range(anchura - columnasPersonajesInicial, anchura);
 
                 if (arrayTile[randPosX, randPosY].IsClear())
                 {
-                    item = Instantiate(generadorDePersonajes.listaDeEnemigos[indiceEnemigo].prefab, new Vector3(randPosX, randPosY, generadorDePersonajes.GetZCoord()), Quaternion.identity);
+                    item = Instantiate(generadorDePersonajes.listaDeEnemigos[indiceEnemigo].prefab, new Vector2(randPosX, randPosY), Quaternion.identity);
+
                     cantidadEnemigoActual++;
                 }
             }
         }
-    }   
+    }
 }
 
 public enum Orientacion
@@ -229,7 +245,7 @@ public class GeneradorMapa
 
     public void CrearMapa()
     {
-        if(anchurasPosibles.Count > 0 && alturasPosibles.Count > 0)
+        if (anchurasPosibles.Count > 0 && alturasPosibles.Count > 0)
         {
             randomWidthIndex = Random.Range(0, anchurasPosibles.Count);
             randomHeightIndex = Random.Range(0, alturasPosibles.Count);
@@ -302,5 +318,3 @@ public class GeneradorEnemigos
     public GameObject prefab;
     public int cantidad;
 }
-
-

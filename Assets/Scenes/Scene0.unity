@@ -1516,7 +1516,7 @@ GameObject:
   - component: {fileID: 520505527}
   - component: {fileID: 520505528}
   m_Layer: 0
-  m_Name: Field
+  m_Name: Field Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1531,7 +1531,7 @@ Transform:
   m_GameObject: {fileID: 520505526}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1551,8 +1551,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generadorDelMapa:
     prefab: {fileID: 2445037597648736328, guid: 71e16c72ad5694997b7ed5aab84a5750, type: 3}
-    anchurasPosibles: 090000000c0000000f000000
-    alturasPosibles: 090000000c0000000f000000
+    anchurasPosibles: 0a0000000c0000000f000000
+    alturasPosibles: 0a0000000c0000000f000000
   generadorDeObstaculos:
   - prefab: {fileID: 1706629476239711546, guid: 4d63e3192a7a94a59ab08bc2027d7be3, type: 3}
     cantidad: 2
