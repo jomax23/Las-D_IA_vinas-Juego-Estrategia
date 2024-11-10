@@ -3064,9 +3064,8 @@ MonoBehaviour:
   hasAttacked: 0
   weaponIcon: {fileID: 5077469895758304879}
   health: 15
-  attackDamage: 5
-  defenseDamage: 4
-  armor: 2
+  attackStat: 5
+  defenseStat: 3
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   isKing: 0

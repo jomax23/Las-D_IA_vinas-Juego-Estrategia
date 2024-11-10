@@ -3107,10 +3107,9 @@ MonoBehaviour:
   attackRange: 1
   hasAttacked: 0
   weaponIcon: {fileID: 533152477096500302}
-  health: 4
-  attackDamage: 6
-  defenseDamage: 2
-  armor: 1
+  health: 15
+  attackStat: 5
+  defenseStat: 3
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   isKing: 0

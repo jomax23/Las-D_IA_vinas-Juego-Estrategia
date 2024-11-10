@@ -239,12 +239,12 @@ MonoBehaviour:
   hasAttacked: 0
   weaponIcon: {fileID: 8211377213077379688}
   health: 5
-  attackDamage: 3
-  defenseDamage: 2
-  armor: 1
+  attackStat: 0
+  defenseStat: 0
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   isKing: 0
+  layer: 0
 --- !u!114 &8612551442916575653
 MonoBehaviour:
   m_ObjectHideFlags: 0

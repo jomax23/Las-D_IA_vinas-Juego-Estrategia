@@ -25,11 +25,9 @@ public class Unit : MonoBehaviour
 
     public int health;
 
-    public int attackDamage;
+    public int attackStat;
 
-    public int defenseDamage;
-
-    public int armor;
+    public int defenseStat;
 
     public DamageIcon damageIcon;
 
@@ -100,27 +98,15 @@ public class Unit : MonoBehaviour
     {
         hasAttacked = true;
 
-        int enemyDamage = attackDamage - enemy.armor; // DAÑO QUE HACEMOS AL ENEMIGO
-
-        int myDamage = enemy.defenseDamage - armor;
-
-        if(enemyDamage >= 1)
-        {
-            DamageIcon instance = Instantiate(damageIcon, enemy.transform.position, Quaternion.identity);
-            instance.Setup(attackDamage);
-
-            enemy.health -= enemyDamage;
-
-            enemy.UpdateKingHealth();
-        }
+        int damageDealt = attackStat - enemy.defenseStat; // DAÑO QUE HACEMOS AL ENEMIGO
 
         
-        if(myDamage >= 1)
+        if(damageDealt >= 1)
         {
-            DamageIcon instance = Instantiate(damageIcon, transform.position, Quaternion.identity);
-            instance.Setup(defenseDamage);
+            DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
 
-            health -= myDamage;
+            instance.Setup(damageDealt);
+            enemy.health -= damageDealt;
 
             enemy.UpdateKingHealth();
         }
