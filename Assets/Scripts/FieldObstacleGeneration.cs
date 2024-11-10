@@ -8,7 +8,8 @@ public class FieldObstacleGeneration : MonoBehaviour
     [Header("DIMENSIONES DEL MAPA")]
     public GeneradorMapa generadorDelMapa = new GeneradorMapa();
 
-    private Tile[,] arrayTile;
+    [HideInInspector]
+    public Tile[,] arrayTile;
 
     [Header("OBSTACULOS")]
     public List<GeneradorObstaculos> generadorDeObstaculos;
@@ -98,14 +99,9 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                         GameObject obstacle;
 
-                        Debug.Log(randPosY);
-                        Debug.Log(randPosY - 1);
-                        Debug.Log(randPosY + 1);
-
                         if (arrayTile[randPosX, randPosY].IsClear() && arrayTile[randPosX, randPosY - 1].IsClear() && arrayTile[randPosX, randPosY + 1].IsClear())
                         {
                             obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3(randPosX, randPosY, generadorDeObstaculos[index].GetZCoord()), Quaternion.identity);
-                            obstacle.transform.Rotate(0.0f, 0.0f, -90.0f);
                             i++;
                         }
 

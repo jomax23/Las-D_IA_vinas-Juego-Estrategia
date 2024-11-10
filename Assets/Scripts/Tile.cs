@@ -89,6 +89,7 @@ public class Tile : MonoBehaviour
         rend.color = highlightedColor;
         isCreatable = true;
     }
+
     private void OnMouseDown()
     {
         if (isWalkable && gm.selectedUnit != null)

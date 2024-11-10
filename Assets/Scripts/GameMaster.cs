@@ -81,6 +81,8 @@ public class GameMaster : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             EndTurn();
+            GetGoldIncome(playerTurn);
+            
         }
 
         if(selectedUnit != null)
@@ -109,8 +111,6 @@ public class GameMaster : MonoBehaviour
             playerTurn = 1;
             playerIndicator.sprite = player1Indicator;
         }
-
-        GetGoldIncome(playerTurn);
 
         if(selectedUnit != null)
         {

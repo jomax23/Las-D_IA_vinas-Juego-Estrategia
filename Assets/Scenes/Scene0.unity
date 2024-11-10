@@ -593,7 +593,7 @@ MonoBehaviour:
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 6163824192921613367, guid: 75497e8fbcd5a9d4d80576e3373d56bc, type: 3}
+          m_ObjectArgument: {fileID: 6163824192921613367, guid: 54e996b86e207466e8e2cf0a3684cba2, type: 3}
           m_ObjectArgumentAssemblyTypeName: BarrackItem, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1173,6 +1173,7 @@ MonoBehaviour:
   player2ToggleButton: {fileID: 40558672}
   player1Menu: {fileID: 1394645863}
   player2Menu: {fileID: 2146327225}
+  fieldObstacleGenerator: {fileID: 520505528}
 --- !u!1 &385262070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1369,6 +1370,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1419,7 +1421,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1444,12 +1446,29 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.52, y: 4.97, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a1b7522c25c4796b42fb2415575e3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraOffset:
+    xOffset: 0
+    yOffset: 0
+  scaleFactor: 1.5
+  generatedField: {fileID: 520505528}
 --- !u!1 &520276514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1511,7 +1530,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 520505526}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1532,18 +1551,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generadorDelMapa:
     prefab: {fileID: 2445037597648736328, guid: 71e16c72ad5694997b7ed5aab84a5750, type: 3}
-    anchurasPosibles: 0a0000000d0000000f000000
-    alturasPosibles: 07000000080000000a000000
+    anchurasPosibles: 090000000c0000000f000000
+    alturasPosibles: 090000000c0000000f000000
   generadorDeObstaculos:
   - prefab: {fileID: 1706629476239711546, guid: 4d63e3192a7a94a59ab08bc2027d7be3, type: 3}
     cantidad: 2
     orientacion: 0
+  - prefab: {fileID: 1706629476239711546, guid: d63e93cd7f913457a97ecd0d5408c0fe, type: 3}
+    cantidad: 15
+    orientacion: 1
   - prefab: {fileID: 1706629476239711546, guid: aef58eca77570f24f8dff94decf961a9, type: 3}
     cantidad: 5
     orientacion: 2
-  - prefab: {fileID: 1706629476239711546, guid: 4d63e3192a7a94a59ab08bc2027d7be3, type: 3}
-    cantidad: 4
-    orientacion: 0
   generadorDePersonajes:
     prefabReyAliado: {fileID: 6542107707085821831, guid: c6b9d3e08b1e24d6a9205950a8386b5d, type: 3}
     prefabReyEnemigo: {fileID: 6313888290563817257, guid: 46df0e1a724304b6f91dacb0d2b72725, type: 3}
@@ -2162,7 +2181,7 @@ MonoBehaviour:
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: -7488888433070591151, guid: 1f6b55e6977170041beb684b6123af8f, type: 3}
+          m_ObjectArgument: {fileID: -7488888433070591151, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
           m_ObjectArgumentAssemblyTypeName: BarrackItem, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -2370,7 +2389,7 @@ MonoBehaviour:
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: -7578288797206187086, guid: 5ac795e66496d1d4aa8e883f4a80e29f, type: 3}
+          m_ObjectArgument: {fileID: -7578288797206187086, guid: 6d37bb996ce5043bc9a127540a29a1ad, type: 3}
           m_ObjectArgumentAssemblyTypeName: BarrackItem, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -2756,7 +2775,7 @@ MonoBehaviour:
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 4445436798085839871, guid: b963f3fdfba8f7c44aa0f548a3713cb9, type: 3}
+          m_ObjectArgument: {fileID: 4445436798085839871, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
           m_ObjectArgumentAssemblyTypeName: BarrackItem, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -3055,7 +3074,7 @@ MonoBehaviour:
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 3680329328905416647, guid: 11a46b0d74d6b064fa1b61c42f486f5b, type: 3}
+          m_ObjectArgument: {fileID: 3680329328905416647, guid: bf50c9f0453a84a1f8e70b609f6d6f7b, type: 3}
           m_ObjectArgumentAssemblyTypeName: BarrackItem, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -4245,7 +4264,7 @@ MonoBehaviour:
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 5431812339515679249, guid: 53f4206878e992048b02533acfe15642, type: 3}
+          m_ObjectArgument: {fileID: 5431812339515679249, guid: 51eaef0a992214fce90beaa72fae6702, type: 3}
           m_ObjectArgumentAssemblyTypeName: BarrackItem, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -5304,8 +5323,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
-  - {fileID: 339563923}
   - {fileID: 520505527}
+  - {fileID: 339563923}
   - {fileID: 46653326}
   - {fileID: 1394936730}
   - {fileID: 2014530762}
