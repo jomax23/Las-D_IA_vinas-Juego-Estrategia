@@ -22,20 +22,8 @@ public class Tile : MonoBehaviour
     public Color creatableColor;
     public bool isCreatable;
 
-    private bool canCreateObstacle = true;
-
-    public bool CanCreateObstacle
-    {
-        get
-        {
-            return canCreateObstacle;
-        }
-
-        set
-        {
-            canCreateObstacle = value;
-        }
-    }
+    [HideInInspector]
+    public bool canCreateObstacle = true;
 
     void Start()
     {
