@@ -24,6 +24,7 @@ public class Tile : MonoBehaviour
 
     [HideInInspector]
     public bool canCreateObstacle = true;
+    public bool isObstacleUncreatable = false;
 
     void Start()
     {

@@ -1,16 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class FieldObstacleGeneration : MonoBehaviour
 {
     [Header("DIMENSIONES DEL MAPA")]
     public GeneradorMapa generadorDelMapa = new GeneradorMapa();
 
-    private int anchura; //ANCHURA DEL MAPA
-    private int altura; //ALTURA DEL MAPA
+    [HideInInspector]
+    public int anchura; //ANCHURA DEL MAPA
+
+    [HideInInspector]
+    public int altura; //ALTURA DEL MAPA
 
     private int depth = 5; //Coordenada z que tendran z los tiles y los obstaculos
 
@@ -37,13 +40,15 @@ public class FieldObstacleGeneration : MonoBehaviour
         arrayTile = new Tile[anchura, altura];
         GameObject item;
 
-        for (int col = 0; col < anchura; col++)
+        List<Vector2> lista = new List<Vector2>();
+
+        for (int c = 0; c < anchura; c++)
         {
-            for (int row = 0; row < altura; row++)
+            for (int r = 0; r < altura; r++)
             {
-                item = Instantiate(generadorDelMapa.prefab, new Vector3(col, row, depth), Quaternion.identity);
+                item = Instantiate(generadorDelMapa.prefab, new Vector3(c, r, depth), Quaternion.identity);
                 Tile tileScript = item.GetComponent<Tile>();
-                arrayTile[col, row] = tileScript;
+                arrayTile[c, r] = tileScript;
             }
         }
 
@@ -61,16 +66,20 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         if((anchura > columnasPersonajesInicial * 2 && altura > 2))
         {
+            
+            lista.Remove(new Vector2(columna, fila));
+
             while (columna < anchura - columnasPersonajesInicial)
             {
-
+                
                 arrayTile[columna, fila].canCreateObstacle = false;
+                arrayTile[columna, fila].isObstacleUncreatable = true;
 
                 if (columna < anchura - 1)
                 {
                     if (fila == altura - 1)
                     {
-                        randomClearPathValue = Random.Range(0, 2); //0 == Abajo, 1 == Derecha
+                        randomClearPathValue = UnityEngine.Random.Range(0, 2); //0 == Abajo, 1 == Derecha
 
                         if (randomClearPathValue == 0 && arrayTile[columna, fila - 1].canCreateObstacle)
                         {
@@ -84,7 +93,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                     else if (fila == 0)
                     {
-                        randomClearPathValue = Random.Range(0, 2); //0 == Arriba, 1 == Derecha
+                        randomClearPathValue = UnityEngine.Random.Range(0, 2); //0 == Arriba, 1 == Derecha
 
                         if (randomClearPathValue == 0 && arrayTile[columna, fila + 1].canCreateObstacle)
                         {
@@ -98,7 +107,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                     else
                     {
-                        randomClearPathValue = Random.Range(0, 3); //0 == Arriba, 1 == Abajo, 2 == Derecha
+                        randomClearPathValue = UnityEngine.Random.Range(0, 3); //0 == Arriba, 1 == Abajo, 2 == Derecha
 
                         if (randomClearPathValue == 0 && arrayTile[columna, fila + 1].canCreateObstacle)
                         {
@@ -115,6 +124,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                             columna++;
                         }
                     }
+
                 }
 
                 iterationCounter++;
@@ -129,177 +139,190 @@ public class FieldObstacleGeneration : MonoBehaviour
         int midFieldWidth = anchura - columnasPersonajesInicial * 2;
 
         int numCasillasMidField = midFieldWidth * altura;
-        int i = 0;
-
-        int randPosY;
-        int randPosX;
-
-        int contadorCasillasSinObstaculos = 0;
-
-        int casillasQueOcupa = 0;
 
         //OBSTACULOS
 
         int randIndex;
 
-        List<Tile> lista = new List<Tile>(); //LA HE LLAMADO LISTA POR SIMPLIFICAR EL NOMBRE, PERO SU FUNCION ES ALMACENAR LAS POSIBLES POSICIONES DE LOS OBSTACULOS Y LOS PERSONAJES
-
+        int col;
+        int row;
         for (int index = 0; index < generadorDeObstaculos.Count; index++)
         {
             if (generadorDeObstaculos[index].orientacion == Orientacion.Horizontal)
             {
-                casillasQueOcupa = 3;
-                
-                if (casillasQueOcupa <= midFieldWidth && altura > 0)// && generadorDeObstaculos[index].cantidad < altura)
+                for (int r = 0; r < altura; r++)
                 {
-                    for (int col = columnasPersonajesInicial + 1; col < anchura - columnasPersonajesInicial - 1; col++)
+                    for (int c = columnasPersonajesInicial + 1; c < anchura - columnasPersonajesInicial - 1; c++)
                     {
-                        for (int row = 0; row < altura; row++)
+                        if(arrayTile[c, r].canCreateObstacle && arrayTile[c - 1, r].canCreateObstacle && arrayTile[c + 1, r].canCreateObstacle)
                         {
-                            lista.Add(arrayTile[col, row]); // IMPORTANTE PARA ENTENDER LO DE ABAJO, EN UNITY, LOS OBJETOS SE PASAN POR DEFECTO POR REFERENCIA, A DIFERENCIA DE ENTEROS, STRINGS, ETC.
+                            lista.Add(new Vector2(c, r));
                         }
                     }
-
-                    while (i < generadorDeObstaculos[index].cantidad && contadorCasillasSinObstaculos < numCasillasMidField)
-                    {
-
-                        randIndex = Random.Range(0, lista.Count);
-                        GameObject obstacle;
-
-                        if (lista[randIndex].IsClear() && lista[randIndex].canCreateObstacle && arrayTile[(int)lista[randIndex].transform.position.x - 1, (int)lista[randIndex].transform.position.y].canCreateObstacle && arrayTile[(int)lista[randIndex].transform.position.x + 1, (int)lista[randIndex].transform.position.y].canCreateObstacle)
-                        {
-
-                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y, depth), Quaternion.identity);
-                            arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y].canCreateObstacle = false;
-                            arrayTile[(int)lista[randIndex].transform.position.x - 1, (int)lista[randIndex].transform.position.y].canCreateObstacle = false;
-                            arrayTile[(int)lista[randIndex].transform.position.x + 1, (int)lista[randIndex].transform.position.y].canCreateObstacle = false;
-
-                            lista.RemoveAt(randIndex);
-                            contadorCasillasSinObstaculos += 3;
-
-                            i++;
-                            
-                        }
-
-                        //PARA LOS TILES CONTIGUOS, ME GUSTARIA HACERLO CON ALGUNA FUNCION QUE ME PERMITA BORRAR LOS CONTIGUOS A LA POSICION DEL OBSTACULO GENERADO DE LA LISTA, PERO DE MOMENTO SOLO SE ME OCURRE USAR UN
-                        //BUCLE LARGO DE COJONES, MAS ADELANTE PENSARE COMO JUNTARLO CON EL IF DE ARRIBA SI ME DA TIEMPO ^^. 
-                        else
-                        {
-                            lista.RemoveAt(randIndex);
-                            contadorCasillasSinObstaculos++;
-                        }
-                    }
-
-                    lista.Clear();
                 }
 
-                i = 0;
+                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].cantidad; miCantidad++)
+                {
+                    if(lista.Count > 0)
+                    {
+                        randIndex = UnityEngine.Random.Range(0, lista.Count);
+
+                        col = (int)lista[randIndex].x;
+                        row = (int)lista[randIndex].y;
+
+                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depth), Quaternion.identity);
+
+
+                        if (col + 2 < anchura - columnasPersonajesInicial)
+                        {
+                            //arrayTile[col + 2, row].canCreateObstacle = false;
+                            lista.Remove(new Vector2(col + 2, row));
+                        }
+
+                        if (col - 2 > columnasPersonajesInicial)
+                        {
+                            //arrayTile[col - 2, row].canCreateObstacle = false;
+                            lista.Remove(new Vector2(col - 2, row));
+                        }
+
+                        arrayTile[col + 1, row].canCreateObstacle = false;
+                        arrayTile[col, row].canCreateObstacle = false;
+                        arrayTile[col - 1, row].canCreateObstacle = false;
+
+
+                        lista.Remove(new Vector2(col + 1, row));
+                        lista.Remove(new Vector2(col, row));
+                        lista.Remove(new Vector2(col - 1, row));
+                    }
+                }
+
+                for (int r = 0; r < altura; r++)
+                {
+                    for (int c = columnasPersonajesInicial + 1; c < anchura - columnasPersonajesInicial - 1; c++)
+                    {
+                        if (!arrayTile[c, r].isObstacleUncreatable && arrayTile[c, r].IsClear())
+                        {
+                            arrayTile[c, r].canCreateObstacle = true;
+                        }
+                    }
+                }
+
+                lista.Clear();
             }
 
-            else if (generadorDeObstaculos[index].orientacion == Orientacion.Vertical)
+            if (generadorDeObstaculos[index].orientacion == Orientacion.Vertical)
             {
-                casillasQueOcupa = 3;
-
-                if (casillasQueOcupa <= altura && midFieldWidth > 0)// && generadorDeObstaculos[index].cantidad < altura)
+                for (int c = columnasPersonajesInicial; c < anchura - columnasPersonajesInicial; c++)
                 {
-                    for (int col = columnasPersonajesInicial; col < anchura - columnasPersonajesInicial; col++)
+                    for (int r = 1; r < altura - 1; r++)
                     {
-                        for (int row = 1; row < altura - 1; row++)
+                        if (arrayTile[c, r].canCreateObstacle && arrayTile[c, r - 1].canCreateObstacle && arrayTile[c, r + 1].canCreateObstacle)
                         {
-                            if (arrayTile[col, row].IsClear())
+                            lista.Add(new Vector2(c, r));
+
+                           // item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[c, r].transform.position.x, (int)arrayTile[c, r].transform.position.y, depth), Quaternion.identity);
+                        }
+                    }
+                }
+
+                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].cantidad; miCantidad++)
+                {
+                    if (lista.Count > 0)
+                    {
+                        randIndex = UnityEngine.Random.Range(0, lista.Count);
+
+                        col = (int)lista[randIndex].x;
+                        row = (int)lista[randIndex].y;
+
+                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depth), Quaternion.identity);
+
+                        if (row < altura - 2)
+                        {
+                            if (arrayTile[col, row + 2].canCreateObstacle)
                             {
-                                lista.Add(arrayTile[col, row]); // IMPORTANTE PARA ENTENDER LO DE ABAJO, EN UNITY, LOS OBJETOS SE PASAN POR DEFECTO POR REFERENCIA, A DIFERENCIA DE ENTEROS, STRINGS, ETC.
+                                arrayTile[col, row + 2].canCreateObstacle = false;
+                                lista.Remove(new Vector2(col, row + 2));
                             }
                         }
-                    }
 
-                    while (i < generadorDeObstaculos[index].cantidad && contadorCasillasSinObstaculos < numCasillasMidField)
-                    {
-                        randIndex = Random.Range(0, lista.Count);
-
-                        GameObject obstacle;
-
-                        if (lista[randIndex].IsClear() && lista[randIndex].canCreateObstacle && arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y - 1].canCreateObstacle && arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y + 1].canCreateObstacle)
+                        if(row > 2)
                         {
-
-                            
-                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y, depth), Quaternion.identity);
-                            arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y].canCreateObstacle = false;
-                            arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y - 1].canCreateObstacle = false;
-                            arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y + 1].canCreateObstacle = false;
-
-                            lista.RemoveAt(randIndex);
-                            contadorCasillasSinObstaculos += 3;
-
-                            i++;
-
-                        }
-
-                        //PARA LOS TILES CONTIGUOS, ME GUSTARIA HACERLO CON ALGUNA FUNCION QUE ME PERMITA BORRAR LOS CONTIGUOS A LA POSICION DEL OBSTACULO GENERADO DE LA LISTA, PERO DE MOMENTO SOLO SE ME OCURRE USAR UN
-                        //BUCLE LARGO DE COJONES, MAS ADELANTE PENSARE COMO JUNTARLO CON EL IF DE ARRIBA SI ME DA TIEMPO ^^. 
-
-                        else
-                        {
-                            lista.RemoveAt(randIndex);
-                            contadorCasillasSinObstaculos++;
-                        }
-                    }
-
-                    lista.Clear();
-                }
-
-                i = 0;
-            }
-
-            else if (generadorDeObstaculos[index].orientacion == Orientacion.UnoXUno)
-            {
-                casillasQueOcupa = 1;
-
-                if (casillasQueOcupa <= midFieldWidth && casillasQueOcupa <= altura)
-                {
-                    for (int col = columnasPersonajesInicial; col < anchura - columnasPersonajesInicial; col++)
-                    {
-                        for (int row = 0; row < altura; row++)
-                        {
-                            if (arrayTile[col, row].IsClear() && arrayTile[col, row].canCreateObstacle)
+                            if (arrayTile[col, row - 2].canCreateObstacle)
                             {
-                                lista.Add(arrayTile[col, row]); // IMPORTANTE PARA ENTENDER LO DE ABAJO, EN UNITY, LOS OBJETOS SE PASAN POR DEFECTO POR REFERENCIA, A DIFERENCIA DE ENTEROS, STRINGS, ETC.
+                                arrayTile[col, row - 2].canCreateObstacle = false;
+                                lista.Remove(new Vector2(col, row - 2));
                             }
                         }
+                                
+                        arrayTile[col, row - 1].canCreateObstacle = false;
+                        arrayTile[col, row].canCreateObstacle = false;
+                        arrayTile[col, row + 1].canCreateObstacle = false;
+
+                        lista.Remove(new Vector2(col, row - 1));
+                        lista.Remove(new Vector2(col, row));
+                        lista.Remove(new Vector2(col, row + 1));
                     }
-
-                    randIndex = Random.Range(0, lista.Count);
-
-                    GameObject obstacle;
-                    while (i < generadorDeObstaculos[index].cantidad && contadorCasillasSinObstaculos < numCasillasMidField)
-                    {
-                        if (lista[randIndex].IsClear() && lista[randIndex].canCreateObstacle)
-                        {
-                            randIndex = Random.Range(0, lista.Count);
-
-                            obstacle = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y, depth), Quaternion.identity);
-                            arrayTile[(int)lista[randIndex].transform.position.x, (int)lista[randIndex].transform.position.y].canCreateObstacle = false;
-
-                            lista.RemoveAt(randIndex);
-                            contadorCasillasSinObstaculos++;
-
-                            i++;
-
-                        }
-
-                        else
-                        {
-                            //lista.RemoveAt(randIndex);
-                            contadorCasillasSinObstaculos++;
-                        }
-                    }
-
-                    lista.Clear();
-
                 }
 
-                i = 0;
+                lista.Clear();
+
+                for (int c = columnasPersonajesInicial; c < anchura - columnasPersonajesInicial; c++)
+                {
+                    for (int r = 1; r < altura - 1; r++)
+                    {
+                        if (!arrayTile[c, r].isObstacleUncreatable && arrayTile[c, r].IsClear())
+                        {
+                            arrayTile[c, r].canCreateObstacle = true;
+                        }
+                    }
+                }
             }
+
+            if (generadorDeObstaculos[index].orientacion == Orientacion.UnoXUno)
+            {
+                for (int r = 0; r < altura; r++)
+                {
+                    for (int c = columnasPersonajesInicial; c < anchura - columnasPersonajesInicial; c++)
+                    {
+                        if (arrayTile[c, r].canCreateObstacle)
+                        {
+                            lista.Add(new Vector2(c, r));
+                        }
+                    }
+                }
+
+
+
+                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].cantidad; miCantidad++)
+                {
+                    if (lista.Count > 0)
+                    {
+                        randIndex = UnityEngine.Random.Range(0, lista.Count);
+
+                        col = (int)lista[randIndex].x;
+                        row = (int)lista[randIndex].y;
+
+                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depth), Quaternion.identity);
+
+                        arrayTile[col, row].canCreateObstacle = false;
+                        lista.Remove(new Vector2(col, row));
+                    }
+                }
+
+                lista.Clear();
+
+                for (int r = 0; r < altura; r++)
+                {
+                    for (int c = 0; c < anchura; c++)
+                    {
+                        if (!arrayTile[c, r].isObstacleUncreatable && arrayTile[c, r].IsClear())
+                        {
+                            arrayTile[c, r].canCreateObstacle = true;
+                        }
+                    }
+                }
+            }
+        
         }
 
 
@@ -313,35 +336,33 @@ public class FieldObstacleGeneration : MonoBehaviour
         item = Instantiate(generadorDePersonajes.prefabReyAliado, new Vector2(-1, altura / 2), Quaternion.identity);
 
         //INSTANCIAS DEL RESTO DE PERSONAJES ALIADOS
-
-        for (int col = 0; col < anchura - columnasPersonajesInicial; col++)
+        for (int c = 0; c < columnasPersonajesInicial; c++)
         {
-            for (int row = 0; row < altura; row++)
+            for (int r = 0; r < altura; r++)  
             {
-                if (arrayTile[col, row].IsClear())
-                {
-                    lista.Add(arrayTile[col, row]); // IMPORTANTE PARA ENTENDER LO DE ABAJO, EN UNITY, LOS OBJETOS SE PASAN POR DEFECTO POR REFERENCIA, A DIFERENCIA DE ENTEROS, STRINGS, ETC.
-                }
+                lista.Add(new Vector2(c, r));
             }
         }
 
         for (int indiceAliado = 0; indiceAliado < generadorDePersonajes.listaDeAliados.Count; indiceAliado++)
         {
-            int cantidadAliadoActual = 0;
-
-            while (cantidadAliadoActual < generadorDePersonajes.listaDeAliados[indiceAliado].cantidad)
+            for (int miCantidad = 0; miCantidad < generadorDePersonajes.listaDeAliados[indiceAliado].cantidad; miCantidad++)
             {
-                randPosY = Random.Range(0, altura);
-                randPosX = Random.Range(0, columnasPersonajesInicial);
-
-                if (arrayTile[randPosX, randPosY].IsClear())
+                if (lista.Count > 0)
                 {
-                    item = Instantiate(generadorDePersonajes.listaDeAliados[indiceAliado].prefab, new Vector2(randPosX, randPosY), Quaternion.identity);
+                    randIndex = UnityEngine.Random.Range(0, lista.Count);
 
-                    cantidadAliadoActual++;
+                    col = (int)lista[randIndex].x;
+                    row = (int)lista[randIndex].y;
+
+                    item = Instantiate(generadorDePersonajes.listaDeAliados[indiceAliado].prefab, new Vector2(col, row), Quaternion.identity);
+
+                    lista.Remove(new Vector2(col, row));
                 }
             }
         }
+
+        lista.Clear();
 
 
         //ENEMIGOS
@@ -352,23 +373,33 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         //INSTANCIAS DEL RESTO DE PERSONAJES ENEMIGOS
 
+        for (int c = midFieldWidth + columnasPersonajesInicial; c < anchura; c++)
+        {
+            for (int r = 0; r < altura; r++)
+            {
+                lista.Add(new Vector2(c, r));
+            }
+        }
+
         for (int indiceEnemigo = 0; indiceEnemigo < generadorDePersonajes.listaDeEnemigos.Count; indiceEnemigo++)
         {
-            int cantidadEnemigoActual = 0;
-
-            while (cantidadEnemigoActual < generadorDePersonajes.listaDeEnemigos[indiceEnemigo].cantidad)
+            for (int miCantidad = 0; miCantidad < generadorDePersonajes.listaDeEnemigos[indiceEnemigo].cantidad; miCantidad++)
             {
-                randPosY = Random.Range(0, altura);
-                randPosX = Random.Range(anchura - columnasPersonajesInicial, anchura);
-
-                if (arrayTile[randPosX, randPosY].IsClear())
+                if (lista.Count > 0)
                 {
-                    item = Instantiate(generadorDePersonajes.listaDeEnemigos[indiceEnemigo].prefab, new Vector2(randPosX, randPosY), Quaternion.identity);
+                    randIndex = UnityEngine.Random.Range(0, lista.Count);
 
-                    cantidadEnemigoActual++;
+                    col = (int)lista[randIndex].x;
+                    row = (int)lista[randIndex].y;
+
+                    item = Instantiate(generadorDePersonajes.listaDeEnemigos[indiceEnemigo].prefab, new Vector2(col, row), Quaternion.identity);
+
+                    lista.Remove(new Vector2(col, row));
                 }
             }
         }
+
+        lista.Clear();
     }
 }
 
@@ -397,8 +428,8 @@ public class GeneradorMapa
     {
         if (anchurasPosibles.Count > 0 && alturasPosibles.Count > 0)
         {
-            randomWidthIndex = Random.Range(0, anchurasPosibles.Count);
-            randomHeightIndex = Random.Range(0, alturasPosibles.Count);
+            randomWidthIndex = UnityEngine.Random.Range(0, anchurasPosibles.Count);
+            randomHeightIndex = UnityEngine.Random.Range(0, alturasPosibles.Count);
 
             anchura = anchurasPosibles[randomWidthIndex];
             altura = alturasPosibles[randomHeightIndex];

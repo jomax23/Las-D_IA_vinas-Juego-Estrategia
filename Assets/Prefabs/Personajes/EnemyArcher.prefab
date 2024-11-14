@@ -3056,7 +3056,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selected: 0
-  tileSpeed: 10
+  tileSpeed: 5
   hasMoved: 0
   moveSpeed: 5
   playerNumber: 2

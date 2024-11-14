@@ -1551,14 +1551,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generadorDelMapa:
     prefab: {fileID: 2445037597648736328, guid: 71e16c72ad5694997b7ed5aab84a5750, type: 3}
-    anchurasPosibles: 0a0000000c0000000f000000
+    anchurasPosibles: 0e0000000f00000012000000
     alturasPosibles: 0a0000000c0000000f000000
+  anchura: 0
+  altura: 0
   generadorDeObstaculos:
   - prefab: {fileID: 1706629476239711546, guid: 4d63e3192a7a94a59ab08bc2027d7be3, type: 3}
-    cantidad: 2
+    cantidad: 5
     orientacion: 0
   - prefab: {fileID: 1706629476239711546, guid: d63e93cd7f913457a97ecd0d5408c0fe, type: 3}
-    cantidad: 15
+    cantidad: 4
     orientacion: 1
   - prefab: {fileID: 1706629476239711546, guid: aef58eca77570f24f8dff94decf961a9, type: 3}
     cantidad: 5
@@ -1568,7 +1570,7 @@ MonoBehaviour:
     prefabReyEnemigo: {fileID: 6313888290563817257, guid: 46df0e1a724304b6f91dacb0d2b72725, type: 3}
     listaDeAliados:
     - prefab: {fileID: 5205237815304574374, guid: 54e996b86e207466e8e2cf0a3684cba2, type: 3}
-      cantidad: 3
+      cantidad: 4
     - prefab: {fileID: 154897429256349546, guid: 6d37bb996ce5043bc9a127540a29a1ad, type: 3}
       cantidad: 3
     - prefab: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}

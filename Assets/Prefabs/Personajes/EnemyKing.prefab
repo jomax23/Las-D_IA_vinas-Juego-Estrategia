@@ -3100,11 +3100,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selected: 0
-  tileSpeed: 10
+  tileSpeed: 3
   hasMoved: 0
   moveSpeed: 6
   playerNumber: 2
-  attackRange: 1
+  attackRange: 2
   hasAttacked: 0
   weaponIcon: {fileID: 533152477096500302}
   health: 15

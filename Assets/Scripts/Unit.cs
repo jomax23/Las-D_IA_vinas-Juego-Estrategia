@@ -37,9 +37,12 @@ public class Unit : MonoBehaviour
 
     public int layer = 0;
 
+    //public FieldObstacleGeneration myField;
     private void Start()
     {
         gm = FindObjectOfType<GameMaster>();
+        //myField = FindObjectOfType<FieldObstacleGeneration>();
+
         UpdateKingHealth();
     }
 
@@ -55,7 +58,7 @@ public class Unit : MonoBehaviour
     {
         ResetWeaponIcons();
 
-        if(selected == true)
+        if (selected == true)
         {
             selected = false;
             gm.selectedUnit = null;
@@ -64,9 +67,9 @@ public class Unit : MonoBehaviour
 
         else
         {
-            if(playerNumber == gm.playerTurn)
+            if (playerNumber == gm.playerTurn)
             {
-                if(gm.selectedUnit != null)
+                if (gm.selectedUnit != null)
                 {
                     gm.selectedUnit.selected = false;
                 }
@@ -83,7 +86,7 @@ public class Unit : MonoBehaviour
         Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
         Unit unit = col.GetComponent<Unit>();
 
-        if(gm.selectedUnit != null)
+        if (gm.selectedUnit != null)
         {
             //Debug.Log("HOLA");
             if (gm.selectedUnit.enemiesInRange.Contains(unit) && gm.selectedUnit.hasAttacked == false)
@@ -100,8 +103,8 @@ public class Unit : MonoBehaviour
 
         int damageDealt = attackStat - enemy.defenseStat; // DAÑO QUE HACEMOS AL ENEMIGO
 
-        
-        if(damageDealt >= 1)
+
+        if (damageDealt >= 1)
         {
             DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
 
@@ -110,24 +113,24 @@ public class Unit : MonoBehaviour
 
             enemy.UpdateKingHealth();
         }
-        
-        if(enemy.health <= 0)
+
+        if (enemy.health <= 0)
         {
             Destroy(enemy.gameObject);
             GetWalkableTiles();
         }
-        
-        if(health <= 0)
+
+        if (health <= 0)
         {
             gm.ResetTiles();
             Destroy(this.gameObject);
         }
-        
+
     }
 
     void GetWalkableTiles()
     {
-        if(hasMoved == true)
+        if (hasMoved == true)
         {
             return;
         }
@@ -143,17 +146,28 @@ public class Unit : MonoBehaviour
                 }
             }
         }
+        
+        /*
+        for (int col = 0; col < myField.anchura; col++)
+        {
+            for (int row = 0; row < myField.altura; row++)
+            {
+                myField.arrayTile[col, row].Highlight();
+            }
+        }
+        */
     }
 
-    void GetEnemies()
+    public void GetEnemies()
     {
         enemiesInRange.Clear();
 
-        foreach(Unit unit in FindObjectsOfType<Unit>())
+        foreach (Unit unit in FindObjectsOfType<Unit>())
         {
-            if (Mathf.Abs(transform.position.x - unit.transform.position.x) + Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange)
+            //Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(unit.transform.position.x, unit.transform.position.y))
+            if (Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(unit.transform.position.x, unit.transform.position.y)) <= attackRange * Mathf.Sqrt(2))
             {
-                if(unit.playerNumber != gm.playerTurn && hasAttacked == false)
+                if (unit.playerNumber != gm.playerTurn && hasAttacked == false)
                 {
                     enemiesInRange.Add(unit);
                     unit.weaponIcon.SetActive(true);
@@ -162,7 +176,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void ResetWeaponIcons()
+    void ResetWeaponIcons()
     {
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
@@ -183,7 +197,7 @@ public class Unit : MonoBehaviour
 
     IEnumerator StartMovement(Vector2 tilePos) {
 
-        while(transform.position.x != tilePos.x)
+        while (transform.position.x != tilePos.x)
         {
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(tilePos.x, transform.position.y), moveSpeed * Time.deltaTime);
             yield return null;
@@ -207,3 +221,4 @@ public class Unit : MonoBehaviour
         GetEnemies();
     }
 }
+
