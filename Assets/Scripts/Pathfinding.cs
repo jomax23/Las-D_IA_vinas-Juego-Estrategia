@@ -1,117 +1,182 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System;
 
-public class Pathfinding : MonoBehaviour {
-	
-	PathRequestManager requestManager;
-	Grid grid;
-	
-	void Awake() {
-		requestManager = GetComponent<PathRequestManager>();
-		grid = GetComponent<Grid>();
-	}
-	
-	
-	public void StartFindPath(Vector3 startPos, Vector3 targetPos) {
-		StartCoroutine(FindPath(startPos,targetPos));
-	}
-	
-	IEnumerator FindPath(Vector3 startPos, Vector3 targetPos) {
-		
-		Stopwatch sw = new Stopwatch();
-		sw.Start();
-		
-		Vector3[] waypoints = new Vector3[0];
-		bool pathSuccess = false;
-		
-		Node startNode = grid.NodeFromWorldPoint(startPos);
-		Node targetNode = grid.NodeFromWorldPoint(targetPos);
-		startNode.parent = startNode;
-		
-		
-		if (startNode.walkable && targetNode.walkable) {
-			Heap<Node> openSet = new Heap<Node>(grid.MaxSize);
-			HashSet<Node> closedSet = new HashSet<Node>();
-			openSet.Add(startNode);
-			
-			while (openSet.Count > 0) {
-				Node currentNode = openSet.RemoveFirst();
-				closedSet.Add(currentNode);
-				
-				if (currentNode == targetNode) {
-					sw.Stop();
-					print ("Path found: " + sw.ElapsedMilliseconds + " ms");
-					pathSuccess = true;
-					break;
-				}
-				
-				foreach (Node neighbour in grid.GetNeighbours(currentNode)) {
-					if (!neighbour.walkable || closedSet.Contains(neighbour)) {
-						continue;
-					}
-					
-					int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) + neighbour.movementPenalty;
-					if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
-						neighbour.gCost = newMovementCostToNeighbour;
-						neighbour.hCost = GetDistance(neighbour, targetNode);
-						neighbour.parent = currentNode;
-						
-						if (!openSet.Contains(neighbour))
-							openSet.Add(neighbour);
-						else 
-							openSet.UpdateItem(neighbour);
-					}
-				}
-			}
-		}
-		yield return null;
-		if (pathSuccess) {
-			waypoints = RetracePath(startNode,targetNode);
-		}
-		requestManager.FinishedProcessingPath(waypoints,pathSuccess);
-		
-	}
-		
-	
-	Vector3[] RetracePath(Node startNode, Node endNode) {
-		List<Node> path = new List<Node>();
-		Node currentNode = endNode;
-		
-		while (currentNode != startNode) {
-			path.Add(currentNode);
-			currentNode = currentNode.parent;
-		}
-		Vector3[] waypoints = SimplifyPath(path);
-		Array.Reverse(waypoints);
-		return waypoints;
-		
-	}
-	
-	Vector3[] SimplifyPath(List<Node> path) {
-		List<Vector3> waypoints = new List<Vector3>();
-		Vector2 directionOld = Vector2.zero;
-		
-		for (int i = 1; i < path.Count; i ++) {
-			Vector2 directionNew = new Vector2(path[i-1].gridX - path[i].gridX,path[i-1].gridY - path[i].gridY);
-			if (directionNew != directionOld) {
-				waypoints.Add(path[i].worldPosition);
-			}
-			directionOld = directionNew;
-		}
-		return waypoints.ToArray();
-	}
-	
-	int GetDistance(Node nodeA, Node nodeB) {
-		int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
-		int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
-		
-		if (dstX > dstY)
-			return 14*dstY + 10* (dstX-dstY);
-		return 14*dstX + 10 * (dstY-dstX);
-	}
-	
-	
+public class Pathfinding : MonoBehaviour
+{
+
+    public Transform seeker, target;
+    FieldObstacleGeneration grid;
+    public Unit seekerUnit;
+
+    public int pathCounter = 0;
+
+    public List<Tile> pathMovement;
+
+    void Awake()
+    {
+        grid = GetComponent<FieldObstacleGeneration>();
+        
+    }
+
+    public void FindPath(Vector3 startPos, Vector3 targetPos)
+    {
+        Tile startTile = grid.arrayTile[(int)startPos.x, (int)startPos.y];
+        Tile targetTile = grid.arrayTile[(int)targetPos.x, (int)targetPos.y];
+
+        List<Tile> openSet = new List<Tile>();
+        HashSet<Tile> closedSet = new HashSet<Tile>();
+        openSet.Add(startTile);
+
+        while (openSet.Count > 0)
+        {
+            Tile tile = openSet[0];
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].fCost < tile.fCost || openSet[i].fCost == tile.fCost)
+                {
+                    if (openSet[i].hCost < tile.hCost)
+                        tile = openSet[i];
+                }
+            }
+
+            openSet.Remove(tile);
+            closedSet.Add(tile);
+
+            if (tile == targetTile)
+            {
+                RetracePath(startTile, targetTile);
+                return;
+            }
+
+            foreach (Tile neighbour in grid.GetNeighbours(tile))
+            {
+                if (!neighbour.IsClear() || closedSet.Contains(neighbour))
+                {
+                    continue;
+                }
+
+                int newCostToNeighbour = tile.gCost + GetDistance(tile, neighbour);
+                if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.gCost = newCostToNeighbour;
+                    neighbour.hCost = GetDistance(neighbour, targetTile);
+                    neighbour.parent = tile;
+
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                }
+            }
+        }
+    }
+
+    void RetracePath(Tile startTile, Tile endTile)
+    {
+        List<Tile> path = new List<Tile>();
+        Tile currentTile = endTile;
+
+        while (currentTile != startTile)
+        {
+            path.Add(currentTile);
+            currentTile = currentTile.parent;
+        }
+
+        
+        path.Reverse();
+        Debug.Log(path.Count);
+        pathCounter = path.Count;
+
+        Debug.Log("CAMINO");
+
+        foreach (Tile tile in path)
+        {
+            Debug.Log(tile.transform.position.x + ", " + tile.transform.position.y);
+        }
+
+        seekerUnit = null;
+        seeker = null;
+        target = null;
+
+    }
+
+    public void FindPathMovement(Vector3 startPos, Vector3 targetPos)
+    {
+        Tile startTile = grid.arrayTile[(int)startPos.x, (int)startPos.y];
+        Tile targetTile = grid.arrayTile[(int)targetPos.x, (int)targetPos.y];
+
+        List<Tile> openSet = new List<Tile>();
+        HashSet<Tile> closedSet = new HashSet<Tile>();
+        openSet.Add(startTile);
+
+        while (openSet.Count > 0)
+        {
+            Tile tile = openSet[0];
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].fCost < tile.fCost || openSet[i].fCost == tile.fCost)
+                {
+                    if (openSet[i].hCost < tile.hCost)
+                        tile = openSet[i];
+                }
+            }
+
+            openSet.Remove(tile);
+            closedSet.Add(tile);
+
+            if (tile == targetTile)
+            {
+                RetracePathMovement(startTile, targetTile);
+                return;
+            }
+
+            foreach (Tile neighbour in grid.GetNeighbours(tile))
+            {
+                if (!neighbour.IsClear() || closedSet.Contains(neighbour))
+                {
+                    continue;
+                }
+
+                int newCostToNeighbour = tile.gCost + GetDistance(tile, neighbour);
+                if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.gCost = newCostToNeighbour;
+                    neighbour.hCost = GetDistance(neighbour, targetTile);
+                    neighbour.parent = tile;
+
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                }
+            }
+        }
+    }
+
+    void RetracePathMovement(Tile startTile, Tile endTile)
+    {
+        pathMovement = new List<Tile>();
+        Tile currentTile = endTile;
+
+        while (currentTile != startTile)
+        {
+            pathMovement.Add(currentTile);
+            currentTile = currentTile.parent;
+        }
+        pathMovement.Reverse();
+        /*
+        foreach (Tile tile in pathMovement)
+        {
+            Debug.Log(tile.transform.position.x + ", " + tile.transform.position.y);
+        }
+        */
+    }
+
+    int GetDistance(Tile tileA, Tile tileB)
+    {
+        int dstX = Mathf.Abs(tileA.posX - tileB.posX);
+        int dstY = Mathf.Abs(tileA.posY - tileB.posY);
+
+        // Si el movimiento es diagonal
+        if (dstX > dstY)
+            return 14 * dstY + 10 * (dstX - dstY);  // Movimiento diagonal (usamos 14 para las diagonales)
+        return 14 * dstX + 10 * (dstY - dstX);  // Movimiento ortogonal (usamos 10 para los movimientos ortogonales)
+    }
 }

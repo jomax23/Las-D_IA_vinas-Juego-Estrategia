@@ -975,7 +975,7 @@ MonoBehaviour:
   hasMoved: 0
   moveSpeed: 5
   playerNumber: 1
-  attackRange: 1
+  attackRange: 3
   hasAttacked: 0
   weaponIcon: {fileID: 7212956247754808106}
   health: 15

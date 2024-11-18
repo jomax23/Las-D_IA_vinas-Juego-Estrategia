@@ -15,18 +15,23 @@ public class FieldObstacleGeneration : MonoBehaviour
     [HideInInspector]
     public int altura; //ALTURA DEL MAPA
 
-    private int depth = 5; //Coordenada z que tendran z los tiles y los obstaculos
+    public int depth = 5; //Coordenada z que tendran z los tiles y los obstaculos
 
     private const int columnasPersonajesInicial = 3;
 
     [HideInInspector]
     public Tile[,] arrayTile;
 
+    [HideInInspector]
+    public List<Tile> path;
+
     [Header("OBSTACULOS")]
     public List<GeneradorObstaculos> generadorDeObstaculos;
 
     [Header("PERSONAJES")]
     public GeneradorPersonajes generadorDePersonajes;
+
+    public Tile myKingTile;
 
     void Awake()
     {
@@ -52,8 +57,8 @@ public class FieldObstacleGeneration : MonoBehaviour
             }
         }
 
-        arrayTile[0, altura -1].canCreateObstacle = false;
-        arrayTile[anchura -1, altura - 1].canCreateObstacle = false;
+        arrayTile[0, altura - 1].canCreateObstacle = false;
+        arrayTile[anchura - 1, altura - 1].canCreateObstacle = false;
 
         int columna = columnasPersonajesInicial;
         int fila = altura / 2;
@@ -61,17 +66,17 @@ public class FieldObstacleGeneration : MonoBehaviour
         //string[] direcciones = { "Abajo", "Derecha", "Arriba" };
 
         int randomClearPathValue;
-        
+
         int iterationCounter = 0;
 
-        if((anchura > columnasPersonajesInicial * 2 && altura > 2))
+        if ((anchura > columnasPersonajesInicial * 2 && altura > 2))
         {
-            
+
             lista.Remove(new Vector2(columna, fila));
 
             while (columna < anchura - columnasPersonajesInicial)
             {
-                
+
                 arrayTile[columna, fila].canCreateObstacle = false;
                 arrayTile[columna, fila].isObstacleUncreatable = true;
 
@@ -85,7 +90,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                         {
                             fila--;
                         }
-                        else if(arrayTile[columna + 1, fila].canCreateObstacle)
+                        else if (arrayTile[columna + 1, fila].canCreateObstacle)
                         {
                             columna++;
                         }
@@ -154,16 +159,18 @@ public class FieldObstacleGeneration : MonoBehaviour
                 {
                     for (int c = columnasPersonajesInicial + 1; c < anchura - columnasPersonajesInicial - 1; c++)
                     {
-                        if(arrayTile[c, r].canCreateObstacle && arrayTile[c - 1, r].canCreateObstacle && arrayTile[c + 1, r].canCreateObstacle)
+                        if (arrayTile[c, r].canCreateObstacle && arrayTile[c - 1, r].canCreateObstacle && arrayTile[c + 1, r].canCreateObstacle)
                         {
                             lista.Add(new Vector2(c, r));
                         }
                     }
                 }
 
-                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].cantidad; miCantidad++)
+                generadorDeObstaculos[index].GetPosiblesCantidades();
+
+                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].GetCantidad(); miCantidad++)
                 {
-                    if(lista.Count > 0)
+                    if (lista.Count > 0)
                     {
                         randIndex = UnityEngine.Random.Range(0, lista.Count);
 
@@ -220,12 +227,14 @@ public class FieldObstacleGeneration : MonoBehaviour
                         {
                             lista.Add(new Vector2(c, r));
 
-                           // item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[c, r].transform.position.x, (int)arrayTile[c, r].transform.position.y, depth), Quaternion.identity);
+                            // item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[c, r].transform.position.x, (int)arrayTile[c, r].transform.position.y, depth), Quaternion.identity);
                         }
                     }
                 }
 
-                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].cantidad; miCantidad++)
+                generadorDeObstaculos[index].GetPosiblesCantidades();
+
+                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].GetCantidad(); miCantidad++)
                 {
                     if (lista.Count > 0)
                     {
@@ -245,7 +254,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                             }
                         }
 
-                        if(row > 2)
+                        if (row > 2)
                         {
                             if (arrayTile[col, row - 2].canCreateObstacle)
                             {
@@ -253,7 +262,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                                 lista.Remove(new Vector2(col, row - 2));
                             }
                         }
-                                
+
                         arrayTile[col, row - 1].canCreateObstacle = false;
                         arrayTile[col, row].canCreateObstacle = false;
                         arrayTile[col, row + 1].canCreateObstacle = false;
@@ -291,9 +300,9 @@ public class FieldObstacleGeneration : MonoBehaviour
                     }
                 }
 
+                generadorDeObstaculos[index].GetPosiblesCantidades();
 
-
-                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].cantidad; miCantidad++)
+                for (int miCantidad = 0; miCantidad < generadorDeObstaculos[index].GetCantidad(); miCantidad++)
                 {
                     if (lista.Count > 0)
                     {
@@ -322,7 +331,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                     }
                 }
             }
-        
+
         }
 
 
@@ -338,15 +347,20 @@ public class FieldObstacleGeneration : MonoBehaviour
         //INSTANCIAS DEL RESTO DE PERSONAJES ALIADOS
         for (int c = 0; c < columnasPersonajesInicial; c++)
         {
-            for (int r = 0; r < altura; r++)  
+            for (int r = 0; r < altura; r++)
             {
-                lista.Add(new Vector2(c, r));
+                if(c != 0 || r != altura -1)
+                {
+                    lista.Add(new Vector2(c, r));
+                }
             }
         }
 
         for (int indiceAliado = 0; indiceAliado < generadorDePersonajes.listaDeAliados.Count; indiceAliado++)
         {
-            for (int miCantidad = 0; miCantidad < generadorDePersonajes.listaDeAliados[indiceAliado].cantidad; miCantidad++)
+            generadorDePersonajes.listaDeAliados[indiceAliado].GetPosiblesCantidades();
+
+            for (int miCantidad = 0; miCantidad < generadorDePersonajes.listaDeAliados[indiceAliado].GetCantidad(); miCantidad++)
             {
                 if (lista.Count > 0)
                 {
@@ -377,13 +391,18 @@ public class FieldObstacleGeneration : MonoBehaviour
         {
             for (int r = 0; r < altura; r++)
             {
-                lista.Add(new Vector2(c, r));
+                if (c != anchura - 1 || r != altura - 1)
+                {
+                    lista.Add(new Vector2(c, r));
+                }
             }
         }
 
         for (int indiceEnemigo = 0; indiceEnemigo < generadorDePersonajes.listaDeEnemigos.Count; indiceEnemigo++)
         {
-            for (int miCantidad = 0; miCantidad < generadorDePersonajes.listaDeEnemigos[indiceEnemigo].cantidad; miCantidad++)
+            generadorDePersonajes.listaDeEnemigos[indiceEnemigo].GetPosiblesCantidades();
+
+            for (int miCantidad = 0; miCantidad < generadorDePersonajes.listaDeEnemigos[indiceEnemigo].GetCantidad(); miCantidad++)
             {
                 if (lista.Count > 0)
                 {
@@ -392,6 +411,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                     col = (int)lista[randIndex].x;
                     row = (int)lista[randIndex].y;
 
+                    
                     item = Instantiate(generadorDePersonajes.listaDeEnemigos[indiceEnemigo].prefab, new Vector2(col, row), Quaternion.identity);
 
                     lista.Remove(new Vector2(col, row));
@@ -401,97 +421,202 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         lista.Clear();
     }
-}
 
-public enum Orientacion
-{
-    Horizontal,
-    Vertical,
-    UnoXUno
-}
-
-[System.Serializable]
-public class GeneradorMapa
-{
-    public GameObject prefab;
-
-    public List<int> anchurasPosibles;
-    public List<int> alturasPosibles;
-
-    private int randomWidthIndex;
-    private int randomHeightIndex;
-
-    private int anchura; //SERIA LA MAX COLUMNA y LA MAS A LA DERECHA
-    private int altura; //SERIA LA MAX FILA y LA MAS ALTA
-
-    public void CrearMapa()
+    public enum Orientacion
     {
-        if (anchurasPosibles.Count > 0 && alturasPosibles.Count > 0)
-        {
-            randomWidthIndex = UnityEngine.Random.Range(0, anchurasPosibles.Count);
-            randomHeightIndex = UnityEngine.Random.Range(0, alturasPosibles.Count);
+        Horizontal,
+        Vertical,
+        UnoXUno
+    }
 
-            anchura = anchurasPosibles[randomWidthIndex];
-            altura = alturasPosibles[randomHeightIndex];
+    public List<Tile> GetNeighbours(Tile tile)
+    {
+        List<Tile> neighbours = new List<Tile>();
+
+        // Priorizar movimientos horizontales y verticales antes que diagonales
+        int x = (int)tile.transform.position.x;
+        int y = (int)tile.transform.position.y;
+
+        // Movimientos horizontales (izquierda y derecha)
+        if (x - 1 >= 0) neighbours.Add(arrayTile[x - 1, y]); // izquierda
+        if (x + 1 < anchura) neighbours.Add(arrayTile[x + 1, y]); // derecha
+
+        // Movimientos verticales (arriba y abajo)
+        if (y - 1 >= 0) neighbours.Add(arrayTile[x, y - 1]); // abajo
+        if (y + 1 < altura) neighbours.Add(arrayTile[x, y + 1]); // arriba
+
+        // Movimientos diagonales (abajo izquierda, abajo derecha, arriba izquierda, arriba derecha)
+        if (x - 1 >= 0 && y - 1 >= 0) neighbours.Add(arrayTile[x - 1, y - 1]); // abajo izquierda
+        if (x + 1 < anchura && y - 1 >= 0) neighbours.Add(arrayTile[x + 1, y - 1]); // abajo derecha
+        if (x - 1 >= 0 && y + 1 < altura) neighbours.Add(arrayTile[x - 1, y + 1]); // arriba izquierda
+        if (x + 1 < anchura && y + 1 < altura) neighbours.Add(arrayTile[x + 1, y + 1]); // arriba derecha
+
+        return neighbours;
+    }
+
+    [System.Serializable]
+    public class GeneradorMapa
+    {
+        public GameObject prefab;
+
+        public List<int> anchurasPosibles;
+        public List<int> alturasPosibles;
+
+        private int randomWidthIndex;
+        private int randomHeightIndex;
+
+        private int anchura; //SERIA LA MAX COLUMNA y LA MAS A LA DERECHA
+        private int altura; //SERIA LA MAX FILA y LA MAS ALTA
+
+        public void CrearMapa()
+        {
+            if (anchurasPosibles.Count > 0 && alturasPosibles.Count > 0)
+            {
+                randomWidthIndex = UnityEngine.Random.Range(0, anchurasPosibles.Count);
+                randomHeightIndex = UnityEngine.Random.Range(0, alturasPosibles.Count);
+
+                anchura = anchurasPosibles[randomWidthIndex];
+                altura = alturasPosibles[randomHeightIndex];
+            }
+        }
+
+        public int GetAnchura()
+        {
+            return anchura;
+        }
+
+        public int GetAltura()
+        {
+            return altura;
         }
     }
 
-    public int GetAnchura()
+    [System.Serializable]
+    public class GeneradorObstaculos
     {
-        return anchura;
+        public GameObject prefab;
+
+        private int cantidad;
+
+        public int minimaCantidad;
+        public int maximaCantidad;
+
+        private int zCoord = -5;
+
+        public int GetZCoord()
+        {
+            return zCoord;  // Devuelve el valor de zCoord
+        }
+
+        public void GetPosiblesCantidades()
+        {
+
+            if (minimaCantidad >= 0 && minimaCantidad <= maximaCantidad)
+            {
+                cantidad = UnityEngine.Random.Range(minimaCantidad, maximaCantidad + 1);
+            }
+
+            else if (minimaCantidad > maximaCantidad || minimaCantidad < 0 || maximaCantidad < 0)
+            {
+                cantidad = 0;
+            }
+
+            else
+            {
+                cantidad = minimaCantidad;
+            }
+        }
+
+        public int GetCantidad()
+        {
+            return cantidad;
+        }
+
+        public Orientacion orientacion;
     }
 
-    public int GetAltura()
+    [System.Serializable]
+    public class GeneradorPersonajes
     {
-        return altura;
-    }
-}
+        public GameObject prefabReyAliado;
+        public GameObject prefabReyEnemigo;
 
-[System.Serializable]
-public class GeneradorObstaculos
-{
-    public GameObject prefab;
+        public List<GeneradorAliados> listaDeAliados;
+        public List<GeneradorEnemigos> listaDeEnemigos;
+        
 
-    public int cantidad;
+        private int zCoord = -5;
 
-    private int zCoord = -5;
+        public int GetZCoord()
+        {
+            return zCoord;  // Devuelve el valor de zCoord
+        }
 
-    public int GetZCoord()
-    {
-        return zCoord;  // Devuelve el valor de zCoord
-    }
-
-    public Orientacion orientacion;
-}
-
-[System.Serializable]
-public class GeneradorPersonajes
-{
-    public GameObject prefabReyAliado;
-    public GameObject prefabReyEnemigo;
-
-    public List<GeneradorAliados> listaDeAliados;
-    public List<GeneradorEnemigos> listaDeEnemigos;
-
-    private int zCoord = -5;
-
-    public int GetZCoord()
-    {
-        return zCoord;  // Devuelve el valor de zCoord
     }
 
-}
+    [System.Serializable]
+    public class GeneradorAliados
+    {
+        public GameObject prefab;
 
-[System.Serializable]
-public class GeneradorAliados
-{
-    public GameObject prefab;
-    public int cantidad;
-}
+        private int cantidad;
 
-[System.Serializable]
-public class GeneradorEnemigos
-{
-    public GameObject prefab;
-    public int cantidad;
+        public int minimaCantidad;
+        public int maximaCantidad;
+        public void GetPosiblesCantidades()
+        {
+
+            if (minimaCantidad >= 0 && minimaCantidad <= maximaCantidad)
+            {
+                cantidad = UnityEngine.Random.Range(minimaCantidad, maximaCantidad + 1);
+            }
+
+            else if(minimaCantidad > maximaCantidad || minimaCantidad < 0 || maximaCantidad < 0)
+            {
+                cantidad = 0;
+            }
+
+            else
+            {
+                cantidad = minimaCantidad;
+            }
+        }
+
+        public int GetCantidad()
+        {
+            return cantidad;
+        }
+    }
+
+    [System.Serializable]
+    public class GeneradorEnemigos
+    {
+        public GameObject prefab;
+
+        private int cantidad;
+
+        public int minimaCantidad;
+        public int maximaCantidad;
+        public void GetPosiblesCantidades()
+        {
+            if (minimaCantidad >= 0 && minimaCantidad <= maximaCantidad)
+            {
+                cantidad = UnityEngine.Random.Range(minimaCantidad, maximaCantidad + 1);
+            }
+
+            else if (minimaCantidad > maximaCantidad || minimaCantidad < 0)
+            {
+                cantidad = 0;
+            }
+
+            else
+            {
+                cantidad = minimaCantidad;
+            }
+        }
+        public int GetCantidad()
+        {
+            return cantidad;
+        }
+    }
 }

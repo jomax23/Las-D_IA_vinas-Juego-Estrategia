@@ -2,55 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class Unit : MonoBehaviour
 {
     public bool selected;
 
-    GameMaster gm;
+    private GameMaster gm;
+    private Pathfinding pathFinding;
 
     public int tileSpeed;
     public bool hasMoved;
-
     public float moveSpeed;
 
     public int playerNumber;
-
     public int attackRange;
 
-    List<Unit> enemiesInRange = new List<Unit>();
+    private List<Unit> enemiesInRange = new List<Unit>();
 
     public bool hasAttacked;
-
     public GameObject weaponIcon;
 
     public int health;
-
     public int attackStat;
-
     public int defenseStat;
 
     public DamageIcon damageIcon;
-
     public Text kingHealth;
 
     public bool isKing;
-
     public int layer = 0;
 
-    //public FieldObstacleGeneration myField;
+    private FieldObstacleGeneration myField;
+    private List<Tile> myPathToObjective;
+
     private void Start()
     {
         gm = FindObjectOfType<GameMaster>();
-        //myField = FindObjectOfType<FieldObstacleGeneration>();
-
+        myField = FindObjectOfType<FieldObstacleGeneration>();
+        pathFinding = FindObjectOfType<Pathfinding>();
         UpdateKingHealth();
     }
 
     public void UpdateKingHealth()
     {
-        if (isKing == true)
+        if (isKing)
         {
-            //kingHealth.text = health.ToString();
+            // Un-comment this line if you want to display king's health in the UI
+            // kingHealth.text = health.ToString();
         }
     }
 
@@ -58,59 +56,45 @@ public class Unit : MonoBehaviour
     {
         ResetWeaponIcons();
 
-        if (selected == true)
+        if (selected)
         {
             selected = false;
             gm.selectedUnit = null;
             gm.ResetTiles();
         }
-
-        else
+        else if (playerNumber == gm.playerTurn)
         {
-            if (playerNumber == gm.playerTurn)
+            if (gm.selectedUnit != null)
             {
-                if (gm.selectedUnit != null)
-                {
-                    gm.selectedUnit.selected = false;
-                }
-
-                selected = true;
-                gm.selectedUnit = this;
-
-                gm.ResetTiles();
-                GetEnemies();
-                GetWalkableTiles();
+                gm.selectedUnit.selected = false;
             }
+
+            selected = true;
+            gm.selectedUnit = this;
+            gm.ResetTiles();
+            GetEnemies();
+            GetWalkableTiles();
         }
 
+        // Check for enemy attack
         Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
-        Unit unit = col.GetComponent<Unit>();
-
-        if (gm.selectedUnit != null)
+        Unit unit = col?.GetComponent<Unit>();
+        if (gm.selectedUnit != null && unit != null && gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
         {
-            //Debug.Log("HOLA");
-            if (gm.selectedUnit.enemiesInRange.Contains(unit) && gm.selectedUnit.hasAttacked == false)
-            {
-                gm.selectedUnit.Attack(unit);
-            }
+            gm.selectedUnit.Attack(unit);
         }
-
     }
 
     void Attack(Unit enemy)
     {
         hasAttacked = true;
 
-        int damageDealt = attackStat - enemy.defenseStat; // DAÑO QUE HACEMOS AL ENEMIGO
-
-
-        if (damageDealt >= 1)
+        int damageDealt = attackStat - enemy.defenseStat;
+        if (damageDealt > 0)
         {
             DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
-
             instance.Setup(damageDealt);
             enemy.health -= damageDealt;
-
             enemy.UpdateKingHealth();
         }
 
@@ -123,39 +107,40 @@ public class Unit : MonoBehaviour
         if (health <= 0)
         {
             gm.ResetTiles();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
-
     }
 
     void GetWalkableTiles()
     {
-        if (hasMoved == true)
-        {
-            return;
-        }
+        if (hasMoved) return;
 
-        foreach(Tile tile in FindObjectsOfType<Tile>())
+        foreach (Tile tile in FindObjectsOfType<Tile>())
         {
-            if (Mathf.Abs(transform.position.x - tile.transform.position.x)  + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
+            if (transform.position.x == -1)
             {
-                if(tile.IsClear() == true)
+                Debug.Log("POSICION DEL TILE ES -1");
+            }
+
+            if (transform.position.x == myField.anchura)
+            {
+                Debug.Log("POSICION DEL TILE ES ANCHURA");
+            }
+
+            if (Mathf.Abs(transform.position.x - tile.transform.position.x) <= tileSpeed && Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed && tile.IsClear())
+            {
+                pathFinding.seekerUnit = this;
+                pathFinding.seeker = transform;
+                pathFinding.target = tile.transform;
+
+                pathFinding.FindPath(transform.position, tile.transform.position);
+
+                if (pathFinding.pathCounter <= tileSpeed)
                 {
                     tile.Highlight();
-                    //Debug.Log("mensaje");
                 }
             }
         }
-        
-        /*
-        for (int col = 0; col < myField.anchura; col++)
-        {
-            for (int row = 0; row < myField.altura; row++)
-            {
-                myField.arrayTile[col, row].Highlight();
-            }
-        }
-        */
     }
 
     public void GetEnemies()
@@ -164,14 +149,13 @@ public class Unit : MonoBehaviour
 
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
-            //Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(unit.transform.position.x, unit.transform.position.y))
-            if (Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(unit.transform.position.x, unit.transform.position.y)) <= attackRange * Mathf.Sqrt(2))
+            float distance = Vector2.Distance(transform.position, unit.transform.position);
+            if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
             {
-                if (unit.playerNumber != gm.playerTurn && hasAttacked == false)
-                {
-                    enemiesInRange.Add(unit);
-                    unit.weaponIcon.SetActive(true);
-                }
+                enemiesInRange.Add(unit);
+                unit.weaponIcon.SetActive(true);
+
+                myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
             }
         }
     }
@@ -181,35 +165,25 @@ public class Unit : MonoBehaviour
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
             unit.weaponIcon.SetActive(false);
-            /*
-            if (unit.weaponIcon != null)
-            {
-                unit.weaponIcon.SetActive(false);
-            }
-            */
         }
     }
+
     public void Move(Vector2 tilePos)
     {
         gm.ResetTiles();
+        pathFinding.FindPathMovement(transform.position, new Vector3(tilePos.x, tilePos.y, myField.depth));
         StartCoroutine(StartMovement(tilePos));
     }
 
-    IEnumerator StartMovement(Vector2 tilePos) {
-
-        while (transform.position.x != tilePos.x)
+    IEnumerator StartMovement(Vector2 tilePos)
+    {
+        foreach (Tile tile in pathFinding.pathMovement)
         {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(tilePos.x, transform.position.y), moveSpeed * Time.deltaTime);
-            yield return null;
-
-        }
-
-        while (transform.position.y != tilePos.y)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, tilePos.y), moveSpeed * Time.deltaTime);
-
-            yield return null;
-
+            while (transform.position.x != tile.transform.position.x || transform.position.y != tile.transform.position.y)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(tile.transform.position.x, tile.transform.position.y), moveSpeed * Time.deltaTime);
+                yield return null;
+            }
         }
 
         hasMoved = true;
@@ -221,4 +195,3 @@ public class Unit : MonoBehaviour
         GetEnemies();
     }
 }
-

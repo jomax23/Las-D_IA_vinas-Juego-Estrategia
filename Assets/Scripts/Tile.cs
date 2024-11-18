@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +6,6 @@ public class Tile : MonoBehaviour
 {
     private SpriteRenderer rend;
     public Sprite[] tileGraphics;
-
     public float hoverAmount;
 
     public LayerMask obstacleLayer;
@@ -17,7 +15,12 @@ public class Tile : MonoBehaviour
 
     public GameObject obstacleTree;
     public GameObject obstacleRock;
-    GameMaster gm;
+
+    public Vector3 worldPosition;
+    public int posX;
+    public int posY;
+
+    private GameMaster gm;
 
     public Color creatableColor;
     public bool isCreatable;
@@ -26,44 +29,61 @@ public class Tile : MonoBehaviour
     public bool canCreateObstacle = true;
     public bool isObstacleUncreatable = false;
 
+    public int gCost;
+    public int hCost;
+    public Tile parent;
+
+    private Pathfinding pathFinding;
+
     void Start()
     {
         rend = GetComponent<SpriteRenderer>();
-        int randTile = Random.Range(0, tileGraphics.Length);
-        rend.sprite = tileGraphics[randTile];
+        rend.sprite = tileGraphics[Random.Range(0, tileGraphics.Length)];
 
         gm = FindObjectOfType<GameMaster>();
+        worldPosition = transform.position;
+
+        pathFinding = FindObjectOfType<Pathfinding>();
     }
 
-    private void OnMouseEnter()
-    {
-        transform.localScale += Vector3.one * hoverAmount;
-    }
+    public int fCost => gCost + hCost;
 
-    private void OnMouseExit()
-    {
-        transform.localScale -= Vector3.one * hoverAmount;
-    }
+    private void OnMouseEnter() => transform.localScale += Vector3.one * hoverAmount;
 
-    public bool IsClear()
-    {
-        Collider2D obstacle = Physics2D.OverlapCircle(transform.position, 0.2f, obstacleLayer);
+    private void OnMouseExit() => transform.localScale -= Vector3.one * hoverAmount;
 
-        if(obstacle != null)
-        {
-            return false;
-        }
+    public bool IsClear() => Physics2D.OverlapCircle(transform.position, 0.2f, obstacleLayer) == null;
 
-        else
-        {
-            return true;
-        }
-    }
 
     public void Highlight()
     {
-        rend.color = highlightedColor;
-        isWalkable = true;
+        if (pathFinding != null)
+        {
+            rend.color = highlightedColor;
+            isWalkable = true;
+        }
+        else
+        {
+            rend.color = Color.black;
+        }
+
+        // Reset pathfinding-related data
+        pathFinding.target = null;
+        pathFinding.seekerUnit = null;
+        pathFinding.seeker = null;
+        pathFinding.pathCounter = 0;
+    }
+
+    public void HighlightAttackTile(int actualPlayerNumber)
+    {
+        if (actualPlayerNumber == 1)
+        {
+            rend.color = Color.blue;
+        }
+        else
+        {
+            rend.color = Color.red;
+        }
     }
 
     public void Reset()
@@ -75,7 +95,7 @@ public class Tile : MonoBehaviour
 
     public void SetCreatable()
     {
-        rend.color = highlightedColor;
+        rend.color = creatableColor;
         isCreatable = true;
     }
 
@@ -83,22 +103,24 @@ public class Tile : MonoBehaviour
     {
         if (isWalkable && gm.selectedUnit != null)
         {
-            gm.selectedUnit.Move(this.transform.position);
+            gm.selectedUnit.Move(transform.position);
         }
-
-        else if (isCreatable == true)
+        else if (isCreatable)
         {
-            BarrackItem item =  Instantiate(gm.purchasedItem, new Vector3(transform.position.x, transform.position.y, -5), Quaternion.identity);
-            gm.ResetTiles();
+            CreateBarrackItem();
+        }
+    }
 
-            Unit unit = item.GetComponent<Unit>();
+    private void CreateBarrackItem()
+    {
+        BarrackItem item = Instantiate(gm.purchasedItem, new Vector3(transform.position.x, transform.position.y, -5), Quaternion.identity);
+        gm.ResetTiles();
 
-            if (unit != null)
-            {
-                unit.hasMoved = true;
-                unit.hasAttacked = true;
-            }
+        Unit unit = item.GetComponent<Unit>();
+        if (unit != null)
+        {
+            unit.hasMoved = true;
+            unit.hasAttacked = true;
         }
     }
 }
-
