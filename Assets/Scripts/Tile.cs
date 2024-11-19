@@ -76,14 +76,11 @@ public class Tile : MonoBehaviour
 
     public void HighlightAttackTile(int actualPlayerNumber)
     {
-        if (actualPlayerNumber == 1)
-        {
+
             rend.color = Color.blue;
-        }
-        else
-        {
+
             rend.color = Color.red;
-        }
+        
     }
 
     public void Reset()

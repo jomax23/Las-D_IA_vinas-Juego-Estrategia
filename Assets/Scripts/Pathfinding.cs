@@ -83,15 +83,16 @@ public class Pathfinding : MonoBehaviour
 
         
         path.Reverse();
-        Debug.Log(path.Count);
+        //Debug.Log(path.Count);
         pathCounter = path.Count;
 
-        Debug.Log("CAMINO");
-
+        //Debug.Log("CAMINO");
+        /*
         foreach (Tile tile in path)
         {
             Debug.Log(tile.transform.position.x + ", " + tile.transform.position.y);
         }
+        */
 
         seekerUnit = null;
         seeker = null;

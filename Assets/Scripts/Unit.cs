@@ -146,10 +146,11 @@ public class Unit : MonoBehaviour
     public void GetEnemies()
     {
         enemiesInRange.Clear();
-
+        
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
             float distance = Vector2.Distance(transform.position, unit.transform.position);
+            //if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
             if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
             {
                 enemiesInRange.Add(unit);
@@ -158,6 +159,27 @@ public class Unit : MonoBehaviour
                 myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
             }
         }
+        
+        //ESTO DE AQUI ES PARA QUE VEAIS COMO PUEDE AFECTAR EL ATAQUE A UN AREA CIRCULAR EN LUGAR DE UN AREA CUADRADA COMO EL MOVIMIENTO, YA QUE EL PROBLEMA DE LA OTRA ES QUE PUEDE ATACAR A UN ENEMIGO EN DIAGONAL QUE ESTA MAS LEJOS QUE UNO QUE PUEDA ESTAR
+        //UNA CASILLA MAS ALEJADA DE SU RANGO DE ATAQUE EN EL EJE VERTICAL Y HORIZONTAL, YA QUE POR PITAGORAS SE SABE QUE LA DIAGONAL MIDE LADO * SQRT(2). LO PODEMOS CAMBIAR COMO QUERAIS QUE ES UN SEGUNDO HACERLO, ESTO LO PUEDO OPTIMIZAR TAMBIEN EN UN SEGUNDO QUE DE MOMENTO ESTA POCHA
+        //ESTE CODIGO QUE NO SE QUITE QUE PUEDE SERVIR ALGUNA COSILLA DE AQUI PARA HACER EL MAPA DE INFLUENCIAS
+        /*
+        foreach (Tile unit in FindObjectsOfType<Tile>())
+        {
+            float distance = Vector2.Distance(transform.position, unit.transform.position);
+            //if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
+            if (distance <= attackRange)
+            {
+                //enemiesInRange.Add(unit);
+                //unit.weaponIcon.SetActive(true);
+
+                myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
+            }
+        }
+        */
+
+        
+        
     }
 
     void ResetWeaponIcons()

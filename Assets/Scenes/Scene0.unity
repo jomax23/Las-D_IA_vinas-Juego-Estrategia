@@ -1550,13 +1550,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debaebc1c7649fb41a05fb845f532e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  depth: 5
   generadorDelMapa:
     prefab: {fileID: 2445037597648736328, guid: 71e16c72ad5694997b7ed5aab84a5750, type: 3}
     anchurasPosibles: 0e0000000f00000012000000
     alturasPosibles: 0a0000000c0000000f000000
   anchura: 0
   altura: 0
-  depth: 5
   path: []
   generadorDeObstaculos:
   - prefab: {fileID: 1706629476239711546, guid: 4d63e3192a7a94a59ab08bc2027d7be3, type: 3}
@@ -1572,29 +1572,24 @@ MonoBehaviour:
     maximaCantidad: 10
     orientacion: 2
   generadorDePersonajes:
-    prefabReyAliado: {fileID: 6542107707085821831, guid: c6b9d3e08b1e24d6a9205950a8386b5d, type: 3}
-    prefabReyEnemigo: {fileID: 6313888290563817257, guid: 46df0e1a724304b6f91dacb0d2b72725, type: 3}
-    listaDeAliados:
-    - prefab: {fileID: 5205237815304574374, guid: 54e996b86e207466e8e2cf0a3684cba2, type: 3}
+    generadorReyes:
+      prefabReyAliado: {fileID: 6542107707085821831, guid: c6b9d3e08b1e24d6a9205950a8386b5d, type: 3}
+      prefabReyEnemigo: {fileID: 6313888290563817257, guid: 46df0e1a724304b6f91dacb0d2b72725, type: 3}
+    generadorTanques:
+      prefabTanqueAliado: {fileID: 5205237815304574374, guid: 54e996b86e207466e8e2cf0a3684cba2, type: 3}
+      prefabTanqueEnemigo: {fileID: 237567536429048964, guid: bf50c9f0453a84a1f8e70b609f6d6f7b, type: 3}
+      minimaCantidad: 4
+      maximaCantidad: 8
+    generadorArqueros:
+      prefabArqueroAliado: {fileID: 154897429256349546, guid: 6d37bb996ce5043bc9a127540a29a1ad, type: 3}
+      prefabArqueroEnemigo: {fileID: 6198282042775486887, guid: 51eaef0a992214fce90beaa72fae6702, type: 3}
+      minimaCantidad: 4
+      maximaCantidad: 9
+    generadorSanadores:
+      prefabSanadorAliado: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
+      prefabSanadorEnemigo: {fileID: 6754446678692195979, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
       minimaCantidad: 3
-      maximaCantidad: 5
-    - prefab: {fileID: 154897429256349546, guid: 6d37bb996ce5043bc9a127540a29a1ad, type: 3}
-      minimaCantidad: 2
-      maximaCantidad: 5
-    - prefab: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
-      minimaCantidad: 2
-      maximaCantidad: 2
-    listaDeEnemigos:
-    - prefab: {fileID: 237567536429048964, guid: bf50c9f0453a84a1f8e70b609f6d6f7b, type: 3}
-      minimaCantidad: 3
-      maximaCantidad: 5
-    - prefab: {fileID: 6198282042775486887, guid: 51eaef0a992214fce90beaa72fae6702, type: 3}
-      minimaCantidad: 2
-      maximaCantidad: 5
-    - prefab: {fileID: 6754446678692195979, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
-      minimaCantidad: 2
-      maximaCantidad: 2
-  myKingTile: {fileID: 0}
+      maximaCantidad: 6
 --- !u!114 &520505529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1999,37 +1994,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 738557590}
   m_CullTransparentMesh: 1
---- !u!1 &791127008
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 791127009}
-  m_Layer: 0
-  m_Name: AStar
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &791127009
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 791127008}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.061333, y: 10.573932, z: 4.971847}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &808567266
 GameObject:
   m_ObjectHideFlags: 0
@@ -5394,4 +5358,3 @@ SceneRoots:
   - {fileID: 514668584}
   - {fileID: 1948923716}
   - {fileID: 643999909}
-  - {fileID: 791127009}
