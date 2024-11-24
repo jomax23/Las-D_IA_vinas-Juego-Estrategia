@@ -110,8 +110,16 @@ MonoBehaviour:
   isWalkable: 0
   obstacleTree: {fileID: 0}
   obstacleRock: {fileID: 0}
+  worldPosition: {x: 0, y: 0, z: 0}
+  posX: 0
+  posY: 0
   creatableColor: {r: 0.8584906, g: 0.16602883, b: 0.16602883, a: 0}
   isCreatable: 0
+  canCreateObstacle: 1
+  isObstacleUncreatable: 0
+  gCost: 0
+  hCost: 0
+  parent: {fileID: 0}
 --- !u!61 &5238758601743877929
 BoxCollider2D:
   m_ObjectHideFlags: 0

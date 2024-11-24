@@ -34,11 +34,12 @@ public class CameraPositionModifier : MonoBehaviour
 
 
         greaterDim = Mathf.Max(generatedField.generadorDelMapa.GetAnchura(), generatedField.generadorDelMapa.GetAltura());
-        
+        //greaterDim = generatedField.generadorDelMapa.GetAltura();
+
         //camera.orthographicSize = (greaterDim) * scaleFactor / 2;
 
         camera.orthographicSize = greaterDim / (scaleFactor * resolutionFactor);
-        
+        Debug.Log(camera.orthographicSize);
 
 
     }

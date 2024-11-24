@@ -74,13 +74,14 @@ public class Tile : MonoBehaviour
         pathFinding.pathCounter = 0;
     }
 
-    public void HighlightAttackTile(int actualPlayerNumber)
+    public void HighlightAttackTile(int enemyNumber)
     {
-
-            rend.color = Color.blue;
-
             rend.color = Color.red;
-        
+    }
+
+    public void HighlightHealthTile(int allyNumber)
+    {
+        rend.color = Color.blue;
     }
 
     public void Reset()

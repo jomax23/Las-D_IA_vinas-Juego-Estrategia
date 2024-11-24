@@ -1,54 +1,87 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static FieldObstacleGeneration;
 
 public class Unit : MonoBehaviour
 {
-    public bool selected;
-
     private GameMaster gm;
     private Pathfinding pathFinding;
 
-    public int tileSpeed;
-    public bool hasMoved;
-    public float moveSpeed;
-
+    [Header("EQUIPO DE LA UNIDAD")]
     public int playerNumber;
-    public int attackRange;
 
-    private List<Unit> enemiesInRange = new List<Unit>();
+    [Header("TIPO DE UNIDAD")]
+    public UnitType unitType;
 
-    public bool hasAttacked;
-    public GameObject weaponIcon;
+    [Header("STATS")]
+    public int tileSpeed;
 
     public int health;
     public int attackStat;
     public int defenseStat;
 
+    public int attackRange;
+
+    [Header("OBJETOS DE ATAQUE/CURACION")]
+    public ObjetosAtaqueYCuracion misObjetos;
+
+    [Header("EFECTOS TRAS ATACAR")]
+    public GameObject weaponIcon;
     public DamageIcon damageIcon;
+
+    [Header("TEXTO DE VIDA DEL REY")]
     public Text kingHealth;
 
-    public bool isKing;
-    public int layer = 0;
+    [HideInInspector]
+    public bool hasMoved;
+
+    [HideInInspector]
+    public float moveSpeed;
+
+    [HideInInspector]
+    public bool hasAttacked;
+
+    [HideInInspector]
+    public bool selected;
+
+    private int layer = 0;
+
+    private List<Unit> enemiesInRange = new List<Unit>();
 
     private FieldObstacleGeneration myField;
-    private List<Tile> myPathToObjective;
 
+    //private GameObject miItem;
     private void Start()
     {
         gm = FindObjectOfType<GameMaster>();
         myField = FindObjectOfType<FieldObstacleGeneration>();
         pathFinding = FindObjectOfType<Pathfinding>();
-        UpdateKingHealth();
+        /*
+        if(unitType == UnitType.Archer)
+        {
+            miItem = misObjetos.flecha;
+        }
+        */
+        //UpdateKingHealth();
+    }
+
+    public enum UnitType
+    {
+        King,
+        Tank,
+        Archer,
+        Healer
     }
 
     public void UpdateKingHealth()
     {
-        if (isKing)
+        if (unitType == UnitType.King)
         {
             // Un-comment this line if you want to display king's health in the UI
-            // kingHealth.text = health.ToString();
+            kingHealth.text = health.ToString();
         }
     }
 
@@ -90,24 +123,35 @@ public class Unit : MonoBehaviour
         hasAttacked = true;
 
         int damageDealt = attackStat - enemy.defenseStat;
-        if (damageDealt > 0)
+        if(unitType == UnitType.Archer)
         {
-            DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
-            instance.Setup(damageDealt);
-            enemy.health -= damageDealt;
-            enemy.UpdateKingHealth();
+            GameObject instance = Instantiate(misObjetos.flecha, transform.position, Quaternion.identity);
+
+            StartCoroutine(StartMovementItem(instance, enemy, damageDealt));
+            
         }
 
-        if (enemy.health <= 0)
+        else
         {
-            Destroy(enemy.gameObject);
-            GetWalkableTiles();
-        }
+            if (damageDealt > 0)
+            {
+                DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
+                instance.Setup(damageDealt);
+                enemy.health -= damageDealt;
+                enemy.UpdateKingHealth();
+            }
 
-        if (health <= 0)
-        {
-            gm.ResetTiles();
-            Destroy(gameObject);
+            if (enemy.health <= 0)
+            {
+                Destroy(enemy.gameObject);
+                GetWalkableTiles();
+            }
+
+            if (health <= 0)
+            {
+                gm.ResetTiles();
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -115,31 +159,28 @@ public class Unit : MonoBehaviour
     {
         if (hasMoved) return;
 
-        foreach (Tile tile in FindObjectsOfType<Tile>())
-        {
-            if (transform.position.x == -1)
+        List<Tile> reachableTileList = new List<Tile>();
+
+
+            for(int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
             {
-                Debug.Log("POSICION DEL TILE ES -1");
-            }
-
-            if (transform.position.x == myField.anchura)
-            {
-                Debug.Log("POSICION DEL TILE ES ANCHURA");
-            }
-
-            if (Mathf.Abs(transform.position.x - tile.transform.position.x) <= tileSpeed && Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed && tile.IsClear())
-            {
-                pathFinding.seekerUnit = this;
-                pathFinding.seeker = transform;
-                pathFinding.target = tile.transform;
-
-                pathFinding.FindPath(transform.position, tile.transform.position);
-
-                if (pathFinding.pathCounter <= tileSpeed)
+                for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
                 {
-                    tile.Highlight();
+                    if(i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
+                    {
+                        if ((int)transform.position.x != i || (int)transform.position.y != j)
+                        {
+                            Debug.Log(i + ", " + j);
+                            reachableTileList.Add(myField.arrayTile[i, j]);
+                        }
+                    }
                 }
             }
+        
+
+        foreach (Tile tile in reachableTileList)
+        {
+            pathFinding.FindPath(this, tile.transform.position);
         }
     }
 
@@ -210,10 +251,51 @@ public class Unit : MonoBehaviour
 
         hasMoved = true;
 
-        layer = (int)tilePos.y;
+        layer = (int)tilePos.y + 1;
 
         ResetWeaponIcons();
 
         GetEnemies();
+    }
+
+    IEnumerator StartMovementItem(GameObject item, Unit enemy, int damageDealt)
+    {
+        Vector2 tilePos = enemy.transform.position;
+
+        while (item.transform.position.x != tilePos.x || item.transform.position.y != tilePos.y)
+        {
+            item.transform.position = Vector2.MoveTowards(item.transform.position, tilePos, moveSpeed * 2 * Time.deltaTime);
+            yield return null;
+        }
+
+        layer = (int)tilePos.y + 1;
+        Destroy(item);
+
+        if (damageDealt > 0)
+        {
+            DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
+            instance.Setup(damageDealt);
+            enemy.health -= damageDealt;
+            enemy.UpdateKingHealth();
+        }
+
+        if (enemy.health <= 0)
+        {
+            Destroy(enemy.gameObject);
+            GetWalkableTiles();
+        }
+
+        if (health <= 0)
+        {
+            gm.ResetTiles();
+            Destroy(gameObject);
+        }
+    }
+
+    [System.Serializable]
+    public class ObjetosAtaqueYCuracion
+    {
+        public GameObject flecha;
+        public GameObject curacion;
     }
 }

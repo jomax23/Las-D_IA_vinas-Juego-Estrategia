@@ -956,7 +956,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.8734163, y: 0.8734163}
   m_EdgeRadius: 0
 --- !u!114 &1430857086897192066
 MonoBehaviour:
@@ -970,21 +970,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a5f62e989774b30bf472b123f3f082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selected: 0
-  tileSpeed: 3
-  hasMoved: 0
-  moveSpeed: 5
   playerNumber: 1
-  attackRange: 8
-  hasAttacked: 0
-  weaponIcon: {fileID: 7212956247754808106}
-  health: 15
+  unitType: 2
+  tileSpeed: 3
+  maxHealth: 10
   attackStat: 5
   defenseStat: 3
+  health: 15
+  attackRange: 8
+  misObjetos:
+    flecha: {fileID: 7782567485386129484, guid: aa489e083d75fa24384907f6b265ec0e, type: 3}
+    curacion: {fileID: 7782567485386129484, guid: 3917158283f4950449fcbd7d3a7f2cab, type: 3}
+  weaponIcon: {fileID: 7212956247754808106}
+  healthIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
-  isKing: 0
-  layer: 0
+  hasMoved: 0
+  moveSpeed: 5
+  hasAttacked: 0
+  selected: 0
 --- !u!114 &-5686153449871086417
 MonoBehaviour:
   m_ObjectHideFlags: 0

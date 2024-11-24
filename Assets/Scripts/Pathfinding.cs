@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 public class Pathfinding : MonoBehaviour
 {
@@ -19,9 +20,10 @@ public class Pathfinding : MonoBehaviour
         
     }
 
-    public void FindPath(Vector3 startPos, Vector3 targetPos)
+    public void FindPath(Unit unit, Vector3 targetPos)
     {
-        Tile startTile = grid.arrayTile[(int)startPos.x, (int)startPos.y];
+        //pathCounter = 0;
+        Tile startTile = grid.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y];
         Tile targetTile = grid.arrayTile[(int)targetPos.x, (int)targetPos.y];
 
         List<Tile> openSet = new List<Tile>();
@@ -45,7 +47,7 @@ public class Pathfinding : MonoBehaviour
 
             if (tile == targetTile)
             {
-                RetracePath(startTile, targetTile);
+                RetracePath(startTile, targetTile, unit.tileSpeed);
                 return;
             }
 
@@ -64,13 +66,21 @@ public class Pathfinding : MonoBehaviour
                     neighbour.parent = tile;
 
                     if (!openSet.Contains(neighbour))
+                    {
                         openSet.Add(neighbour);
+                    }
+
+                    else if (tile != targetTile && pathCounter >= unit.tileSpeed)
+                    {
+                        pathCounter = 0;
+                        return;
+                    }
                 }
             }
         }
     }
 
-    void RetracePath(Tile startTile, Tile endTile)
+    void RetracePath(Tile startTile, Tile endTile, int tileSpeed)
     {
         List<Tile> path = new List<Tile>();
         Tile currentTile = endTile;
@@ -78,26 +88,23 @@ public class Pathfinding : MonoBehaviour
         while (currentTile != startTile)
         {
             path.Add(currentTile);
+            pathCounter++;
             currentTile = currentTile.parent;
         }
 
         
         path.Reverse();
-        //Debug.Log(path.Count);
+
         pathCounter = path.Count;
 
-        //Debug.Log("CAMINO");
-        /*
-        foreach (Tile tile in path)
+        if(pathCounter <= tileSpeed)
         {
-            Debug.Log(tile.transform.position.x + ", " + tile.transform.position.y);
+            endTile.Highlight();
         }
-        */
 
         seekerUnit = null;
         seeker = null;
         target = null;
-
     }
 
     public void FindPathMovement(Vector3 startPos, Vector3 targetPos)

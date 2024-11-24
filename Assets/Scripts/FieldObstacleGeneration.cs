@@ -58,8 +58,9 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                 if((c == 0 || c == anchura -1) && r != altura / 2)
                 {
-                    tileScript.isWalkable = false;
-                    item.SetActive(false);
+                    item = Instantiate(generadorDeObstaculos[2].prefab, new Vector3(c, r, depth), Quaternion.identity);
+                    //tileScript.isWalkable = false;
+                    //item.SetActive(false);
                 }
                 
                 arrayTile[c, r] = tileScript;
@@ -320,17 +321,6 @@ public class FieldObstacleGeneration : MonoBehaviour
                 }
 
                 lista.Clear();
-
-                /*
-                for (int r = 0; r < altura; r++)
-                {
-                    if (r != altura / 2)
-                    {
-                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[0, r].transform.position.x, (int)arrayTile[0, r].transform.position.y, depth), Quaternion.identity);
-                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[arrayTile.GetLength(0) - 1, r].transform.position.x, (int)arrayTile[arrayTile.GetLength(0) - 1, r].transform.position.y, depth), Quaternion.identity);
-                    }
-                }
-                */
                 
 
                 for (int r = 0; r < altura; r++)
@@ -476,7 +466,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                 row = (int)lista[randIndex].y;
 
                 item = Instantiate(generadorDePersonajes.generadorTanques.prefabTanqueEnemigo, new Vector2(col, row), Quaternion.identity);
-
+                
                 lista.Remove(new Vector2(col, row));
             }
         }
@@ -521,6 +511,7 @@ public class FieldObstacleGeneration : MonoBehaviour
         UnoXUno
     }
 
+
     public List<Tile> GetNeighbours(Tile tile)
     {
         List<Tile> neighbours = new List<Tile>();
@@ -545,6 +536,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         return neighbours;
     }
+    
 
     [System.Serializable]
     public class GeneradorMapa
