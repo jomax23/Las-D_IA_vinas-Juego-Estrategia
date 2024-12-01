@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    public float influenceValue;
+
     private SpriteRenderer rend;
     public Sprite[] tileGraphics;
     public float hoverAmount;
@@ -33,6 +35,8 @@ public class Tile : MonoBehaviour
     public int hCost;
     public Tile parent;
 
+    public bool visited;
+
     private Pathfinding pathFinding;
 
     void Start()
@@ -60,7 +64,32 @@ public class Tile : MonoBehaviour
         if (pathFinding != null)
         {
             rend.color = highlightedColor;
+            
             isWalkable = true;
+            //visited = true;
+        }
+        else
+        {
+            rend.color = Color.black;
+        }
+
+        // Reset pathfinding-related data
+        pathFinding.target = null;
+        pathFinding.seekerUnit = null;
+        pathFinding.seeker = null;
+        pathFinding.pathCounter = 0;
+    }
+
+    public void HighlightInfluence(int value)
+    {
+        if (pathFinding != null)
+        {
+            rend.color = highlightedColor / value;
+
+            isWalkable = true;
+
+            //rend.color = highlightedColor;
+            //visited = true;
         }
         else
         {

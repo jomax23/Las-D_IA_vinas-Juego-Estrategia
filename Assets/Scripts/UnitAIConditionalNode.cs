@@ -18,7 +18,7 @@ public class UnitAIConditionalNode : UnitAINode
         switch (ct)
         {
             case ConditionalType.LowHealth:
-                return u.health < 4;
+                return u.health < 4;// * factor;
 
             case ConditionalType.KingLowHealth:
                 return true;

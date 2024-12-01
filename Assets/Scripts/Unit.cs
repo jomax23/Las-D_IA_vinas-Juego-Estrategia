@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static FieldObstacleGeneration;
+using static UnityEditor.PlayerSettings;
 
 public class Unit : MonoBehaviour
 {
@@ -12,6 +13,12 @@ public class Unit : MonoBehaviour
     private GameMaster gm;
     private Pathfinding pathFinding;
 
+    //influenceStrength unidades aliadas sera negativa, y la de los enemigos positiva
+    public float influenceStrength;
+    /*
+    public Vector2Int Position { get; set; }
+    public Vector2Int Direction { get; set; }
+    */
     [Header("EQUIPO DE LA UNIDAD")]
     public int playerNumber;
 
@@ -61,6 +68,7 @@ public class Unit : MonoBehaviour
         gm = FindObjectOfType<GameMaster>();
         myField = FindObjectOfType<FieldObstacleGeneration>();
         pathFinding = FindObjectOfType<Pathfinding>();
+        SetInfluenceTiles();
         /*
         if(unitType == UnitType.Archer)
         {
@@ -127,6 +135,7 @@ public class Unit : MonoBehaviour
         hasAttacked = true;
 
         int damageDealt = attackStat - enemy.defenseStat;
+
         if(unitType == UnitType.Archer)
         {
             GameObject instance = Instantiate(misObjetos.flecha, transform.position, Quaternion.identity);
@@ -158,6 +167,8 @@ public class Unit : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+
+        SetInfluenceTiles();
     }
 
     void GetWalkableTiles()
@@ -166,29 +177,103 @@ public class Unit : MonoBehaviour
 
         List<Tile> reachableTileList = new List<Tile>();
 
-
-            for(int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
+        
+        for(int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
+        {
+            for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
             {
-                for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
+                if(i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
                 {
-                    if(i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
+                    if ((int)transform.position.x != i || (int)transform.position.y != j)
                     {
-                        if ((int)transform.position.x != i || (int)transform.position.y != j)
-                        {
-                            Debug.Log(i + ", " + j);
-                            reachableTileList.Add(myField.arrayTile[i, j]);
-                        }
+                        Debug.Log(i + ", " + j);
+                        reachableTileList.Add(myField.arrayTile[i, j]);
                     }
                 }
             }
-        
+        }
 
+        
+        
         foreach (Tile tile in reachableTileList)
         {
             pathFinding.FindPath(this, tile.transform.position);
         }
     }
 
+    public void SetInfluenceTiles()
+    {
+        
+        int myCol;
+        int myRow;
+
+        //SOLO PARA LOS TILES VECINOS A LA UNIDAD
+        myCol = (int)transform.position.x - 1;
+        myRow = (int)transform.position.y + 1;
+
+        for (int i = 1; i <= myField.anchura * myField.altura; i++)
+        {
+            myCol = (int)transform.position.x - i;
+            myRow = (int)transform.position.y + i;
+
+            if (myRow >= 0 && myRow < myField.altura)
+            {
+                for (int col = myCol; col < (int)transform.position.x + i; col++)
+                {
+                    if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())
+                    {
+                        myField.arrayTile[col, myRow].influenceValue += influenceStrength/i;
+                        Debug.Log(influenceStrength / i);
+                    }
+                    
+                }
+            }
+
+            myCol = (int)transform.position.x + i;
+
+            if (myCol >= 0 && myCol < myField.anchura)
+            {
+                for (int row = myRow; row > (int)transform.position.y - i; row--)
+                {
+                    if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())
+                    {
+                        myField.arrayTile[myCol, row].influenceValue += influenceStrength/i;
+                        Debug.Log(influenceStrength / i);
+                    }
+                }
+            }
+
+            myRow = (int)transform.position.y - i;
+
+            if (myRow >= 0 && myRow < myField.altura)
+            {
+                for (int col = myCol; col > (int)transform.position.x - i; col--)
+                {
+                    if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())
+                    {
+                        myField.arrayTile[col, myRow].influenceValue += influenceStrength / i;
+                        Debug.Log(influenceStrength / i);
+                    }
+                }
+            }
+
+            myCol = (int)transform.position.x - i;
+
+            if (myCol >= 0 && myCol < myField.anchura)
+            {
+                for (int row = myRow; row < (int)transform.position.y + i; row++)
+                {
+                    if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())
+                    {
+                        myField.arrayTile[myCol, row].influenceValue += influenceStrength / i;
+                        Debug.Log(influenceStrength / i);
+                    }
+                }
+            }
+
+            //myRow = (int)transform.position.y + i;
+        }
+    }
     public void GetEnemies()
     {
         enemiesInRange.Clear();
@@ -224,8 +309,8 @@ public class Unit : MonoBehaviour
         }
         */
 
-        
-        
+
+
     }
 
     void ResetWeaponIcons()
@@ -266,6 +351,8 @@ public class Unit : MonoBehaviour
         GetEnemies();
         
         gm.somethingIsMoving = false;
+
+        SetInfluenceTiles();
     }
 
     IEnumerator StartMovementItem(GameObject item, Unit enemy, int damageDealt)
@@ -304,6 +391,7 @@ public class Unit : MonoBehaviour
         }
 
         gm.somethingIsMoving = false;
+        SetInfluenceTiles();
         //gm.somethingIsMoving = false;
     }
 
