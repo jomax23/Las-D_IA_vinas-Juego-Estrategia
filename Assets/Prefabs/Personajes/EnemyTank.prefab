@@ -191,19 +191,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a5f62e989774b30bf472b123f3f082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionRequested: 0
+  influenceStrength: 4
+  influenceAreaRadius: 4
   playerNumber: 2
   unitType: 1
   tileSpeed: 3
-  maxHealth: 20
+  health: 15
   attackStat: 5
   defenseStat: 3
-  health: 15
   attackRange: 4
   misObjetos:
     flecha: {fileID: 7782567485386129484, guid: aa489e083d75fa24384907f6b265ec0e, type: 3}
     curacion: {fileID: 7782567485386129484, guid: 3917158283f4950449fcbd7d3a7f2cab, type: 3}
-  weaponIcon: {fileID: 6197232815059065559}
-  healthIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   damageIcon: {fileID: 5111775242311746823, guid: ad571ab556446e246881af81b6e58aca, type: 3}
   kingHealth: {fileID: 0}
   hasMoved: 0

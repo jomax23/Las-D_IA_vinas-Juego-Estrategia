@@ -128,13 +128,22 @@ public class GameMaster : MonoBehaviour
 
         ResetTiles();
 
-        foreach(Unit unit in FindObjectsOfType<Unit>())
+        GetComponent<Barrack>().CloseMenus();
+
+        foreach (Tile tile in FindObjectsOfType<Tile>())
+        {
+            tile.ResetInfluences();
+        }
+        //ACTUALMENTE ESTO LO HE PUESTO EN OTRO LUGAR, PARA QUE SE EJECUTE CADA VEZ QUE EL USUARIO HA REALIZADO UNA ACCION COMO MOVERSE, ATACAR O CURAR, PERO SE PODRIA PONER AQUI, DEPENDE DE LO QUE QUERAIS
+
+        /*
+        foreach (Unit unit in FindObjectsOfType<Unit>())
         {
             unit.hasMoved = false;
             //unit.weaponIcon.SetActive(false);
             unit.hasAttacked = false;
+            unit.SetInfluenceTiles();
         }
-
-        GetComponent<Barrack>().CloseMenus();
+        */
     }
 }

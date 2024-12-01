@@ -116,8 +116,16 @@ public class Tile : MonoBehaviour
     public void Reset()
     {
         rend.color = Color.white;
+        
         isWalkable = false;
         isCreatable = false;
+
+        //influenceValue = 0;
+    }
+
+    public void ResetInfluences()
+    {
+        influenceValue = 0;
     }
 
     public void SetCreatable()

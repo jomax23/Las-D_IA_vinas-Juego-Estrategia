@@ -15,6 +15,7 @@ public class Unit : MonoBehaviour
 
     //influenceStrength unidades aliadas sera negativa, y la de los enemigos positiva
     public float influenceStrength;
+    public int influenceAreaRadius;
     /*
     public Vector2Int Position { get; set; }
     public Vector2Int Direction { get; set; }
@@ -166,9 +167,11 @@ public class Unit : MonoBehaviour
                 gm.ResetTiles();
                 Destroy(gameObject);
             }
+
+            UpdateInfluenceMap();
         }
 
-        SetInfluenceTiles();
+        
     }
 
     void GetWalkableTiles()
@@ -186,7 +189,7 @@ public class Unit : MonoBehaviour
                 {
                     if ((int)transform.position.x != i || (int)transform.position.y != j)
                     {
-                        Debug.Log(i + ", " + j);
+                        //Debug.Log(i + ", " + j);
                         reachableTileList.Add(myField.arrayTile[i, j]);
                     }
                 }
@@ -211,7 +214,7 @@ public class Unit : MonoBehaviour
         myCol = (int)transform.position.x - 1;
         myRow = (int)transform.position.y + 1;
 
-        for (int i = 1; i <= myField.anchura * myField.altura; i++)
+        for (int i = 1; i <= influenceAreaRadius; i++)
         {
             myCol = (int)transform.position.x - i;
             myRow = (int)transform.position.y + i;
@@ -223,7 +226,7 @@ public class Unit : MonoBehaviour
                     if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())
                     {
                         myField.arrayTile[col, myRow].influenceValue += influenceStrength/i;
-                        Debug.Log(influenceStrength / i);
+                        Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
                     }
                     
                 }
@@ -238,7 +241,7 @@ public class Unit : MonoBehaviour
                     if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())
                     {
                         myField.arrayTile[myCol, row].influenceValue += influenceStrength/i;
-                        Debug.Log(influenceStrength / i);
+                        Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                     }
                 }
             }
@@ -252,7 +255,7 @@ public class Unit : MonoBehaviour
                     if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())
                     {
                         myField.arrayTile[col, myRow].influenceValue += influenceStrength / i;
-                        Debug.Log(influenceStrength / i);
+                        Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
                     }
                 }
             }
@@ -266,7 +269,7 @@ public class Unit : MonoBehaviour
                     if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())
                     {
                         myField.arrayTile[myCol, row].influenceValue += influenceStrength / i;
-                        Debug.Log(influenceStrength / i);
+                        Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                     }
                 }
             }
@@ -352,7 +355,9 @@ public class Unit : MonoBehaviour
         
         gm.somethingIsMoving = false;
 
-        SetInfluenceTiles();
+        //SetInfluenceTiles();
+
+        UpdateInfluenceMap();
     }
 
     IEnumerator StartMovementItem(GameObject item, Unit enemy, int damageDealt)
@@ -391,10 +396,26 @@ public class Unit : MonoBehaviour
         }
 
         gm.somethingIsMoving = false;
-        SetInfluenceTiles();
+
+        UpdateInfluenceMap();
         //gm.somethingIsMoving = false;
     }
 
+    public void UpdateInfluenceMap()
+    {
+        foreach (Tile tile in FindObjectsOfType<Tile>())
+        {
+            tile.ResetInfluences();
+        }
+
+        foreach (Unit unit in FindObjectsOfType<Unit>())
+        {
+            unit.hasMoved = false;
+            //unit.weaponIcon.SetActive(false);
+            unit.hasAttacked = false;
+            unit.SetInfluenceTiles();
+        }
+    }
     [System.Serializable]
     public class ObjetosAtaqueYCuracion
     {

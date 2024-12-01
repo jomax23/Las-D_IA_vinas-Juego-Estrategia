@@ -3057,6 +3057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionRequested: 0
   influenceStrength: 3
+  influenceAreaRadius: 4
   playerNumber: 2
   unitType: 2
   tileSpeed: 5
