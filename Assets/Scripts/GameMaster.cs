@@ -95,7 +95,9 @@ public class GameMaster : MonoBehaviour
 
             if (selectedUnit != null)
             {
+                //ESTO YO NO QUIERO QUE SE VEA, YO NO QUIERO ):
                 selectedUnitSquare.SetActive(true);
+                //selectedUnitSquare.Set
                 selectedUnitSquare.transform.position = selectedUnit.transform.position;
             }
 
@@ -134,16 +136,13 @@ public class GameMaster : MonoBehaviour
         {
             tile.ResetInfluences();
         }
-        //ACTUALMENTE ESTO LO HE PUESTO EN OTRO LUGAR, PARA QUE SE EJECUTE CADA VEZ QUE EL USUARIO HA REALIZADO UNA ACCION COMO MOVERSE, ATACAR O CURAR, PERO SE PODRIA PONER AQUI, DEPENDE DE LO QUE QUERAIS
 
-        /*
+        
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
             unit.hasMoved = false;
             //unit.weaponIcon.SetActive(false);
             unit.hasAttacked = false;
-            unit.SetInfluenceTiles();
         }
-        */
     }
 }

@@ -171,7 +171,9 @@ public class Unit : MonoBehaviour
             UpdateInfluenceMap();
         }
 
-        
+        gm.ResetTiles();
+
+
     }
 
     void GetWalkableTiles()
@@ -410,9 +412,7 @@ public class Unit : MonoBehaviour
 
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
-            unit.hasMoved = false;
             //unit.weaponIcon.SetActive(false);
-            unit.hasAttacked = false;
             unit.SetInfluenceTiles();
         }
     }
