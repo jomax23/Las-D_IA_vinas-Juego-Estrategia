@@ -19,7 +19,7 @@ public class Barrack : MonoBehaviour
     private void Start()
     {
         gm = GetComponent<GameMaster>();
-        //fieldObstacleGenerator = GetComponent<FieldObstacleGeneration>();
+        fieldObstacleGenerator = FindObjectOfType<FieldObstacleGeneration>();
     }
 
     // Update is called once per frame
@@ -55,24 +55,34 @@ public class Barrack : MonoBehaviour
 
         if (gm.playerTurn == 1 && item.cost <= gm.player1Gold)
         {
-            if (fieldObstacleGenerator.arrayTile[0, fieldObstacleGenerator.generadorDelMapa.GetAltura() - 1].IsClear())
+            if (fieldObstacleGenerator.arrayTile[1, fieldObstacleGenerator.altura - 1].IsClear())
             {
                 gm.player1Gold -= item.cost;
-                BarrackItem itemBought = Instantiate(gm.purchasedItem, new Vector3(0, fieldObstacleGenerator.generadorDelMapa.GetAltura() - 1, -5), Quaternion.identity);
+                BarrackItem itemBought = Instantiate(gm.purchasedItem, new Vector3(1, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
+                player1Menu.SetActive(false);
             }
 
-            player1Menu.SetActive(false);
+            else
+            {
+                print("CELDA OCUPADA, NO SE PUEDE CREAR UNIDAD");
+                return;
+            }
         }
 
         else if (gm.playerTurn == 2 && item.cost <= gm.player2Gold)
         {
-            if (fieldObstacleGenerator.arrayTile[fieldObstacleGenerator.generadorDelMapa.GetAnchura() - 1, fieldObstacleGenerator.generadorDelMapa.GetAltura() - 1].IsClear())
+            if (fieldObstacleGenerator.arrayTile[fieldObstacleGenerator.anchura - 2, fieldObstacleGenerator.altura - 1].IsClear())
             {
                 gm.player2Gold -= item.cost;
-                BarrackItem iitemBought = Instantiate(gm.purchasedItem, new Vector3(fieldObstacleGenerator.generadorDelMapa.GetAnchura() - 1, fieldObstacleGenerator.generadorDelMapa.GetAltura() - 1, -5), Quaternion.identity);
+                BarrackItem iitemBought = Instantiate(gm.purchasedItem, new Vector3(fieldObstacleGenerator.anchura - 2, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
+                player2Menu.SetActive(false);
             }
 
-            player2Menu.SetActive(false);
+            else
+            {
+                print("CELDA OCUPADA, NO SE PUEDE CREAR UNIDAD");
+                return;
+            }
         }
 
         else
@@ -89,21 +99,23 @@ public class Barrack : MonoBehaviour
             gm.selectedUnit = null;
         }
         
-        GetCreatableTiles(gm.playerTurn);
+        //GetCreatableTiles(gm.playerTurn);
         
     }
 
+    /*
     void GetCreatableTiles(int playerTurn)
     {
         
-        /*
-        foreach (Tile tile in FindObjectsOfType<Tile>())
-        {
-            if(tile.IsClear())
-            {
-                tile.SetCreatable();
-            }
-        }
-        */
+        
+        //foreach (Tile tile in FindObjectsOfType<Tile>())
+        //{
+            //if(tile.IsClear())
+            //{
+                //tile.SetCreatable();
+            //}
+        //}
+        
     }
+    */
 }

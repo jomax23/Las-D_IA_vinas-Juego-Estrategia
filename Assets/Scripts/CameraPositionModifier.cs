@@ -39,9 +39,7 @@ public class CameraPositionModifier : MonoBehaviour
         //camera.orthographicSize = (greaterDim) * scaleFactor / 2;
 
         camera.orthographicSize = greaterDim / (scaleFactor * resolutionFactor);
-        Debug.Log(camera.orthographicSize);
-
-
+        //Debug.Log(camera.orthographicSize);
     }
 
     // Update is called once per frame

@@ -7,6 +7,8 @@ using static FieldObstacleGeneration;
 
 public class Unit : MonoBehaviour
 {
+    public UnitAINodeAction.ActionType actionRequested;
+
     private GameMaster gm;
     private Pathfinding pathFinding;
 
@@ -29,7 +31,7 @@ public class Unit : MonoBehaviour
     public ObjetosAtaqueYCuracion misObjetos;
 
     [Header("EFECTOS TRAS ATACAR")]
-    public GameObject weaponIcon;
+    //public GameObject weaponIcon;
     public DamageIcon damageIcon;
 
     [Header("TEXTO DE VIDA DEL REY")]
@@ -87,6 +89,7 @@ public class Unit : MonoBehaviour
 
     private void OnMouseDown()
     {
+        //gm.SomethingIsMoving();
         ResetWeaponIcons();
 
         if (selected)
@@ -112,6 +115,7 @@ public class Unit : MonoBehaviour
         // Check for enemy attack
         Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
         Unit unit = col?.GetComponent<Unit>();
+
         if (gm.selectedUnit != null && unit != null && gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
         {
             gm.selectedUnit.Attack(unit);
@@ -126,8 +130,9 @@ public class Unit : MonoBehaviour
         if(unitType == UnitType.Archer)
         {
             GameObject instance = Instantiate(misObjetos.flecha, transform.position, Quaternion.identity);
-
+            gm.somethingIsMoving = true;
             StartCoroutine(StartMovementItem(instance, enemy, damageDealt));
+            //if(StartMovementItem.hasEnded)
             
         }
 
@@ -195,7 +200,7 @@ public class Unit : MonoBehaviour
             if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
             {
                 enemiesInRange.Add(unit);
-                unit.weaponIcon.SetActive(true);
+                //unit.weaponIcon.SetActive(true);
 
                 myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
             }
@@ -227,15 +232,18 @@ public class Unit : MonoBehaviour
     {
         foreach (Unit unit in FindObjectsOfType<Unit>())
         {
-            unit.weaponIcon.SetActive(false);
+            //unit.weaponIcon.SetActive(false);
         }
     }
 
     public void Move(Vector2 tilePos)
     {
+        gm.somethingIsMoving = true;
+        //gm.SomethingIsMoving(true);
         gm.ResetTiles();
         pathFinding.FindPathMovement(transform.position, new Vector3(tilePos.x, tilePos.y, myField.depth));
         StartCoroutine(StartMovement(tilePos));
+        //gm.somethingIsMoving = false;
     }
 
     IEnumerator StartMovement(Vector2 tilePos)
@@ -250,16 +258,20 @@ public class Unit : MonoBehaviour
         }
 
         hasMoved = true;
-
+        //gm.somethingIsMoving = false;
         layer = (int)tilePos.y + 1;
 
         ResetWeaponIcons();
 
         GetEnemies();
+        
+        gm.somethingIsMoving = false;
     }
 
     IEnumerator StartMovementItem(GameObject item, Unit enemy, int damageDealt)
     {
+        gm.somethingIsMoving = true;
+
         Vector2 tilePos = enemy.transform.position;
 
         while (item.transform.position.x != tilePos.x || item.transform.position.y != tilePos.y)
@@ -290,6 +302,9 @@ public class Unit : MonoBehaviour
             gm.ResetTiles();
             Destroy(gameObject);
         }
+
+        gm.somethingIsMoving = false;
+        //gm.somethingIsMoving = false;
     }
 
     [System.Serializable]

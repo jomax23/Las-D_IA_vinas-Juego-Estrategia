@@ -26,6 +26,9 @@ public class GameMaster : MonoBehaviour
 
     public BarrackItem purchasedItem;
 
+    [HideInInspector]
+    public bool somethingIsMoving = false;
+
     private void Start()
     {
         //GetGoldIncome(1);
@@ -78,24 +81,29 @@ public class GameMaster : MonoBehaviour
     }
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            EndTurn();
-            GetGoldIncome(playerTurn);
-            
-        }
 
-        if(selectedUnit != null)
+        if (somethingIsMoving == false)
         {
-            selectedUnitSquare.SetActive(true);
-            selectedUnitSquare.transform.position = selectedUnit.transform.position;
-        }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                //Debug.Log(somethingIsMoving);
+                //gm.SomethingIsMoving();
+                EndTurn();
+                GetGoldIncome(playerTurn);
 
-        else
-        {
-            selectedUnitSquare.SetActive(false);
+            }
+
+            if (selectedUnit != null)
+            {
+                selectedUnitSquare.SetActive(true);
+                selectedUnitSquare.transform.position = selectedUnit.transform.position;
+            }
+
+            else
+            {
+                selectedUnitSquare.SetActive(false);
+            }
         }
-           
     }
 
     void EndTurn()
@@ -123,7 +131,7 @@ public class GameMaster : MonoBehaviour
         foreach(Unit unit in FindObjectsOfType<Unit>())
         {
             unit.hasMoved = false;
-            unit.weaponIcon.SetActive(false);
+            //unit.weaponIcon.SetActive(false);
             unit.hasAttacked = false;
         }
 

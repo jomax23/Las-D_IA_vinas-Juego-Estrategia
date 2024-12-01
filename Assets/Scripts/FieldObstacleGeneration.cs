@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
-using Color = UnityEngine.Color;
 
 public class FieldObstacleGeneration : MonoBehaviour
 {
@@ -66,9 +65,6 @@ public class FieldObstacleGeneration : MonoBehaviour
                 arrayTile[c, r] = tileScript;
             }
         }
-
-        arrayTile[1, altura - 1].canCreateObstacle = false;
-        arrayTile[anchura - 1, altura - 1].canCreateObstacle = false;
 
         int columna = columnasGeneracionPersonajes;
         int fila = altura / 2;
@@ -354,6 +350,9 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         //ALIADOS
 
+        //EN LA CASILLA DE CREACION DE PERSONAJES ALIADOS NO SE PODRA CREAR UN ALIADO INICIALMENTE, AL INICIO DEBERA ESTAR VACIA
+        arrayTile[1, altura - 1].canCreateObstacle = false;
+        
         //REY ALIADO
 
         item = Instantiate(generadorDePersonajes.generadorReyes.prefabReyAliado, new Vector2(0, altura / 2), Quaternion.identity);
@@ -367,13 +366,6 @@ public class FieldObstacleGeneration : MonoBehaviour
                 if (c != 1 || r != altura - 1)
                 {
                     lista.Add(new Vector2(c, r));
-                }
-
-                //ESTO LO HE PUESTO PARA MAS ADELANTE SABER DONDE ESTA LA ESQUINA DE CADA CAMPO
-                else
-                {
-                    SpriteRenderer renderTile = arrayTile[c, r].GetComponent<SpriteRenderer>();
-                    renderTile.color = Color.black;
                 }
             }
         }
@@ -427,7 +419,14 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         lista.Clear();
 
+        //COMO YA HEMOS CREADO A LOS ALIADOS, AHORA SI SE PODRAN CREAR ALIADOS EN ESA CASILLA
+        arrayTile[1, altura - 1].canCreateObstacle = true;
+
+
         //ENEMIGOS
+
+        //EN LA CASILLA DE CREACION DE PERSONAJES ENEMIGOS NO SE PODRA CREAR UN ENEMIGO INICIALMENTE, AL INICIO DEBERA ESTAR VACIA
+        arrayTile[anchura - 1, altura - 1].canCreateObstacle = false;
 
         //REY ENEMIGO
 
@@ -442,14 +441,6 @@ public class FieldObstacleGeneration : MonoBehaviour
                 if (c != anchura - 2 || r != altura - 1)
                 {
                     lista.Add(new Vector2(c, r));
-                }
-
-                //ESTO LO HE PUESTO PARA MAS ADELANTE SABER DONDE ESTA LA ESQUINA DE CADA CAMPO
-                else
-                {
-                    
-                    SpriteRenderer renderTile = arrayTile[c, r].GetComponent<SpriteRenderer>();
-                    renderTile.color = Color.black;
                 }
             }
         }
@@ -502,6 +493,9 @@ public class FieldObstacleGeneration : MonoBehaviour
         }
 
         lista.Clear();
+
+        //COMO YA HEMOS CREADO A LOS ENEMIGOS, AHORA SI SE PODRAN CREAR ENEMIGOS EN ESA CASILLA
+        arrayTile[anchura - 1, altura - 1].canCreateObstacle = true;
     }
 
     public enum Orientacion
