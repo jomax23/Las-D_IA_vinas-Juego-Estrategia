@@ -70,6 +70,24 @@ public class Unit : MonoBehaviour
         myField = FindObjectOfType<FieldObstacleGeneration>();
         pathFinding = FindObjectOfType<Pathfinding>();
         SetInfluenceTiles();
+
+        if (unitType == UnitType.King)
+        {
+            if (playerNumber == 1)
+            {
+                myField.decisionMakingValues.kingsInfo.myKing = this;
+                myField.decisionMakingValues.kingsInfo.myKingCoord = transform.position;
+                //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ALIADO, NO ES EL VALOR REAL DE SU TILE EL QUE SE MUESTRA EN EL INSPECTOR INICIALMENTE , DESPUES DE LA PRIMERA ACCION YA SE MUESTRA CORRECTAMENTE
+                //myField.decisionMakingValues.kingsInfo.myKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.myKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.myKingCoord.y].influenceValue;
+            }
+            else
+            {
+                myField.decisionMakingValues.kingsInfo.enemyKing = this;
+                myField.decisionMakingValues.kingsInfo.enemyKingCoord = transform.position;
+                //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ENEMIGO, NO ES EL VALOR REAL DE SU TILE EL QUE SE MUESTRA EN EL INSPECTOR INICIALMENTE , DESPUES DE LA PRIMERA ACCION YA SE MUESTRA CORRECTAMENTE
+                //myField.decisionMakingValues.kingsInfo.enemyKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.y].influenceValue;
+            }
+        }
         /*
         if(unitType == UnitType.Archer)
         {
@@ -137,13 +155,13 @@ public class Unit : MonoBehaviour
 
         int damageDealt = attackStat - enemy.defenseStat;
 
-        if(unitType == UnitType.Archer)
+        if (unitType == UnitType.Archer)
         {
             GameObject instance = Instantiate(misObjetos.flecha, transform.position, Quaternion.identity);
             gm.somethingIsMoving = true;
             StartCoroutine(StartMovementItem(instance, enemy, damageDealt));
             //if(StartMovementItem.hasEnded)
-            
+
         }
 
         else
@@ -160,18 +178,14 @@ public class Unit : MonoBehaviour
             {
                 Destroy(enemy.gameObject);
                 GetWalkableTiles();
-            }
+                myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();
 
-            if (health <= 0)
-            {
-                gm.ResetTiles();
-                Destroy(gameObject);
             }
 
             UpdateInfluenceMap();
         }
 
-        gm.ResetTiles();
+        //gm.ResetTiles(); //Reset tiles es solo para los booleanos de walkable, creatable y el color del tile, por si se mata a un enemigo que estaba en ese tile
 
 
     }
@@ -182,24 +196,24 @@ public class Unit : MonoBehaviour
 
         List<Tile> reachableTileList = new List<Tile>();
 
-        
-        for(int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
+
+        for (int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
         {
             for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
             {
-                if(i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
+                if (i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
                 {
                     if ((int)transform.position.x != i || (int)transform.position.y != j)
                     {
                         //Debug.Log(i + ", " + j);
+                        //ESTA LISTA CREO QUE SE PODRIA QUITAR Y METERLE DIRECTAMENTE LO DE DENTRO DEL BUCLE FOR QUE TIENE ABAJO
                         reachableTileList.Add(myField.arrayTile[i, j]);
                     }
                 }
             }
         }
 
-        
-        
+
         foreach (Tile tile in reachableTileList)
         {
             pathFinding.FindPath(this, tile.transform.position);
@@ -208,13 +222,16 @@ public class Unit : MonoBehaviour
 
     public void SetInfluenceTiles()
     {
-        
+
         int myCol;
         int myRow;
 
         //SOLO PARA LOS TILES VECINOS A LA UNIDAD
         myCol = (int)transform.position.x - 1;
         myRow = (int)transform.position.y + 1;
+
+
+        myField.arrayTile[(int)transform.position.x, (int)transform.position.y].influenceValue += influenceStrength;
 
         for (int i = 1; i <= influenceAreaRadius; i++)
         {
@@ -225,12 +242,12 @@ public class Unit : MonoBehaviour
             {
                 for (int col = myCol; col < (int)transform.position.x + i; col++)
                 {
-                    if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())
+                    if (col >= 0 && col < myField.anchura)// && myField.arrayTile[col, myRow].IsClear())
                     {
-                        myField.arrayTile[col, myRow].influenceValue += influenceStrength/i;
+                        myField.arrayTile[col, myRow].influenceValue += influenceStrength / (i + 1);
                         Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
                     }
-                    
+
                 }
             }
 
@@ -240,9 +257,9 @@ public class Unit : MonoBehaviour
             {
                 for (int row = myRow; row > (int)transform.position.y - i; row--)
                 {
-                    if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())
+                    if (row >= 0 && row < myField.altura)// && myField.arrayTile[myCol, row].IsClear())
                     {
-                        myField.arrayTile[myCol, row].influenceValue += influenceStrength/i;
+                        myField.arrayTile[myCol, row].influenceValue += influenceStrength / (i + 1);
                         Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                     }
                 }
@@ -254,9 +271,9 @@ public class Unit : MonoBehaviour
             {
                 for (int col = myCol; col > (int)transform.position.x - i; col--)
                 {
-                    if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())
+                    if (col >= 0 && col < myField.anchura)// && myField.arrayTile[col, myRow].IsClear())
                     {
-                        myField.arrayTile[col, myRow].influenceValue += influenceStrength / i;
+                        myField.arrayTile[col, myRow].influenceValue += influenceStrength / (i + 1);
                         Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
                     }
                 }
@@ -268,9 +285,9 @@ public class Unit : MonoBehaviour
             {
                 for (int row = myRow; row < (int)transform.position.y + i; row++)
                 {
-                    if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())
+                    if (row >= 0 && row < myField.altura)// && myField.arrayTile[myCol, row].IsClear())
                     {
-                        myField.arrayTile[myCol, row].influenceValue += influenceStrength / i;
+                        myField.arrayTile[myCol, row].influenceValue += influenceStrength / (i + 1);
                         Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                     }
                 }
@@ -278,7 +295,41 @@ public class Unit : MonoBehaviour
 
             //myRow = (int)transform.position.y + i;
         }
+
+        //ACTUALIZAMOS VALOR DE LA INFLUENCIA QUE HAY EN LA CASILLA DEL REY, ESTO PODRIA CAMBIARSE POR LA VIDA DEL REY COMO CONDICION PARA TOMAR UNA DECISION U OTRA EN EL ARBOL DE DECISIONES Y NO USAR EL MAPA DE INFLUENCIAS AQUI,
+        //SOLO LO HAGO PARA QUE SE VEA POR SI QUEREIS USARLO MAS ADELANTE PARA ALGO
+        //myField.decisionMakingValues.myKingIV = myField.arrayTile[0, myField.altura / 2].influenceValue;
+
+        //CONSIDERAMOS DE MOMENTO UNA CASILLA ARBITRARIA COMO MINIMO Y MAXIMO, EN  MI CASO HE ESCOGIDO LA CASILLA INICIAL DEL REY ALIADO, LA CUAL ESTA EN LA POSICION 0, altura / 2
+        myField.decisionMakingValues.minIV = myField.arrayTile[0, myField.altura / 2].influenceValue;
+        myField.decisionMakingValues.maxIV = myField.arrayTile[0, myField.altura / 2].influenceValue;
+
+        for (int col = 0; col < myField.anchura; col++)
+        {
+            for (int row = 0; row < myField.altura; row++)
+            {
+                //CAMBIAR MINIMO
+                if (myField.decisionMakingValues.minIV > myField.arrayTile[col, row].influenceValue)
+                {
+                    myField.decisionMakingValues.minIV = myField.arrayTile[col, row].influenceValue;
+                    myField.decisionMakingValues.minIVCoord.x = col;
+                    myField.decisionMakingValues.minIVCoord.y = row;
+                }
+
+                //CAMBIAR MAXIMO
+                else if (myField.decisionMakingValues.maxIV < myField.arrayTile[col, row].influenceValue)
+                {
+                    myField.decisionMakingValues.maxIV = myField.arrayTile[col, row].influenceValue;
+                    myField.decisionMakingValues.maxIVCoord.x = col;
+                    myField.decisionMakingValues.maxIVCoord.y = row;
+                }
+            }
+        }
+
+        //myField.decisionMakingValues.kingsInfo.myKingCoord = 
+
     }
+
     public void GetEnemies()
     {
         enemiesInRange.Clear();
@@ -333,6 +384,7 @@ public class Unit : MonoBehaviour
         gm.ResetTiles();
         pathFinding.FindPathMovement(transform.position, new Vector3(tilePos.x, tilePos.y, myField.depth));
         StartCoroutine(StartMovement(tilePos));
+
         //gm.somethingIsMoving = false;
     }
 
@@ -347,6 +399,7 @@ public class Unit : MonoBehaviour
             }
         }
 
+
         hasMoved = true;
         //gm.somethingIsMoving = false;
         layer = (int)tilePos.y + 1;
@@ -358,8 +411,14 @@ public class Unit : MonoBehaviour
         gm.somethingIsMoving = false;
 
         //SetInfluenceTiles();
-
         UpdateInfluenceMap();
+
+        myField.decisionMakingValues.kingsInfo.SetKingsIVCoords();
+
+        //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ALIADO
+        myField.decisionMakingValues.kingsInfo.myKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.myKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.myKingCoord.y].influenceValue;
+        //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ENEMIGO
+        myField.decisionMakingValues.kingsInfo.enemyKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.y].influenceValue;
     }
 
     IEnumerator StartMovementItem(GameObject item, Unit enemy, int damageDealt)
@@ -389,12 +448,7 @@ public class Unit : MonoBehaviour
         {
             Destroy(enemy.gameObject);
             GetWalkableTiles();
-        }
-
-        if (health <= 0)
-        {
-            gm.ResetTiles();
-            Destroy(gameObject);
+            myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();
         }
 
         gm.somethingIsMoving = false;
@@ -421,5 +475,86 @@ public class Unit : MonoBehaviour
     {
         public GameObject flecha;
         public GameObject curacion;
+    }
+
+    public bool GetPathToP1KingAI()
+    {
+        return false;
+        //ESTO DE AQUI ES SIMILAR A LO QUE HARIA GETWALKABLETILES
+        /*
+        if (hasMoved) return false;
+
+        List<Tile> reachableTileList = new List<Tile>();
+
+
+        for (int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
+        {
+            for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
+            {
+                if (i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
+                {
+                    if ((int)transform.position.x != i || (int)transform.position.y != j)
+                    {
+                        //Debug.Log(i + ", " + j);
+                        //ESTA LISTA CREO QUE SE PODRIA QUITAR Y METERLE DIRECTAMENTE LO DE DENTRO DEL BUCLE FOR QUE TIENE ABAJO
+                        reachableTileList.Add(myField.arrayTile[i, j]);
+                    }
+                }
+            }
+        }
+
+
+        foreach (Tile tile in reachableTileList)
+        {
+            pathFinding.FindPath(this, tile.transform.position);
+        }
+
+        
+        pathFinding.FindPathMovement(transform.position, new Vector3(myField.decisionMakingValues.kingsInfo.enemyKingCoord.x, myField.decisionMakingValues.kingsInfo.enemyKingCoord.y, myField.depth));
+
+
+        if (reachableTileList.Count == 0)
+        {
+            return false;
+        }
+
+        return true;
+        */
+    }
+
+    public bool GetEnemiesAI()
+    {
+        enemiesInRange.Clear();
+
+        foreach (Unit unit in FindObjectsOfType<Unit>())
+        {
+            float distance = Vector2.Distance(transform.position, unit.transform.position);
+            //if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
+            if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange && unit.playerNumber != gm.playerTurn && !hasAttacked)
+            {
+                enemiesInRange.Add(unit);
+                //unit.weaponIcon.SetActive(true);
+
+                //myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
+            }
+        }
+
+        if (enemiesInRange.Count == 0)
+        {
+            return false;
+        }
+            
+        return true;
+    }
+
+    public bool CompareMyTileInfluenceValueAI()
+    {
+        //EL CERO SE PODRIA SUSTITUIR POR OTRO VALOR, PARA QUE NO SE ACOJONE TAN FACILMENTE EN FUNCION DE CIERTOS VALORES Y HUYA
+        if (myField.arrayTile[(int)transform.position.x, (int)transform.position.y].influenceValue <= 0) //ESTAMOS SEGUROS, PODEMOS SEGUIR AVANZANDO O ATACANDO
+        {
+            return true;
+        }
+
+        return false;
     }
 }

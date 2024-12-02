@@ -2995,6 +2995,7 @@ GameObject:
   - component: {fileID: 8953931888322410938}
   - component: {fileID: 6508452111591607837}
   - component: {fileID: 5431812339515679249}
+  - component: {fileID: 6226693849241675543}
   m_Layer: 3
   m_Name: EnemyArcher
   m_TagString: Untagged
@@ -3061,7 +3062,7 @@ MonoBehaviour:
   playerNumber: 2
   unitType: 2
   tileSpeed: 5
-  health: 15
+  health: 10
   attackStat: 5
   defenseStat: 3
   attackRange: 8
@@ -3157,6 +3158,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cost: 70
+--- !u!114 &6226693849241675543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6198282042775486887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa573d130b35452e89d3b06adf549f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myUnit: {fileID: 899301073741466236}
 --- !u!1 &6373447158117170618
 GameObject:
   m_ObjectHideFlags: 0

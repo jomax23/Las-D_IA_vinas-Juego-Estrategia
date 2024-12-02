@@ -2994,6 +2994,7 @@ GameObject:
   - component: {fileID: 2887609168327501289}
   - component: {fileID: -1338461566365383831}
   - component: {fileID: 1207173824575384540}
+  - component: {fileID: 933714948798313619}
   m_Layer: 3
   m_Name: EnemyKing
   m_TagString: Untagged
@@ -3108,7 +3109,7 @@ MonoBehaviour:
   health: 15
   attackStat: 5
   defenseStat: 3
-  attackRange: 2
+  attackRange: 1
   misObjetos:
     flecha: {fileID: 7782567485386129484, guid: aa489e083d75fa24384907f6b265ec0e, type: 3}
     curacion: {fileID: 7782567485386129484, guid: 3917158283f4950449fcbd7d3a7f2cab, type: 3}
@@ -3143,6 +3144,19 @@ SortingGroup:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_SortAtRoot: 0
+--- !u!114 &933714948798313619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6313888290563817257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa573d130b35452e89d3b06adf549f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myUnit: {fileID: 2887609168327501289}
 --- !u!1 &6351637163504113318
 GameObject:
   m_ObjectHideFlags: 0

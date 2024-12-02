@@ -33,6 +33,10 @@ public class FieldObstacleGeneration : MonoBehaviour
     [Header("PERSONAJES")]
     public GeneradorPersonajes generadorDePersonajes;
 
+    [Header("VALORES PARA TOMA DE DECISIONES")]
+    public DecisionMakingValues decisionMakingValues;
+
+
     void Awake()
     {
 
@@ -811,6 +815,44 @@ public class FieldObstacleGeneration : MonoBehaviour
         public int GetCantidad()
         {
             return cantidad;
+        }
+    }
+
+    [System.Serializable]
+    public class DecisionMakingValues
+    {
+        public Vector2 minIVCoord;
+        public float minIV;
+
+        public Vector2 maxIVCoord;
+        public float maxIV;
+
+        public KingsInfo kingsInfo;
+
+        //IV == INFLUENCE VALUE ABREVIADO
+    }
+
+    [System.Serializable]
+    public class KingsInfo
+    {
+        public Vector2 myKingCoord;
+        //ESTO ES SOLO PARA QUE LO VEAIS EN EL INSPECTOR
+        public float myKingTileIV;
+
+        public Vector2 enemyKingCoord;
+        //ESTO ES SOLO PARA QUE LO VEAIS EN EL INSPECTOR
+        public float enemyKingTileIV;
+
+        [HideInInspector]
+        public Unit myKing;
+
+        [HideInInspector]
+        public Unit enemyKing;
+
+        public void SetKingsIVCoords()
+        {
+            myKingCoord = myKing.transform.position;
+            enemyKingCoord = enemyKing.transform.position;
         }
     }
 }

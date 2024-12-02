@@ -17,7 +17,6 @@ public class Pathfinding : MonoBehaviour
     void Awake()
     {
         grid = GetComponent<FieldObstacleGeneration>();
-        
     }
 
     public void FindPath(Unit unit, Vector3 targetPos)

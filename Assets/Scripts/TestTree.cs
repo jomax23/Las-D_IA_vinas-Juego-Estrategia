@@ -5,7 +5,7 @@ using UnityEngine;
 public class TestTree : MonoBehaviour
 {
 
-    public Unit u;
+    public Unit myUnit;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +22,8 @@ public class TestTree : MonoBehaviour
         hijo1.AddChild(subHijo1);
         hijo2.AddChild(subHijo2);
 
-        raiz.Execute(u);
+
+        raiz.Execute(myUnit);
+        
     }
 }

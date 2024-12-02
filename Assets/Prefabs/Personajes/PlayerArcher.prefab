@@ -975,8 +975,8 @@ MonoBehaviour:
   influenceAreaRadius: 4
   playerNumber: 1
   unitType: 2
-  tileSpeed: 3
-  health: 15
+  tileSpeed: 5
+  health: 10
   attackStat: 5
   defenseStat: 3
   attackRange: 8
