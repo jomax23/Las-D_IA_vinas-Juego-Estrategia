@@ -71,12 +71,19 @@ public class Unit : MonoBehaviour
         pathFinding = FindObjectOfType<Pathfinding>();
         SetInfluenceTiles();
 
+        /*
+        if (unitType == UnitType.King && playerNumber == 1)
+        {
+            kingHealth = GameObject.Find("Health1 Text").GetComponent<Text>();
+        }
+        */
         if (unitType == UnitType.King)
         {
             if (playerNumber == 1)
             {
                 myField.decisionMakingValues.kingsInfo.myKing = this;
                 myField.decisionMakingValues.kingsInfo.myKingCoord = transform.position;
+                kingHealth = GameObject.Find("Health1 Text").GetComponent<Text>();
                 //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ALIADO, NO ES EL VALOR REAL DE SU TILE EL QUE SE MUESTRA EN EL INSPECTOR INICIALMENTE , DESPUES DE LA PRIMERA ACCION YA SE MUESTRA CORRECTAMENTE
                 //myField.decisionMakingValues.kingsInfo.myKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.myKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.myKingCoord.y].influenceValue;
             }
@@ -84,6 +91,7 @@ public class Unit : MonoBehaviour
             {
                 myField.decisionMakingValues.kingsInfo.enemyKing = this;
                 myField.decisionMakingValues.kingsInfo.enemyKingCoord = transform.position;
+                kingHealth = GameObject.Find("Health Text").GetComponent<Text>();
                 //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ENEMIGO, NO ES EL VALOR REAL DE SU TILE EL QUE SE MUESTRA EN EL INSPECTOR INICIALMENTE , DESPUES DE LA PRIMERA ACCION YA SE MUESTRA CORRECTAMENTE
                 //myField.decisionMakingValues.kingsInfo.enemyKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.y].influenceValue;
             }
@@ -94,7 +102,7 @@ public class Unit : MonoBehaviour
             miItem = misObjetos.flecha;
         }
         */
-        //UpdateKingHealth();
+        UpdateKingHealth();
     }
 
     public enum UnitType
