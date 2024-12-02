@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class ButtonScript : MonoBehaviour
 {
     // Start is called before the first frame update
-    private int maxPossiblesLevels = 2;
 
     public void Awake()
     {
@@ -15,9 +14,7 @@ public class ButtonScript : MonoBehaviour
     }
     public void Play()
     {
-        int levelNumberToLoad = UnityEngine.Random.Range(0, maxPossiblesLevels);
-        Debug.Log("Number of the Loaded Level:" + levelNumberToLoad);
-        SceneManager.LoadScene("Scene" + Convert.ToString(levelNumberToLoad));
+        SceneManager.LoadScene("Scene0");
     }
 
     public void Exit()
