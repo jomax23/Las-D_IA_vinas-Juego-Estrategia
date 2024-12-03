@@ -18,7 +18,7 @@ public class Pathfinding : MonoBehaviour
     {
         grid = GetComponent<FieldObstacleGeneration>();
     }
-
+    /*
     public void FindPath(Unit unit, Vector3 targetPos)
     {
         //pathCounter = 0;
@@ -105,6 +105,7 @@ public class Pathfinding : MonoBehaviour
         seeker = null;
         target = null;
     }
+    */
 
     public void FindPathMovement(Vector3 startPos, Vector3 targetPos)
     {
@@ -190,123 +191,233 @@ public class Pathfinding : MonoBehaviour
     //---------------------------------------------------------------------------------------------------------------------
     public void ReachableTilesDijkstra(Unit unit)
     {
-        Queue<Vector2> queue = new Queue<Vector2>();
-        Queue<Vector2> queue = new Queue<Vector2>();
+        Queue<Tile> queue = new Queue<Tile>();
+        Queue<Tile> auxiliarQueue = new Queue<Tile>();
+
         int myCol;
         int myRow;
 
-        //queue.Enqueue(unit.myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y]);  // Añadimos el nodo de inicio a la cola
-        myCol = (int)unit.transform.position.x - 1;
-        myRow = (int)unit.transform.position.y + 1;
-
         //SOLO PARA LOS TILES VECINOS A LA UNIDAD
 
-        for (int i = 1; i <= unit.tileSpeed; i++)
+        if (1 <= unit.tileSpeed)
         {
-            
-            myCol = (int)transform.position.x - i;
-            myRow = (int)transform.position.y + i;
-            
-            if(i == 1)
+            myCol = (int)unit.transform.position.x - 1;
+            myRow = (int)unit.transform.position.y + 1;
+
+            if (myRow >= 0 && myRow < unit.myField.altura)
             {
-                if (myRow >= 0 && myRow < myField.altura)
+                for (int col = myCol; col < (int)unit.transform.position.x + 1; col++)
                 {
-                    for (int col = myCol; col < (int)transform.position.x + i; col++)
+                    if (col >= 0 && col < unit.myField.anchura && unit.myField.arrayTile[col, myRow].IsClear() && !unit.myField.arrayTile[col, myRow].isWalkable)
                     {
-                        if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())// && myField.arrayTile[col, myRow].IsClear())
-                        {
-                            //myField.arrayTile[col, myRow].influenceValue += influenceStrength / (i + 1);
-                            //Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
-                            queue.Enqueue(col, myRow);
-                            unit.myField.arrayTile[col, myRow].Highlight();
-                        }
-
+                        queue.Enqueue(unit.myField.arrayTile[col, myRow]);
+                        unit.myField.arrayTile[col, myRow].Highlight();
+                        unit.reachableTileList.Add(unit.myField.arrayTile[col, myRow]);
                     }
+
                 }
+            }
 
-                myCol = (int)transform.position.x + i;
+            myCol = (int)unit.transform.position.x + 1;
 
-                if (myCol >= 0 && myCol < myField.anchura)
+            if (myCol >= 0 && myCol < unit.myField.anchura)
+            {
+                for (int row = myRow; row > (int)unit.transform.position.y - 1; row--)
                 {
-                    for (int row = myRow; row > (int)transform.position.y - i; row--)
+                    if (row >= 0 && row < unit.myField.altura && unit.myField.arrayTile[myCol, row].IsClear() && !unit.myField.arrayTile[myCol, row].isWalkable)
                     {
-                        if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())// && myField.arrayTile[myCol, row].IsClear())
-                        {
-                            //myField.arrayTile[myCol, row].influenceValue += influenceStrength / (i + 1);
-                            //Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
-                            queue.Enqueue(myCol, row);
-                            myField.arrayTile[myCol, row].Highlight();
-                        }
-                    }
-                }
-
-                myRow = (int)transform.position.y - i;
-
-                if (myRow >= 0 && myRow < myField.altura)
-                {
-                    for (int col = myCol; col > (int)transform.position.x - i; col--)
-                    {
-                        if (col >= 0 && col < myField.anchura && myField.arrayTile[col, myRow].IsClear())// && myField.arrayTile[col, myRow].IsClear())
-                        {
-                            //myField.arrayTile[col, myRow].influenceValue += influenceStrength / (i + 1);
-                            //Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
-                            queue.Enqueue(col, myRow);
-                            unit.myField.arrayTile[col, myRow].Highlight();
-                        }
-                    }
-                }
-
-                myCol = (int)transform.position.x - i;
-
-                if (myCol >= 0 && myCol < myField.anchura)
-                {
-                    for (int row = myRow; row < (int)transform.position.y + i; row++)
-                    {
-                        if (row >= 0 && row < myField.altura && myField.arrayTile[myCol, row].IsClear())// && myField.arrayTile[myCol, row].IsClear())
-                        {
-                            //myField.arrayTile[myCol, row].influenceValue += influenceStrength / (i + 1);
-                            //Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
-                            queue.Enqueue(myCol, row);
-                            unit.myField.arrayTile[myCol, row].Highlight();
-                        }
+                        queue.Enqueue(unit.myField.arrayTile[myCol, row]);
+                        unit.myField.arrayTile[myCol, row].Highlight();
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myCol, row]);
                     }
                 }
             }
 
-            while(queue.Count != 0)
+            myRow = (int)unit.transform.position.y - 1;
+
+            if (myRow >= 0 && myRow < unit.myField.altura)
             {
-                Vector2 miVector = queue.Dequeue();
+                for (int col = myCol; col > (int)unit.transform.position.x - 1; col--)
+                {
+                    if (col >= 0 && col < unit.myField.anchura && unit.myField.arrayTile[col, myRow].IsClear() && !unit.myField.arrayTile[col, myRow].isWalkable)
+                    {
+                        queue.Enqueue(unit.myField.arrayTile[col, myRow]);
+                        unit.myField.arrayTile[col, myRow].Highlight();
+                        unit.reachableTileList.Add(unit.myField.arrayTile[col, myRow]);
+                    }
+                }
+            }
+
+            myCol = (int)unit.transform.position.x - 1;
+
+            if (myCol >= 0 && myCol < unit.myField.anchura)
+            {
+                //Debug.Log("COL : " + myCol);
+                for (int row = myRow; row < (int)unit.transform.position.y + 1; row++)
+                {
+                    if (row >= 0 && row < unit.myField.altura && unit.myField.arrayTile[myCol, row].IsClear() && !unit.myField.arrayTile[myCol, row].isWalkable)
+                    {
+                        queue.Enqueue(unit.myField.arrayTile[myCol, row]);
+                        unit.myField.arrayTile[myCol, row].Highlight();
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myCol, row]);
+                    }
+                }
+            }
+        }
+
+        for (int i = 2; i <= unit.tileSpeed; i++)
+        {
+            Tile myTile;
                 
+            while (queue.Count > 0)
+            {
+                myTile = queue.Peek();
+                queue.Dequeue();
+
+                int myTileX = (int)myTile.transform.position.x;
+                int myTileY = (int)myTile.transform.position.y;
+
+                //Debug.Log("COL : " + myTileX + ", ROW : " + myTileY);
+
+                //ESQUINA SUP IZQUIERDA
+                if (myTileX - 1 >= 0 && myTileY + 1 < unit.myField.altura)
+                {
+                    if (unit.myField.arrayTile[myTileX - 1, myTileY + 1].IsClear() && !unit.myField.arrayTile[myTileX - 1, myTileY + 1].isWalkable && (myTileX - 1 != unit.transform.position.x || myTileY + 1!= unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX - 1, myTileY + 1].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX - 1, myTileY + 1]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX - 1, myTileY + 1]);
+                    }
+
+                }
+
+                //ARRIBA
+                if (myTileY + 1 < unit.myField.altura)
+                {
+                    if (unit.myField.arrayTile[myTileX, myTileY + 1].IsClear() && !unit.myField.arrayTile[myTileX, myTileY + 1].isWalkable && (myTileX != unit.transform.position.x || myTileY + 1 != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX, myTileY + 1].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX, myTileY + 1]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX, myTileY + 1]);
+                    }
+
+                }
+
+                //ESQUINA SUP DERECHA
+                if (myTileX + 1 <  unit.myField.anchura && myTileY + 1 < unit.myField.altura)
+                {
+                    if (unit.myField.arrayTile[myTileX + 1, myTileY + 1].IsClear() && !unit.myField.arrayTile[myTileX + 1, myTileY + 1].isWalkable && (myTileX + 1!= unit.transform.position.x || myTileY + 1 != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX + 1, myTileY + 1].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX + 1, myTileY + 1]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX + 1, myTileY + 1]);
+                    }
+
+                }
+
+                //DERECHA
+                if (myTileX + 1 < unit.myField.anchura)
+                {
+                    if (unit.myField.arrayTile[myTileX + 1, myTileY].IsClear() && !unit.myField.arrayTile[myTileX + 1, myTileY].isWalkable && (myTileX + 1 != unit.transform.position.x || myTileY != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX + 1, myTileY].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX + 1, myTileY]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX + 1, myTileY]);
+                    }
+
+                }
+
+                //ESQUINA INF DERECHA
+                if (myTileX + 1 < unit.myField.anchura && myTileY - 1 >= 0)
+                {
+                    if (unit.myField.arrayTile[myTileX + 1, myTileY - 1].IsClear() && !unit.myField.arrayTile[myTileX + 1, myTileY - 1].isWalkable && (myTileX + 1 != unit.transform.position.x || myTileY - 1 != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX + 1, myTileY - 1].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX + 1, myTileY - 1]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX + 1, myTileY - 1]);
+                    }
+
+                }
+
+                //ABAJO
+                if (myTileY - 1 >= 0)
+                {
+                    if (unit.myField.arrayTile[myTileX, myTileY - 1].IsClear() && !unit.myField.arrayTile[myTileX, myTileY - 1].isWalkable && (myTileX != unit.transform.position.x || myTileY - 1 != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX, myTileY - 1].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX, myTileY - 1]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX, myTileY - 1]);
+                    }
+
+                }
+
+                //ESQUINA INF IZQUIERDA
+                if (myTileX - 1 >= 0 && myTileY - 1 >= 0)
+                {
+                    if (unit.myField.arrayTile[myTileX - 1, myTileY - 1].IsClear() && !unit.myField.arrayTile[myTileX - 1, myTileY - 1].isWalkable && (myTileX - 1 != unit.transform.position.x || myTileY - 1 != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX - 1, myTileY - 1].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX - 1, myTileY - 1]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX - 1, myTileY - 1]);
+                    }
+                }
+
+                //IZQUIERDA
+                if (myTileX - 1 >= 0)
+                {
+                    if (unit.myField.arrayTile[myTileX - 1, myTileY].IsClear() && !unit.myField.arrayTile[myTileX - 1, myTileY].isWalkable && (myTileX - 1 != unit.transform.position.x || myTileY != unit.transform.position.y))
+                    {
+                        unit.myField.arrayTile[myTileX - 1, myTileY].Highlight();
+                        auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX - 1, myTileY]);
+                        unit.reachableTileList.Add(unit.myField.arrayTile[myTileX - 1, myTileY]);
+                    }
+                }
+            }
+            /*
+            foreach (Tile tile in auxiliarQueue)
+            {
+                Debug.Log("AUXILIAR QUEUE IT " + i + " TILE -> COL : " + tile.transform.position.x + ", ROW : " + tile.transform.position.y);
+            }
+            */
+            
+
+            while(auxiliarQueue.Count > 0)
+            {
+                queue.Enqueue(auxiliarQueue.Peek());
+                auxiliarQueue.Dequeue();
             }
 
-            //myRow = (int)transform.position.y + i;
         }
 
-        //ACTUALIZAMOS VALOR DE LA INFLUENCIA QUE HAY EN LA CASILLA DEL REY, ESTO PODRIA CAMBIARSE POR LA VIDA DEL REY COMO CONDICION PARA TOMAR UNA DECISION U OTRA EN EL ARBOL DE DECISIONES Y NO USAR EL MAPA DE INFLUENCIAS AQUI,
-        //SOLO LO HAGO PARA QUE SE VEA POR SI QUEREIS USARLO MAS ADELANTE PARA ALGO
-        //myField.decisionMakingValues.myKingIV = myField.arrayTile[0, myField.altura / 2].influenceValue;
+        queue.Clear();
+        auxiliarQueue.Clear();
 
-        //CONSIDERAMOS DE MOMENTO UNA CASILLA ARBITRARIA COMO MINIMO Y MAXIMO, EN  MI CASO HE ESCOGIDO LA CASILLA INICIAL DEL REY ALIADO, LA CUAL ESTA EN LA POSICION 0, altura / 2
-        
 
-        //-----------------------------------------------------------------------
-        /*
-        
-
-        queue.Enqueue(start);  // Añadimos el nodo de inicio a la cola
-
-        while (queue.Count > 0)
-        {
-            int currentNode = queue.Dequeue();  // Extraemos el primer nodo de la cola
-
-             // Revisamos los vecinos del nodo actual
-            queue.Enqueue(neighborNode);  // Añadimos el vecino a la cola
-
-        }
-          // Ordenamos la cola según las distancias para simular una cola de prioridad
-        var sortedQueue = new Queue<int>(queue.OrderBy(node => distances[node]));
-        queue = sortedQueue;
-        */
     }
     
 }
+//ACTUALIZAMOS VALOR DE LA INFLUENCIA QUE HAY EN LA CASILLA DEL REY, ESTO PODRIA CAMBIARSE POR LA VIDA DEL REY COMO CONDICION PARA TOMAR UNA DECISION U OTRA EN EL ARBOL DE DECISIONES Y NO USAR EL MAPA DE INFLUENCIAS AQUI,
+//SOLO LO HAGO PARA QUE SE VEA POR SI QUEREIS USARLO MAS ADELANTE PARA ALGO
+//myField.decisionMakingValues.myKingIV = myField.arrayTile[0, myField.altura / 2].influenceValue;
+
+//CONSIDERAMOS DE MOMENTO UNA CASILLA ARBITRARIA COMO MINIMO Y MAXIMO, EN  MI CASO HE ESCOGIDO LA CASILLA INICIAL DEL REY ALIADO, LA CUAL ESTA EN LA POSICION 0, altura / 2
+
+
+//-----------------------------------------------------------------------
+/*
+
+
+queue.Enqueue(start);  // Añadimos el nodo de inicio a la cola
+
+while (queue.Count > 0)
+{
+    int currentNode = queue.Dequeue();  // Extraemos el primer nodo de la cola
+
+     // Revisamos los vecinos del nodo actual
+    queue.Enqueue(neighborNode);  // Añadimos el vecino a la cola
+
+}
+  // Ordenamos la cola según las distancias para simular una cola de prioridad
+var sortedQueue = new Queue<int>(queue.OrderBy(node => distances[node]));
+queue = sortedQueue;
+*/

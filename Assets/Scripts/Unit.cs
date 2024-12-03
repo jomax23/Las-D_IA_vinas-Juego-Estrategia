@@ -61,7 +61,11 @@ public class Unit : MonoBehaviour
 
     private List<Unit> enemiesInRange = new List<Unit>();
 
-    private FieldObstacleGeneration myField;
+    [HideInInspector]
+    public FieldObstacleGeneration myField;
+
+    [HideInInspector]
+    public List<Tile> reachableTileList = new List<Tile>();
 
     //private GameObject miItem;
     private void Start()
@@ -198,34 +202,47 @@ public class Unit : MonoBehaviour
 
     }
 
+    //ESTO ESTABA EN GetWalkableTiles() ANTES DEL CAMBIO EN LA FORMA DE AVERIGUAR LOS TILES ALCANZABLES 
+    //List<Tile> reachableTileList = new List<Tile>();
+
+    /*
+    for (int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
+    {
+        for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
+        {
+            if (i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
+            {
+                if ((int)transform.position.x != i || (int)transform.position.y != j)
+                {
+                    //Debug.Log(i + ", " + j);
+                    //ESTA LISTA CREO QUE SE PODRIA QUITAR Y METERLE DIRECTAMENTE LO DE DENTRO DEL BUCLE FOR QUE TIENE ABAJO
+                    reachableTileList.Add(myField.arrayTile[i, j]);
+                }
+            }
+        }
+    }
+
+
+    foreach (Tile tile in reachableTileList)
+    {
+        pathFinding.FindPath(this, tile.transform.position);
+    }
+    */
+
     void GetWalkableTiles()
     {
         if (hasMoved) return;
 
-        List<Tile> reachableTileList = new List<Tile>();
+        reachableTileList = new List<Tile>();
+        pathFinding.ReachableTilesDijkstra(this);
 
-
-        for (int i = (int)transform.position.x - tileSpeed; i <= transform.position.x + tileSpeed; i++)
+        //ESTO ES POR SI QUEREIS VER LOS TILES QUE SE HAN AÑADIDO A LA LISTA REACHABLE TILES
+        /*
+        foreach(Tile tile in reachableTileList)
         {
-            for (int j = (int)transform.position.y - tileSpeed; j <= transform.position.y + tileSpeed; j++)
-            {
-                if (i >= 0 && j >= 0 && i < myField.anchura && j < myField.altura && myField.arrayTile[i, j].IsClear())
-                {
-                    if ((int)transform.position.x != i || (int)transform.position.y != j)
-                    {
-                        //Debug.Log(i + ", " + j);
-                        //ESTA LISTA CREO QUE SE PODRIA QUITAR Y METERLE DIRECTAMENTE LO DE DENTRO DEL BUCLE FOR QUE TIENE ABAJO
-                        reachableTileList.Add(myField.arrayTile[i, j]);
-                    }
-                }
-            }
+            Debug.Log(tile.transform.position.x + ", " + tile.transform.position.y);
         }
-
-
-        foreach (Tile tile in reachableTileList)
-        {
-            pathFinding.FindPath(this, tile.transform.position);
-        }
+        */
     }
 
     public void SetInfluenceTiles()
@@ -253,7 +270,7 @@ public class Unit : MonoBehaviour
                     if (col >= 0 && col < myField.anchura)// && myField.arrayTile[col, myRow].IsClear())
                     {
                         myField.arrayTile[col, myRow].influenceValue += influenceStrength / (i + 1);
-                        Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
+                        //Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
                     }
 
                 }
@@ -268,7 +285,7 @@ public class Unit : MonoBehaviour
                     if (row >= 0 && row < myField.altura)// && myField.arrayTile[myCol, row].IsClear())
                     {
                         myField.arrayTile[myCol, row].influenceValue += influenceStrength / (i + 1);
-                        Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
+                        //Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                     }
                 }
             }
@@ -282,7 +299,7 @@ public class Unit : MonoBehaviour
                     if (col >= 0 && col < myField.anchura)// && myField.arrayTile[col, myRow].IsClear())
                     {
                         myField.arrayTile[col, myRow].influenceValue += influenceStrength / (i + 1);
-                        Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
+                        //Debug.Log("COL : " + col + ", ROW : " + myRow + ", VALOR DE INFLUENCIA: " + myField.arrayTile[col, myRow].influenceValue);
                     }
                 }
             }
@@ -296,7 +313,7 @@ public class Unit : MonoBehaviour
                     if (row >= 0 && row < myField.altura)// && myField.arrayTile[myCol, row].IsClear())
                     {
                         myField.arrayTile[myCol, row].influenceValue += influenceStrength / (i + 1);
-                        Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
+                        //Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                     }
                 }
             }
