@@ -433,6 +433,17 @@ public class Unit : MonoBehaviour
         //gm.somethingIsMoving = false;
     }
 
+    public void MoveAIUnit(Vector2 tileTarget)
+    {
+        gm.somethingIsMoving = true;
+        //gm.SomethingIsMoving(true);
+        gm.ResetTiles();
+        pathFinding.FindPathMovement(this, transform.position, new Vector3(tileTarget.x, tileTarget.y, myField.depth));
+        StartCoroutine(StartMovement(tileTarget));
+
+        //gm.somethingIsMoving = false;
+    }
+
     IEnumerator StartMovement(Vector2 tilePos)
     {
         myField.arrayTile[(int) transform.position.x, (int) transform.position.y].hasUnit = false;
@@ -470,6 +481,58 @@ public class Unit : MonoBehaviour
         myField.decisionMakingValues.kingsInfo.enemyKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.y].influenceValue;
     }
 
+    //DAVID, HE HECHO ESTA FUNCION, CREO QUE IRA BIEN, SI NO ESTA BIEN, EL PLANTEAMIENTO CREO QUE SERVIRA, Y CREO QUE DE MOMENTO SOLO NO IRA BIEN SI EL TARGET ESTA RODEADO POR ENEMIGOS Y/O OBSTACULOS
+    
+    IEnumerator StartMovementAI(Vector2 tilePos)
+    {
+        myField.arrayTile[(int)transform.position.x, (int)transform.position.y].hasUnit = false;
+
+        int contadorPasos = 0;
+
+        foreach (Tile tile in pathFinding.pathMovement)
+        {      
+            if(contadorPasos < tileSpeed)
+            {
+                while (transform.position.x != pathFinding.pathMovement[pathFinding.pathMovement.Count - 1].transform.position.x || transform.position.y != pathFinding.pathMovement[pathFinding.pathMovement.Count - 1].transform.position.y)
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(tile.transform.position.x, tile.transform.position.y), moveSpeed * Time.deltaTime);
+                    
+                    yield return null;
+                }
+
+                contadorPasos++;
+            }
+
+            else
+            {
+                break;
+            }
+        }       
+
+        myField.arrayTile[(int)transform.position.x, (int)transform.position.y].hasUnit = true;
+
+
+        hasMoved = true;
+        //gm.somethingIsMoving = false;
+        layer = (int)tilePos.y + 1;
+
+        ResetWeaponIcons();
+
+        GetEnemies();
+
+        gm.somethingIsMoving = false;
+
+        //SetInfluenceTiles();
+        UpdateInfluenceMap();
+
+        myField.decisionMakingValues.kingsInfo.SetKingsIVCoords();
+
+        //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ALIADO
+        myField.decisionMakingValues.kingsInfo.myKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.myKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.myKingCoord.y].influenceValue;
+        //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ENEMIGO
+        myField.decisionMakingValues.kingsInfo.enemyKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.enemyKingCoord.y].influenceValue;
+    }
+    
     IEnumerator StartMovementItem(GameObject item, Unit enemy, int damageDealt)
     {
         gm.somethingIsMoving = true;
