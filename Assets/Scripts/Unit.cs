@@ -114,7 +114,7 @@ public class Unit : MonoBehaviour
         King,
         Tank,
         Archer,
-        Healer
+        Flyer
     }
 
     public void UpdateKingHealth()
@@ -188,6 +188,7 @@ public class Unit : MonoBehaviour
 
             if (enemy.health <= 0)
             {
+                myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].hasUnit = false;
                 Destroy(enemy.gameObject);
                 GetWalkableTiles();
                 myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();
@@ -234,9 +235,19 @@ public class Unit : MonoBehaviour
         if (hasMoved) return;
 
         reachableTileList = new List<Tile>();
-        pathFinding.ReachableTilesDijkstra(this);
 
-        //ESTO ES POR SI QUEREIS VER LOS TILES QUE SE HAN AÑADIDO A LA LISTA REACHABLE TILES
+        if(unitType == UnitType.Flyer)
+        {
+            pathFinding.ReachableTilesDijkstra(this);
+        }
+
+        else
+        {
+            pathFinding.ReachableTilesDijkstra(this);
+        }
+        //pathFinding.ReachableTilesDijkstra(this);
+
+        //ESTO ES POR SI QUEREIS VER LOS TILES QUE SE HAN Aï¿½ADIDO A LA LISTA REACHABLE TILES
         /*
         foreach(Tile tile in reachableTileList)
         {
@@ -407,7 +418,7 @@ public class Unit : MonoBehaviour
         gm.somethingIsMoving = true;
         //gm.SomethingIsMoving(true);
         gm.ResetTiles();
-        pathFinding.FindPathMovement(transform.position, new Vector3(tilePos.x, tilePos.y, myField.depth));
+        pathFinding.FindPathMovement(this, transform.position, new Vector3(tilePos.x, tilePos.y, myField.depth));
         StartCoroutine(StartMovement(tilePos));
 
         //gm.somethingIsMoving = false;
@@ -415,6 +426,8 @@ public class Unit : MonoBehaviour
 
     IEnumerator StartMovement(Vector2 tilePos)
     {
+        myField.arrayTile[(int) transform.position.x, (int) transform.position.y].hasUnit = false;
+
         foreach (Tile tile in pathFinding.pathMovement)
         {
             while (transform.position.x != tile.transform.position.x || transform.position.y != tile.transform.position.y)
@@ -423,6 +436,8 @@ public class Unit : MonoBehaviour
                 yield return null;
             }
         }
+
+        myField.arrayTile[(int) transform.position.x, (int) transform.position.y].hasUnit = true;
 
 
         hasMoved = true;
@@ -451,7 +466,7 @@ public class Unit : MonoBehaviour
         gm.somethingIsMoving = true;
 
         Vector2 tilePos = enemy.transform.position;
-
+        
         while (item.transform.position.x != tilePos.x || item.transform.position.y != tilePos.y)
         {
             item.transform.position = Vector2.MoveTowards(item.transform.position, tilePos, moveSpeed * 2 * Time.deltaTime);
@@ -471,6 +486,7 @@ public class Unit : MonoBehaviour
 
         if (enemy.health <= 0)
         {
+            myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].hasUnit = false;
             Destroy(enemy.gameObject);
             GetWalkableTiles();
             myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();

@@ -8,6 +8,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 {
     [HideInInspector]
     public int depth = 5; //Coordenada z que tendran z los tiles y los obstaculos
+    private int depthObstacle = 6;
 
     [Header("DIMENSIONES DEL MAPA")]
     public GeneradorMapa generadorDelMapa = new GeneradorMapa();
@@ -61,7 +62,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                 if((c == 0 || c == anchura -1) && r != altura / 2)
                 {
-                    item = Instantiate(generadorDeObstaculos[2].prefab, new Vector3(c, r, depth), Quaternion.identity);
+                    item = Instantiate(generadorDeObstaculos[2].prefab, new Vector3(c, r, depthObstacle), Quaternion.identity);
                     //tileScript.isWalkable = false;
                     //item.SetActive(false);
                 }
@@ -183,7 +184,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                         col = (int)lista[randIndex].x;
                         row = (int)lista[randIndex].y;
 
-                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depth), Quaternion.identity);
+                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depthObstacle), Quaternion.identity);
 
 
                         if (col + 2 < anchura - columnasGeneracionPersonajes)
@@ -245,7 +246,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                         col = (int)lista[randIndex].x;
                         row = (int)lista[randIndex].y;
 
-                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depth), Quaternion.identity);
+                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depthObstacle), Quaternion.identity);
 
                         if (row < altura - 2)
                         {
@@ -313,7 +314,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                         col = (int)lista[randIndex].x;
                         row = (int)lista[randIndex].y;
 
-                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depth), Quaternion.identity);
+                        item = Instantiate(generadorDeObstaculos[index].prefab, new Vector3((int)arrayTile[col, row].transform.position.x, (int)arrayTile[col, row].transform.position.y, depthObstacle), Quaternion.identity);
 
                         arrayTile[col, row].canCreateObstacle = false;
                         lista.Remove(new Vector2(col, row));
@@ -349,17 +350,19 @@ public class FieldObstacleGeneration : MonoBehaviour
         generadorDePersonajes.generadorArqueros.SetCantidadRandom();
         int cantidadArqueros = generadorDePersonajes.generadorArqueros.GetCantidad();
 
-        generadorDePersonajes.generadorSanadores.SetCantidadRandom();
-        int cantidadSanadores = generadorDePersonajes.generadorSanadores.GetCantidad();
+        generadorDePersonajes.generadorVoladores.SetCantidadRandom();
+        int cantidadVoladores = generadorDePersonajes.generadorVoladores.GetCantidad();
 
         //ALIADOS
 
         //EN LA CASILLA DE CREACION DE PERSONAJES ALIADOS NO SE PODRA CREAR UN ALIADO INICIALMENTE, AL INICIO DEBERA ESTAR VACIA
         arrayTile[1, altura - 1].canCreateObstacle = false;
-        
+        arrayTile[1, altura - 1].hasUnit = true; //PARA ESTO CONSIDERAREMOS QUE YA TIENE UNA UNIDAD ENCIMA DE EL, AUNQUE ESO OBCVIAMENTE NO SEA CIERTO
+
         //REY ALIADO
 
         item = Instantiate(generadorDePersonajes.generadorReyes.prefabReyAliado, new Vector2(0, altura / 2), Quaternion.identity);
+        arrayTile[0, altura / 2].hasUnit = true;
 
         //LISTA DE VECTORES DE POSICIONES
 
@@ -386,6 +389,7 @@ public class FieldObstacleGeneration : MonoBehaviour
                 row = (int)lista[randIndex].y;
 
                 item = Instantiate(generadorDePersonajes.generadorTanques.prefabTanqueAliado, new Vector2(col, row), Quaternion.identity);
+                arrayTile[col, row].hasUnit = true;
 
                 lista.Remove(new Vector2(col, row));
             }
@@ -401,12 +405,13 @@ public class FieldObstacleGeneration : MonoBehaviour
                 row = (int)lista[randIndex].y;
 
                 item = Instantiate(generadorDePersonajes.generadorArqueros.prefabArqueroAliado, new Vector2(col, row), Quaternion.identity);
+                arrayTile[col, row].hasUnit = true;
 
                 lista.Remove(new Vector2(col, row));
             }
         }
 
-        for (int i = 0; i < cantidadSanadores; i++)
+        for (int i = 0; i < cantidadVoladores; i++)
         {
             if (lista.Count > 0)
             {
@@ -415,7 +420,8 @@ public class FieldObstacleGeneration : MonoBehaviour
                 col = (int)lista[randIndex].x;
                 row = (int)lista[randIndex].y;
 
-                item = Instantiate(generadorDePersonajes.generadorSanadores.prefabSanadorAliado, new Vector2(col, row), Quaternion.identity);
+                item = Instantiate(generadorDePersonajes.generadorVoladores.prefabVoladorAliado, new Vector2(col, row), Quaternion.identity);
+                arrayTile[col, row].hasUnit = true;
 
                 lista.Remove(new Vector2(col, row));
             }
@@ -425,7 +431,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         //COMO YA HEMOS CREADO A LOS ALIADOS, AHORA SI SE PODRAN CREAR ALIADOS EN ESA CASILLA
         arrayTile[1, altura - 1].canCreateObstacle = true;
-
+        arrayTile[1, altura - 1].hasUnit = false;
 
         //ENEMIGOS
 
@@ -435,6 +441,7 @@ public class FieldObstacleGeneration : MonoBehaviour
         //REY ENEMIGO
 
         item = Instantiate(generadorDePersonajes.generadorReyes.prefabReyEnemigo, new Vector2(anchura - 1, altura / 2), Quaternion.identity);
+        arrayTile[anchura - 1, altura / 2].hasUnit = true;
 
         //LISTA DE VECTORES DE POSICIONES
 
@@ -461,7 +468,8 @@ public class FieldObstacleGeneration : MonoBehaviour
                 row = (int)lista[randIndex].y;
 
                 item = Instantiate(generadorDePersonajes.generadorTanques.prefabTanqueEnemigo, new Vector2(col, row), Quaternion.identity);
-                
+                arrayTile[col, row].hasUnit = true;
+
                 lista.Remove(new Vector2(col, row));
             }
         }
@@ -476,12 +484,13 @@ public class FieldObstacleGeneration : MonoBehaviour
                 row = (int)lista[randIndex].y;
 
                 item = Instantiate(generadorDePersonajes.generadorArqueros.prefabArqueroEnemigo, new Vector2(col, row), Quaternion.identity);
+                arrayTile[col, row].hasUnit = true;
 
                 lista.Remove(new Vector2(col, row));
             }
         }
 
-        for (int i = 0; i < cantidadSanadores; i++)
+        for (int i = 0; i < cantidadVoladores; i++)
         {
             if (lista.Count > 0)
             {
@@ -490,7 +499,8 @@ public class FieldObstacleGeneration : MonoBehaviour
                 col = (int)lista[randIndex].x;
                 row = (int)lista[randIndex].y;
 
-                item = Instantiate(generadorDePersonajes.generadorSanadores.prefabSanadorEnemigo, new Vector2(col, row), Quaternion.identity);
+                item = Instantiate(generadorDePersonajes.generadorVoladores.prefabVoladorEnemigo, new Vector2(col, row), Quaternion.identity);
+                arrayTile[col, row].hasUnit = true;
 
                 lista.Remove(new Vector2(col, row));
             }
@@ -500,6 +510,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         //COMO YA HEMOS CREADO A LOS ENEMIGOS, AHORA SI SE PODRAN CREAR ENEMIGOS EN ESA CASILLA
         arrayTile[anchura - 1, altura - 1].canCreateObstacle = true;
+        arrayTile[anchura - 1, altura - 1].hasUnit = false;
     }
 
     public enum Orientacion
@@ -631,7 +642,7 @@ public class FieldObstacleGeneration : MonoBehaviour
         //PARA HACER ESTO PODRIA HABER USADO HERENCIA, ALMACENAR EN UNA LISTA LOS ITEMS Y RECORRERLA ARRIBA PARA QUE QUEDE GUAPO, PERO COMO ES IGUAL DE OPTIMO PARA GENERAR A LOS PERSONAJES NO LO HE INTENTADO, SI ESO LO HARE MAS ADELANTE PERO NO CREO QUE SEA NECESARIO
         public GeneradorTanques generadorTanques;
         public GeneradorArqueros generadorArqueros;
-        public GeneradorSanadores generadorSanadores;
+        public GeneradorVoladores generadorVoladores;
 
         private int zCoord = -5;
 
@@ -718,10 +729,10 @@ public class FieldObstacleGeneration : MonoBehaviour
     }
 
     [System.Serializable]
-    public class GeneradorSanadores
+    public class GeneradorVoladores
     {
-        public GameObject prefabSanadorAliado;
-        public GameObject prefabSanadorEnemigo;
+        public GameObject prefabVoladorAliado;
+        public GameObject prefabVoladorEnemigo;
 
         private int cantidad;
 

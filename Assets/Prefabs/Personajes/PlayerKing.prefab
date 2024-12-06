@@ -2404,6 +2404,8 @@ MonoBehaviour:
   moveSpeed: 5
   hasAttacked: 0
   selected: 0
+  myField: {fileID: 0}
+  reachableTileList: []
 --- !u!61 &6342852957541511448
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2447,7 +2449,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8734163, y: 0.8734163}
+  m_Size: {x: 0.85, y: 0.85}
   m_EdgeRadius: 0
 --- !u!114 &-8867662789820899933
 MonoBehaviour:

@@ -1586,11 +1586,23 @@ MonoBehaviour:
       prefabArqueroEnemigo: {fileID: 6198282042775486887, guid: 51eaef0a992214fce90beaa72fae6702, type: 3}
       minimaCantidad: 2
       maximaCantidad: 5
-    generadorSanadores:
-      prefabSanadorAliado: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
-      prefabSanadorEnemigo: {fileID: 6754446678692195979, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
-      minimaCantidad: 2
-      maximaCantidad: 4
+    generadorVoladores:
+      prefabVoladorAliado: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
+      prefabVoladorEnemigo: {fileID: 6754446678692195979, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
+      minimaCantidad: 3
+      maximaCantidad: 6
+  decisionMakingValues:
+    minIVCoord: {x: 0, y: 0}
+    minIV: 0
+    maxIVCoord: {x: 0, y: 0}
+    maxIV: 0
+    kingsInfo:
+      myKingCoord: {x: 0, y: 0}
+      myKingTileIV: 0
+      enemyKingCoord: {x: 0, y: 0}
+      enemyKingTileIV: 0
+      myKing: {fileID: 0}
+      enemyKing: {fileID: 0}
 --- !u!114 &520505529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3424,7 +3436,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 512, y: 512}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1334187205
 MonoBehaviour:
   m_ObjectHideFlags: 0

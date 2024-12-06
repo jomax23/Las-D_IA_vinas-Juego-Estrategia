@@ -59,6 +59,7 @@ public class Barrack : MonoBehaviour
             {
                 gm.player1Gold -= item.cost;
                 BarrackItem itemBought = Instantiate(gm.purchasedItem, new Vector3(1, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
+                fieldObstacleGenerator.arrayTile[(int)itemBought.transform.position.x, (int)itemBought.transform.position.y].hasUnit = true;
                 player1Menu.SetActive(false);
             }
 
@@ -74,7 +75,8 @@ public class Barrack : MonoBehaviour
             if (fieldObstacleGenerator.arrayTile[fieldObstacleGenerator.anchura - 2, fieldObstacleGenerator.altura - 1].IsClear())
             {
                 gm.player2Gold -= item.cost;
-                BarrackItem iitemBought = Instantiate(gm.purchasedItem, new Vector3(fieldObstacleGenerator.anchura - 2, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
+                BarrackItem itemBought = Instantiate(gm.purchasedItem, new Vector3(fieldObstacleGenerator.anchura - 2, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
+                fieldObstacleGenerator.arrayTile[(int)itemBought.transform.position.x, (int)itemBought.transform.position.y].hasUnit = true;
                 player2Menu.SetActive(false);
             }
 

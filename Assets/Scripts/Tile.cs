@@ -30,6 +30,7 @@ public class Tile : MonoBehaviour
     [HideInInspector]
     public bool canCreateObstacle = true;
     public bool isObstacleUncreatable = false;
+    public bool hasUnit = false;
 
     public int gCost;
     public int hCost;
