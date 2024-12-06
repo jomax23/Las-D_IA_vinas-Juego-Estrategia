@@ -542,7 +542,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 71.1, y: -53.38}
-  m_SizeDelta: {x: 132.382, y: 106.76}
+  m_SizeDelta: {x: 137.14, y: 137.14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &79033624
 MonoBehaviour:
@@ -1660,10 +1660,10 @@ MonoBehaviour:
       minimaCantidad: 2
       maximaCantidad: 5
     generadorVoladores:
-      prefabVoladorAliado: {fileID: 0}
-      prefabVoladorEnemigo: {fileID: 0}
-      minimaCantidad: 0
-      maximaCantidad: 0
+      prefabVoladorAliado: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
+      prefabVoladorEnemigo: {fileID: 6754446678692195979, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
+      minimaCantidad: 2
+      maximaCantidad: 5
   decisionMakingValues:
     minIVCoord: {x: 0, y: 0}
     minIV: 0
@@ -2220,7 +2220,7 @@ GameObject:
   - component: {fileID: 898980452}
   - component: {fileID: 898980451}
   m_Layer: 0
-  m_Name: BOTON SANADOR
+  m_Name: BOTON VOLADOR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2236,15 +2236,15 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 385262071}
   m_Father: {fileID: 2097478466}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -69.1, y: 16.1}
-  m_SizeDelta: {x: 126.814, y: 102.269}
+  m_AnchoredPosition: {x: -62.719986, y: 16.1}
+  m_SizeDelta: {x: 125.4, y: 125.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &898980451
 MonoBehaviour:
@@ -2322,7 +2322,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 668e46c1d04125e49b6a57e9f913beaf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 487c6289f1f233d4e8b58f77d3e17a7d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2452,7 +2452,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 68.55, y: 99.5}
-  m_SizeDelta: {x: 137.1, y: 110.564}
+  m_SizeDelta: {x: 137.14, y: 137.14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &985165337
 MonoBehaviour:
@@ -3630,7 +3630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1394645864
 RectTransform:
   m_ObjectHideFlags: 0
