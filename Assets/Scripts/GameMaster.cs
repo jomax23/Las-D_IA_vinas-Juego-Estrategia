@@ -29,6 +29,11 @@ public class GameMaster : MonoBehaviour
     [HideInInspector]
     public bool somethingIsMoving = false;
 
+    [Header("REFERENCIA AL AI MANAGER")]
+    public AImanager AImanager;
+
+    public bool IAactive = true;
+
     private void Start()
     {
         //GetGoldIncome(1);
@@ -114,6 +119,11 @@ public class GameMaster : MonoBehaviour
         {
             playerTurn = 2;
             playerIndicator.sprite = player2Indicator;
+
+            if (IAactive)
+            {
+                AImanager.PlayEnemyTurn();
+            }
         }
 
         else if(playerTurn == 2)

@@ -37,6 +37,8 @@ public class FieldObstacleGeneration : MonoBehaviour
     [Header("VALORES PARA TOMA DE DECISIONES")]
     public DecisionMakingValues decisionMakingValues;
 
+    [Header("REFERENCIA AL AI MANAGER")]
+    public AImanager AImanager;
 
     void Awake()
     {
@@ -442,6 +444,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         item = Instantiate(generadorDePersonajes.generadorReyes.prefabReyEnemigo, new Vector2(anchura - 1, altura / 2), Quaternion.identity);
         arrayTile[anchura - 1, altura / 2].hasUnit = true;
+        AImanager.units.Add(item);
 
         //LISTA DE VECTORES DE POSICIONES
 
@@ -470,6 +473,8 @@ public class FieldObstacleGeneration : MonoBehaviour
                 item = Instantiate(generadorDePersonajes.generadorTanques.prefabTanqueEnemigo, new Vector2(col, row), Quaternion.identity);
                 arrayTile[col, row].hasUnit = true;
 
+                AImanager.units.Add(item);
+
                 lista.Remove(new Vector2(col, row));
             }
         }
@@ -486,6 +491,8 @@ public class FieldObstacleGeneration : MonoBehaviour
                 item = Instantiate(generadorDePersonajes.generadorArqueros.prefabArqueroEnemigo, new Vector2(col, row), Quaternion.identity);
                 arrayTile[col, row].hasUnit = true;
 
+                AImanager.units.Add(item);
+
                 lista.Remove(new Vector2(col, row));
             }
         }
@@ -501,6 +508,8 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                 item = Instantiate(generadorDePersonajes.generadorVoladores.prefabVoladorEnemigo, new Vector2(col, row), Quaternion.identity);
                 arrayTile[col, row].hasUnit = true;
+
+                AImanager.units.Add(item);
 
                 lista.Remove(new Vector2(col, row));
             }

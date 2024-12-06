@@ -1143,6 +1143,8 @@ MonoBehaviour:
   player2GoldText: {fileID: 1586324898}
   purchasedItem: {fileID: 0}
   somethingIsMoving: 0
+  AImanager: {fileID: 413955278}
+  IAactive: 1
 --- !u!4 &339563923
 Transform:
   m_ObjectHideFlags: 0
@@ -1251,6 +1253,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385262070}
   m_CullTransparentMesh: 1
+--- !u!1 &413955275
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 413955277}
+  - component: {fileID: 413955278}
+  - component: {fileID: 413955279}
+  - component: {fileID: 413955280}
+  m_Layer: 0
+  m_Name: AImanager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &413955277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413955275}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 21.262383, y: 12.075067, z: -0.16152509}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &413955278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413955275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9fd6a0cee9753e44803f435cacd9ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  units: []
+--- !u!114 &413955279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413955275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc20fe3062921324f88ccbb6c2544bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &413955280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413955275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842ba930d85b0e748bf91c07660abf6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &425891292
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,11 +1659,11 @@ MonoBehaviour:
       prefabArqueroEnemigo: {fileID: 6198282042775486887, guid: 51eaef0a992214fce90beaa72fae6702, type: 3}
       minimaCantidad: 2
       maximaCantidad: 5
-    generadorSanadores:
-      prefabSanadorAliado: {fileID: 6765746106348670117, guid: 427d0be64ea5b4270a08ec4463ab7f85, type: 3}
-      prefabSanadorEnemigo: {fileID: 6754446678692195979, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
-      minimaCantidad: 2
-      maximaCantidad: 4
+    generadorVoladores:
+      prefabVoladorAliado: {fileID: 0}
+      prefabVoladorEnemigo: {fileID: 0}
+      minimaCantidad: 0
+      maximaCantidad: 0
   decisionMakingValues:
     minIVCoord: {x: 0, y: 0}
     minIV: 0
@@ -1603,6 +1676,7 @@ MonoBehaviour:
       enemyKingTileIV: 0
       myKing: {fileID: 0}
       enemyKing: {fileID: 0}
+  AImanager: {fileID: 413955278}
 --- !u!114 &520505529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5620,6 +5694,7 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 520505527}
   - {fileID: 339563923}
+  - {fileID: 413955277}
   - {fileID: 46653326}
   - {fileID: 1394936730}
   - {fileID: 2014530762}

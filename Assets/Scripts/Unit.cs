@@ -59,7 +59,11 @@ public class Unit : MonoBehaviour
 
     private int layer = 0;
 
-    private List<Unit> enemiesInRange = new List<Unit>();
+    [HideInInspector]
+    public List<Unit> enemiesInRange = new List<Unit>();
+
+    [HideInInspector]
+    public List<Unit> enemiesClose = new List<Unit>();
 
     [HideInInspector]
     public FieldObstacleGeneration myField;
@@ -137,7 +141,7 @@ public class Unit : MonoBehaviour
             gm.selectedUnit = null;
             gm.ResetTiles();
         }
-        else if (playerNumber == gm.playerTurn)
+        else if (playerNumber == gm.playerTurn && (gm.playerTurn != 2 || !gm.IAactive))
         {
             if (gm.selectedUnit != null)
             {
@@ -161,7 +165,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    void Attack(Unit enemy)
+    public void Attack(Unit enemy)
     {
         hasAttacked = true;
 
@@ -380,6 +384,11 @@ public class Unit : MonoBehaviour
                 //unit.weaponIcon.SetActive(true);
 
                 myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
+            }
+
+            if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange/2 && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange/2 && unit.playerNumber != gm.playerTurn && !hasAttacked)
+            {
+                enemiesClose.Add(unit);
             }
         }
         
