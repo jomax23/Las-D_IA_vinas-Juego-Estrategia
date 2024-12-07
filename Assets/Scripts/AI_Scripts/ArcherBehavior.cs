@@ -6,10 +6,12 @@ using static UnityEngine.GraphicsBuffer;
 public class ArcherBehavior : MonoBehaviour
 {
     private AImanager ai_mg;
+    private GameMaster gm;
 
     private void Awake()
     {
         ai_mg = GetComponent<AImanager>();
+        gm    = GameObject.Find("/GameMaster").GetComponent<GameMaster>();
     }
 
     public IEnumerator PlayActions(Unit unit)
@@ -21,7 +23,7 @@ public class ArcherBehavior : MonoBehaviour
             {
                 // El arquero se aleja de la zona
                 ai_mg.Flee(unit, u);
-                yield return new WaitForSecondsRealtime(1);
+                yield return new WaitUntil(() => !gm.somethingIsMoving);
                 unit.GetEnemies();
 
                 break;
@@ -33,21 +35,21 @@ public class ArcherBehavior : MonoBehaviour
         if(target != null)
         {
             unit.Attack(target);
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitUntil(() => !gm.somethingIsMoving); ;
         }
 
         if (target == null && !unit.hasMoved)   // Si no tiene un objetivo al que atacar y aun no se ha movido
         {
             // el archero se acerca al enemigo más próximo
             ai_mg.MoveToTarget(unit, GetClosestEnemy(unit));
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitUntil(() => !gm.somethingIsMoving);
             unit.GetEnemies();
 
             target = GetLowestHealthEnemy(unit);
             if (target != null) // Si después de moverse encuentra un objetivo le ataca
             {
                 unit.Attack(target);
-                yield return new WaitForSecondsRealtime(1);
+                yield return new WaitUntil(() => !gm.somethingIsMoving);
             }
         }
 

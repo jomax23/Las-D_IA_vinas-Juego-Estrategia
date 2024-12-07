@@ -7,15 +7,19 @@ using UnityEngine;
 public class AImanager : MonoBehaviour
 {
 
-    [HideInInspector]
-    public List<GameObject> units;
-    public List<GameObject> unitsPlayer;
+    [HideInInspector] public List<GameObject> units;
+    [HideInInspector] public List<GameObject> unitsPlayer;
 
     private TankBehavior _tank;
     private ArcherBehavior _archer;
 
     private GameMaster gm;
+    private Barrack bar;
     private FieldObstacleGeneration fog;
+
+    [Header("TIENDA ACCESIBLE POR LA IA")]
+    [Tooltip("Ordena de menor a mayor coste los items de forma manual. Como no pretendemos añadir muchos esto facilita trabajar con la IA.")]
+    public List<BarrackItem> purchasable;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +29,7 @@ public class AImanager : MonoBehaviour
         //ShowEnemiesList();
 
         gm  = GameObject.Find("/GameMaster").GetComponent<GameMaster>();
+        bar = GameObject.Find("/GameMaster").GetComponent<Barrack>();
         fog = GameObject.Find("/FieldGenerator").GetComponent<FieldObstacleGeneration>();
     }
 
@@ -56,8 +61,11 @@ public class AImanager : MonoBehaviour
                     break;
             }
 
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitUntil(() => !gm.somethingIsMoving);
         }
+
+        // Antes de que termine el turno, la IA gasta el dinero de tener dinero
+        PurchaseDecision();
 
         // El turno de la IA termina cuando todas sus unidades han tomado sus respectivas acciones
         gm.AIendTurn();
@@ -164,5 +172,43 @@ public class AImanager : MonoBehaviour
             newTarget = v;
 
         return newTarget;
+    }
+
+    private void PurchaseDecision()
+    {
+        BarrackItem b = null;
+
+        // Si sobra dinero, es porque hemos ahorrado en las rondas anteriores para comprar la unidad cara
+        if (gm.player2Gold >= purchasable[^1].cost)
+            b = purchasable[^1];
+
+        // Si el jugador tiene más tropas, compra la tropa más cara que te puedas permitir
+        else if(unitsPlayer.Count > units.Count)
+        {
+            foreach (BarrackItem i in purchasable)
+            {
+                if (gm.player2Gold >= purchasable[^1].cost)
+                    b = i;
+            }
+        }
+
+        // Si tenemos el mismo número de tropas, como IA quiero comprar lo más barato que pueda para ganar ventaja
+        else if (unitsPlayer.Count == units.Count)
+        {
+            foreach (BarrackItem i in purchasable)
+            {
+                if (gm.player2Gold >= purchasable[^1].cost)
+                {
+                    b = i;
+                    break;
+                }
+            }
+        }
+
+        // Si tengo la ventaja me espero hasta poder comprar la unidad más cara
+        if (b != null)
+        {
+            bar.BuyItem(b);
+        }
     }
 }

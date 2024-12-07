@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,8 @@ public class Barrack : MonoBehaviour
     public GameObject player1Menu;
     public GameObject player2Menu;
 
-    GameMaster gm;
+    private GameMaster gm;
+    private AImanager ai_mg;
 
     public FieldObstacleGeneration fieldObstacleGenerator;
 
@@ -19,6 +21,7 @@ public class Barrack : MonoBehaviour
     private void Start()
     {
         gm = GetComponent<GameMaster>();
+        ai_mg = GameObject.Find("/AImanager").GetComponent<AImanager>();
         fieldObstacleGenerator = FindObjectOfType<FieldObstacleGeneration>();
     }
 
@@ -61,6 +64,8 @@ public class Barrack : MonoBehaviour
                 BarrackItem itemBought = Instantiate(gm.purchasedItem, new Vector3(1, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
                 fieldObstacleGenerator.arrayTile[(int)itemBought.transform.position.x, (int)itemBought.transform.position.y].hasUnit = true;
                 player1Menu.SetActive(false);
+
+                ai_mg.unitsPlayer.Add(itemBought.gameObject);
             }
 
             else
@@ -78,6 +83,8 @@ public class Barrack : MonoBehaviour
                 BarrackItem itemBought = Instantiate(gm.purchasedItem, new Vector3(fieldObstacleGenerator.anchura - 2, fieldObstacleGenerator.altura - 1, -5), Quaternion.identity);
                 fieldObstacleGenerator.arrayTile[(int)itemBought.transform.position.x, (int)itemBought.transform.position.y].hasUnit = true;
                 player2Menu.SetActive(false);
+
+                ai_mg.units.Add(itemBought.gameObject);
             }
 
             else

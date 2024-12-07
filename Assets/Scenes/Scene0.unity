@@ -1300,6 +1300,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   units: []
+  unitsPlayer: []
+  purchasable:
+  - {fileID: 3680329328905416647, guid: bf50c9f0453a84a1f8e70b609f6d6f7b, type: 3}
+  - {fileID: 5431812339515679249, guid: 51eaef0a992214fce90beaa72fae6702, type: 3}
+  - {fileID: 4445436798085839871, guid: f1dda592437cd4a2792a230ce7a31c32, type: 3}
 --- !u!114 &413955279
 MonoBehaviour:
   m_ObjectHideFlags: 0

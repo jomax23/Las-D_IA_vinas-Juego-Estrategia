@@ -548,20 +548,23 @@ public class Unit : MonoBehaviour
         layer = (int)tilePos.y + 1;
         Destroy(item);
 
-        if (damageDealt > 0)
+        if(enemy != null)
         {
-            DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
-            instance.Setup(damageDealt);
-            enemy.health -= damageDealt;
-            enemy.UpdateKingHealth();
-        }
+            if (damageDealt > 0)
+            {
+                DamageIcon instance = Instantiate(enemy.damageIcon, enemy.transform.position, Quaternion.identity);
+                instance.Setup(damageDealt);
+                enemy.health -= damageDealt;
+                enemy.UpdateKingHealth();
+            }
 
-        if (enemy.health <= 0)
-        {
-            myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].hasUnit = false;
-            Destroy(enemy.gameObject);
-            GetWalkableTiles();
-            myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();
+            if (enemy.health <= 0)
+            {
+                myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].hasUnit = false;
+                Destroy(enemy.gameObject);
+                GetWalkableTiles();
+                myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();
+            }
         }
 
         gm.somethingIsMoving = false;
