@@ -89,7 +89,7 @@ public class GameMaster : MonoBehaviour
 
         if (somethingIsMoving == false)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !(IAactive && playerTurn == 2))
             {
                 //Debug.Log(somethingIsMoving);
                 //gm.SomethingIsMoving();
@@ -122,7 +122,7 @@ public class GameMaster : MonoBehaviour
 
             if (IAactive)
             {
-                AImanager.PlayEnemyTurn();
+                StartCoroutine(AImanager.PlayEnemyTurn());
             }
         }
 
@@ -154,5 +154,11 @@ public class GameMaster : MonoBehaviour
             //unit.weaponIcon.SetActive(false);
             unit.hasAttacked = false;
         }
+    }
+
+    public void AIendTurn()
+    {
+        EndTurn();
+        GetGoldIncome(playerTurn);
     }
 }

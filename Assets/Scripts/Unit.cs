@@ -234,7 +234,7 @@ public class Unit : MonoBehaviour
     }
     */
 
-    void GetWalkableTiles()
+    public void GetWalkableTiles()
     {
         if (hasMoved) return;
 
@@ -386,7 +386,7 @@ public class Unit : MonoBehaviour
                 myField.arrayTile[(int)unit.transform.position.x, (int)unit.transform.position.y].HighlightAttackTile(this.playerNumber);
             }
 
-            if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange/2 && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange/2 && unit.playerNumber != gm.playerTurn && !hasAttacked)
+            if (Mathf.Abs(transform.position.x - unit.transform.position.x) <= attackRange/3 && Mathf.Abs(transform.position.y - unit.transform.position.y) <= attackRange/3 && unit.playerNumber != gm.playerTurn && !hasAttacked)
             {
                 enemiesClose.Add(unit);
             }

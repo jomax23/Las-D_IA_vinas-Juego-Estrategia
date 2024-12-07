@@ -365,6 +365,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         item = Instantiate(generadorDePersonajes.generadorReyes.prefabReyAliado, new Vector2(0, altura / 2), Quaternion.identity);
         arrayTile[0, altura / 2].hasUnit = true;
+        AImanager.unitsPlayer.Add(item);
 
         //LISTA DE VECTORES DE POSICIONES
 
@@ -392,6 +393,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                 item = Instantiate(generadorDePersonajes.generadorTanques.prefabTanqueAliado, new Vector2(col, row), Quaternion.identity);
                 arrayTile[col, row].hasUnit = true;
+                AImanager.unitsPlayer.Add(item);
 
                 lista.Remove(new Vector2(col, row));
             }
@@ -408,6 +410,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                 item = Instantiate(generadorDePersonajes.generadorArqueros.prefabArqueroAliado, new Vector2(col, row), Quaternion.identity);
                 arrayTile[col, row].hasUnit = true;
+                AImanager.unitsPlayer.Add(item);
 
                 lista.Remove(new Vector2(col, row));
             }
@@ -424,6 +427,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
                 item = Instantiate(generadorDePersonajes.generadorVoladores.prefabVoladorAliado, new Vector2(col, row), Quaternion.identity);
                 arrayTile[col, row].hasUnit = true;
+                AImanager.unitsPlayer.Add(item);
 
                 lista.Remove(new Vector2(col, row));
             }

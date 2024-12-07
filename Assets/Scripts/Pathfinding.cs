@@ -14,9 +14,12 @@ public class Pathfinding : MonoBehaviour
 
     public List<Tile> pathMovement;
 
+    private GameMaster gm;
+
     void Awake()
     {
         grid = GetComponent<FieldObstacleGeneration>();
+        gm = GameObject.Find("/GameMaster").GetComponent<GameMaster>();
     }
     /*
     public void FindPath(Unit unit, Vector3 targetPos)
@@ -233,7 +236,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (col >= 0 && col < unit.myField.anchura && !unit.myField.arrayTile[col, myRow].hasUnit)// && myField.arrayTile[col, myRow].IsClear())
                         {
-                            unit.myField.arrayTile[col, myRow].Highlight();
+                            if(!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[col, myRow].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[col, myRow]);
                         }
 
@@ -248,7 +252,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (row >= 0 && row < unit.myField.altura && !unit.myField.arrayTile[myCol, row].hasUnit)// && myField.arrayTile[myCol, row].IsClear())
                         {
-                            unit.myField.arrayTile[myCol, row].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myCol, row].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[myCol, row]);
                         }
                     }
@@ -262,7 +267,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (col >= 0 && col < unit.myField.anchura && !unit.myField.arrayTile[col, myRow].hasUnit)// && myField.arrayTile[col, myRow].IsClear())
                         {
-                            unit.myField.arrayTile[col, myRow].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[col, myRow].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[col, myRow]);
                         }
                     }
@@ -276,7 +282,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (row >= 0 && row < unit.myField.altura && !unit.myField.arrayTile[myCol, row].hasUnit)// && myField.arrayTile[myCol, row].IsClear())
                         {
-                            unit.myField.arrayTile[myCol, row].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myCol, row].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[myCol, row]);
                         //Debug.Log("COL : " + myCol + ", ROW : " + row + ", VALOR DE INFLUENCIA: " + myField.arrayTile[myCol, row].influenceValue);
                         }
@@ -303,7 +310,8 @@ public class Pathfinding : MonoBehaviour
                         if (col >= 0 && col < unit.myField.anchura && unit.myField.arrayTile[col, myRow].IsClear() && !unit.myField.arrayTile[col, myRow].isWalkable)
                         {
                             queue.Enqueue(unit.myField.arrayTile[col, myRow]);
-                            unit.myField.arrayTile[col, myRow].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[col, myRow].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[col, myRow]);
                         }
 
@@ -319,7 +327,8 @@ public class Pathfinding : MonoBehaviour
                         if (row >= 0 && row < unit.myField.altura && unit.myField.arrayTile[myCol, row].IsClear() && !unit.myField.arrayTile[myCol, row].isWalkable)
                         {
                             queue.Enqueue(unit.myField.arrayTile[myCol, row]);
-                            unit.myField.arrayTile[myCol, row].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myCol, row].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[myCol, row]);
                         }
                     }
@@ -334,7 +343,8 @@ public class Pathfinding : MonoBehaviour
                         if (col >= 0 && col < unit.myField.anchura && unit.myField.arrayTile[col, myRow].IsClear() && !unit.myField.arrayTile[col, myRow].isWalkable)
                         {
                             queue.Enqueue(unit.myField.arrayTile[col, myRow]);
-                            unit.myField.arrayTile[col, myRow].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[col, myRow].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[col, myRow]);
                         }
                     }
@@ -350,7 +360,8 @@ public class Pathfinding : MonoBehaviour
                         if (row >= 0 && row < unit.myField.altura && unit.myField.arrayTile[myCol, row].IsClear() && !unit.myField.arrayTile[myCol, row].isWalkable)
                         {
                             queue.Enqueue(unit.myField.arrayTile[myCol, row]);
-                            unit.myField.arrayTile[myCol, row].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myCol, row].Highlight();
                             unit.reachableTileList.Add(unit.myField.arrayTile[myCol, row]);
                         }
                     }
@@ -376,7 +387,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX - 1, myTileY + 1].IsClear() && !unit.myField.arrayTile[myTileX - 1, myTileY + 1].isWalkable && (myTileX - 1 != unit.transform.position.x || myTileY + 1 != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX - 1, myTileY + 1].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX - 1, myTileY + 1].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX - 1, myTileY + 1]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX - 1, myTileY + 1]);
                         }
@@ -388,7 +400,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX, myTileY + 1].IsClear() && !unit.myField.arrayTile[myTileX, myTileY + 1].isWalkable && (myTileX != unit.transform.position.x || myTileY + 1 != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX, myTileY + 1].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX, myTileY + 1].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX, myTileY + 1]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX, myTileY + 1]);
                         }
@@ -400,7 +413,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX + 1, myTileY + 1].IsClear() && !unit.myField.arrayTile[myTileX + 1, myTileY + 1].isWalkable && (myTileX + 1 != unit.transform.position.x || myTileY + 1 != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX + 1, myTileY + 1].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX + 1, myTileY + 1].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX + 1, myTileY + 1]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX + 1, myTileY + 1]);
                         }
@@ -412,7 +426,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX + 1, myTileY].IsClear() && !unit.myField.arrayTile[myTileX + 1, myTileY].isWalkable && (myTileX + 1 != unit.transform.position.x || myTileY != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX + 1, myTileY].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX + 1, myTileY].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX + 1, myTileY]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX + 1, myTileY]);
                         }
@@ -424,7 +439,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX + 1, myTileY - 1].IsClear() && !unit.myField.arrayTile[myTileX + 1, myTileY - 1].isWalkable && (myTileX + 1 != unit.transform.position.x || myTileY - 1 != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX + 1, myTileY - 1].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX + 1, myTileY - 1].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX + 1, myTileY - 1]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX + 1, myTileY - 1]);
                         }
@@ -436,7 +452,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX, myTileY - 1].IsClear() && !unit.myField.arrayTile[myTileX, myTileY - 1].isWalkable && (myTileX != unit.transform.position.x || myTileY - 1 != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX, myTileY - 1].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX, myTileY - 1].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX, myTileY - 1]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX, myTileY - 1]);
                         }
@@ -448,7 +465,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX - 1, myTileY - 1].IsClear() && !unit.myField.arrayTile[myTileX - 1, myTileY - 1].isWalkable && (myTileX - 1 != unit.transform.position.x || myTileY - 1 != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX - 1, myTileY - 1].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX - 1, myTileY - 1].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX - 1, myTileY - 1]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX - 1, myTileY - 1]);
                         }
@@ -459,7 +477,8 @@ public class Pathfinding : MonoBehaviour
                     {
                         if (unit.myField.arrayTile[myTileX - 1, myTileY].IsClear() && !unit.myField.arrayTile[myTileX - 1, myTileY].isWalkable && (myTileX - 1 != unit.transform.position.x || myTileY != unit.transform.position.y))
                         {
-                            unit.myField.arrayTile[myTileX - 1, myTileY].Highlight();
+                            if (!(gm.IAactive && gm.playerTurn == 2))
+                                unit.myField.arrayTile[myTileX - 1, myTileY].Highlight();
                             auxiliarQueue.Enqueue(unit.myField.arrayTile[myTileX - 1, myTileY]);
                             unit.reachableTileList.Add(unit.myField.arrayTile[myTileX - 1, myTileY]);
                         }
@@ -484,10 +503,7 @@ public class Pathfinding : MonoBehaviour
 
         queue.Clear();
         auxiliarQueue.Clear();
-
-
     }
-    
 }
 
 
