@@ -40,13 +40,17 @@ public class AImanager : MonoBehaviour
     {
         foreach (var unit in units)
         {
-            print(unit.GetComponent<Unit>().unitType);
-            switch (unit.GetComponent<Unit>().unitType){
+            Unit u = unit.GetComponent<Unit>();
+            switch (u.unitType){
                 case Unit.UnitType.Tank:
-                    _tank.PlayActions(unit.GetComponent<Unit>());
+                    StartCoroutine(_tank.PlayActions(u));
+                    break;
+                case Unit.UnitType.Flyer:
+                    StartCoroutine(_tank.PlayActions(u));
+
                     break;
                 case Unit.UnitType.Archer:
-                    _archer.PlayActions(unit.GetComponent<Unit>());
+                    StartCoroutine(_archer.PlayActions(u));
                     break;
                 default:
                     break;
@@ -57,6 +61,8 @@ public class AImanager : MonoBehaviour
 
         // El turno de la IA termina cuando todas sus unidades han tomado sus respectivas acciones
         gm.AIendTurn();
+
+        yield return null;
     }
 
     public void MoveToKing(Unit mySelf)
@@ -65,7 +71,6 @@ public class AImanager : MonoBehaviour
 
         // una vez tengo las casillas a las quye puedo llegar, quiero obtener la casilla más cercana al objetivo
         target = ClosestToTarget(mySelf, target);
-        print(target);
 
         mySelf.MoveAIUnit(target);
     }
@@ -76,7 +81,6 @@ public class AImanager : MonoBehaviour
 
         // una vez tengo las casillas a las quye puedo llegar, quiero obtener la casilla más cercana al objetivo
         target = ClosestToTarget(mySelf, target);
-        print(target);
 
         mySelf.MoveAIUnit(target);
     }
@@ -85,9 +89,8 @@ public class AImanager : MonoBehaviour
     {
         Vector2 target = myEnemy.transform.position;
 
-        // una vez tengo las casillas a las quye puedo llegar, quiero obtener la casilla más cercana al objetivo
+        // una vez tengo las casillas a las quye puedo llegar, quiero obtener la casilla más alejada del objetivo
         target = FurthestFromTarget(mySelf, target);
-        print(target);
 
         mySelf.MoveAIUnit(target);
     }
@@ -95,7 +98,7 @@ public class AImanager : MonoBehaviour
     public Vector2 ClosestToTarget(Unit unit, Vector2 target)
     {
         Vector2 newTarget = unit.transform.position;
-        print(newTarget);
+        float influence = 1000;
 
         unit.GetWalkableTiles();
 
@@ -109,13 +112,22 @@ public class AImanager : MonoBehaviour
         origen hasta el objetivo.
         */
 
+        // NEW ahora tiene en cuenta el coste de moverse
+
+        Vector2 v;
         foreach (Tile t in unit.reachableTileList)
         {
-            Vector2 v = new Vector2(t.transform.position.x, t.transform.position.y);
-            if (Vector2.Distance(newTarget, target) > Vector2.Distance(v, target))
+            v = new Vector2(t.transform.position.x, t.transform.position.y);
+            if (t.fCost < influence && Vector2.Distance(newTarget, target) > Vector2.Distance(v, target))
+            {
                 newTarget = v;
-
+                influence = t.influenceValue;
+            }
         }
+
+        v = unit.transform.position;
+        if (Vector2.Distance(newTarget, target) > Vector2.Distance(v, target))
+            newTarget = v;
 
         return newTarget;
     }
@@ -123,7 +135,7 @@ public class AImanager : MonoBehaviour
     public Vector2 FurthestFromTarget(Unit unit, Vector2 target)
     {
         Vector2 newTarget = unit.transform.position;
-        print(newTarget);
+        float influence = 1000;
 
         unit.GetWalkableTiles();
 
@@ -134,13 +146,22 @@ public class AImanager : MonoBehaviour
         horrible pero está bastante mal.
         */
 
+        // NEW ahora tiene en cuenta el coste de moverse
+
+        Vector2 v;
         foreach (Tile t in unit.reachableTileList)
         {
-            Vector2 v = new Vector2(t.transform.position.x, t.transform.position.y);
-            if (Vector2.Distance(newTarget, target) < Vector2.Distance(v, target))
+            v = new Vector2(t.transform.position.x, t.transform.position.y);
+            if (t.fCost < influence && Vector2.Distance(newTarget, target) < Vector2.Distance(v, target))
+            {
                 newTarget = v;
-
+                influence = t.influenceValue;
+            }
         }
+
+        v = unit.transform.position;
+        if (Vector2.Distance(newTarget, target) < Vector2.Distance(v, target))
+            newTarget = v;
 
         return newTarget;
     }

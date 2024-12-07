@@ -12,7 +12,7 @@ public class ArcherBehavior : MonoBehaviour
         ai_mg = GetComponent<AImanager>();
     }
 
-    public void PlayActions(Unit unit)
+    public IEnumerator PlayActions(Unit unit)
     {
         unit.GetEnemies();
         foreach (var u in unit.enemiesClose)
@@ -21,6 +21,7 @@ public class ArcherBehavior : MonoBehaviour
             {
                 // El arquero se aleja de la zona
                 ai_mg.Flee(unit, u);
+                yield return new WaitForSecondsRealtime(1);
                 unit.GetEnemies();
 
                 break;
@@ -32,21 +33,25 @@ public class ArcherBehavior : MonoBehaviour
         if(target != null)
         {
             unit.Attack(target);
+            yield return new WaitForSecondsRealtime(1);
         }
 
         if (target == null && !unit.hasMoved)   // Si no tiene un objetivo al que atacar y aun no se ha movido
         {
             // el archero se acerca al enemigo más próximo
             ai_mg.MoveToTarget(unit, GetClosestEnemy(unit));
+            yield return new WaitForSecondsRealtime(1);
             unit.GetEnemies();
 
             target = GetLowestHealthEnemy(unit);
             if (target != null) // Si después de moverse encuentra un objetivo le ataca
             {
                 unit.Attack(target);
+                yield return new WaitForSecondsRealtime(1);
             }
         }
 
+        yield return null;
     }
 
     private Unit GetLowestHealthEnemy(Unit unit)
@@ -73,11 +78,14 @@ public class ArcherBehavior : MonoBehaviour
 
         foreach (var e in ai_mg.unitsPlayer)
         {
-            Vector2 v = new Vector2(e.transform.position.x, e.transform.position.y);
-            if (Vector2.Distance(origin, target) > Vector2.Distance(origin, v))
+            if (e != null)
             {
-                target = v;
-                unitClosest = e.GetComponent<Unit>();
+                Vector2 v = new Vector2(e.transform.position.x, e.transform.position.y);
+                if (Vector2.Distance(origin, target) > Vector2.Distance(origin, v))
+                {
+                    target = v;
+                    unitClosest = e.GetComponent<Unit>();
+                }
             }
         }
 
