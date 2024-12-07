@@ -491,9 +491,9 @@ public class Unit : MonoBehaviour
 
         foreach (Tile tile in pathFinding.pathMovement)
         {      
-            if(contadorPasos < tileSpeed)
+            if(contadorPasos < tileSpeed && (transform.position.x != pathFinding.pathMovement[pathFinding.pathMovement.Count - 2].transform.position.x || transform.position.y != pathFinding.pathMovement[pathFinding.pathMovement.Count - 2].transform.position.y))
             {
-                while (transform.position.x != pathFinding.pathMovement[pathFinding.pathMovement.Count - 1].transform.position.x || transform.position.y != pathFinding.pathMovement[pathFinding.pathMovement.Count - 1].transform.position.y)
+                while (transform.position.x != pathFinding.pathMovement[pathFinding.pathMovement.Count - 2].transform.position.x || transform.position.y != pathFinding.pathMovement[pathFinding.pathMovement.Count - 2].transform.position.y)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, new Vector2(tile.transform.position.x, tile.transform.position.y), moveSpeed * Time.deltaTime);
                     
