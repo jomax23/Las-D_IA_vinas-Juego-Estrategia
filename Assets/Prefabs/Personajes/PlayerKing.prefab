@@ -2386,15 +2386,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionRequested: 0
-  influenceStrength: -5
+  influenceStrength: -20
   influenceAreaRadius: 8
   playerNumber: 1
   unitType: 0
-  tileSpeed: 8
+  tileSpeed: 5
   health: 15
   attackStat: 5
   defenseStat: 3
-  attackRange: 1
+  attackRange: 5
   misObjetos:
     flecha: {fileID: 7782567485386129484, guid: aa489e083d75fa24384907f6b265ec0e, type: 3}
     curacion: {fileID: 7782567485386129484, guid: 3917158283f4950449fcbd7d3a7f2cab, type: 3}
@@ -2404,6 +2404,8 @@ MonoBehaviour:
   moveSpeed: 5
   hasAttacked: 0
   selected: 0
+  enemiesInRange: []
+  enemiesClose: []
   myField: {fileID: 0}
   reachableTileList: []
 --- !u!61 &6342852957541511448

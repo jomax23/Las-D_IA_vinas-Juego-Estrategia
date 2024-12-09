@@ -35,7 +35,7 @@ public class ArcherBehavior : MonoBehaviour
         if(target != null)
         {
             unit.Attack(target);
-            yield return new WaitUntil(() => !gm.somethingIsMoving); ;
+            yield return new WaitUntil(() => !gm.somethingIsMoving);
         }
 
         if (target == null && !unit.hasMoved)   // Si no tiene un objetivo al que atacar y aun no se ha movido

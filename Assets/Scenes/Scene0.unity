@@ -1639,16 +1639,16 @@ MonoBehaviour:
   path: []
   generadorDeObstaculos:
   - prefab: {fileID: 1706629476239711546, guid: 4d63e3192a7a94a59ab08bc2027d7be3, type: 3}
-    minimaCantidad: 5
-    maximaCantidad: 10
+    minimaCantidad: 3
+    maximaCantidad: 5
     orientacion: 0
   - prefab: {fileID: 1706629476239711546, guid: d63e93cd7f913457a97ecd0d5408c0fe, type: 3}
     minimaCantidad: 3
-    maximaCantidad: 7
+    maximaCantidad: 5
     orientacion: 1
   - prefab: {fileID: 1706629476239711546, guid: aef58eca77570f24f8dff94decf961a9, type: 3}
-    minimaCantidad: 6
-    maximaCantidad: 10
+    minimaCantidad: 4
+    maximaCantidad: 7
     orientacion: 2
   generadorDePersonajes:
     generadorReyes:

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static FieldObstacleGeneration;
 using static UnityEditor.PlayerSettings;
@@ -71,12 +72,15 @@ public class Unit : MonoBehaviour
     [HideInInspector]
     public List<Tile> reachableTileList = new List<Tile>();
 
+    private AImanager ai_mg;
     //private GameObject miItem;
     private void Start()
     {
         gm = FindObjectOfType<GameMaster>();
         myField = FindObjectOfType<FieldObstacleGeneration>();
         pathFinding = FindObjectOfType<Pathfinding>();
+        ai_mg = GameObject.Find("/AImanager").GetComponent<AImanager>();
+
         SetInfluenceTiles();
 
         /*
@@ -92,6 +96,7 @@ public class Unit : MonoBehaviour
                 myField.decisionMakingValues.kingsInfo.myKing = this;
                 myField.decisionMakingValues.kingsInfo.myKingCoord = transform.position;
                 kingHealth = GameObject.Find("Health1 Text").GetComponent<Text>();
+
                 //ESTO LO HE PUESTO SOLO PARA QUE VEAIS EL VALOR DE LA CASILLA DEL IV EN EL QUE ESTA EL REY ALIADO, NO ES EL VALOR REAL DE SU TILE EL QUE SE MUESTRA EN EL INSPECTOR INICIALMENTE , DESPUES DE LA PRIMERA ACCION YA SE MUESTRA CORRECTAMENTE
                 //myField.decisionMakingValues.kingsInfo.myKingTileIV = myField.arrayTile[(int)myField.decisionMakingValues.kingsInfo.myKingCoord.x, (int)myField.decisionMakingValues.kingsInfo.myKingCoord.y].influenceValue;
             }
@@ -127,42 +132,52 @@ public class Unit : MonoBehaviour
         {
             // Un-comment this line if you want to display king's health in the UI
             kingHealth.text = health.ToString();
+
+            if(health < 0)
+            {
+                SceneManager.LoadScene("Start");
+            }
         }
     }
 
     private void OnMouseDown()
     {
         //gm.SomethingIsMoving();
-        ResetWeaponIcons();
 
-        if (selected)
+        if(!gm.somethingIsMoving)
         {
-            selected = false;
-            gm.selectedUnit = null;
-            gm.ResetTiles();
-        }
-        else if (playerNumber == gm.playerTurn && (gm.playerTurn != 2 || !gm.IAactive))
-        {
-            if (gm.selectedUnit != null)
+            ResetWeaponIcons();
+
+            if (selected)
             {
-                gm.selectedUnit.selected = false;
+                selected = false;
+                gm.selectedUnit = null;
+                gm.ResetTiles();
+            }
+            else if (playerNumber == gm.playerTurn && (gm.playerTurn != 2 || !gm.IAactive))
+            {
+                if (gm.selectedUnit != null)
+                {
+                    gm.selectedUnit.selected = false;
+                }
+
+                selected = true;
+                gm.selectedUnit = this;
+                gm.ResetTiles();
+                GetEnemies();
+                GetWalkableTiles();
             }
 
-            selected = true;
-            gm.selectedUnit = this;
-            gm.ResetTiles();
-            GetEnemies();
-            GetWalkableTiles();
-        }
+            // Check for enemy attack
+            Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
+            Unit unit = col?.GetComponent<Unit>();
 
-        // Check for enemy attack
-        Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
-        Unit unit = col?.GetComponent<Unit>();
-
-        if (gm.selectedUnit != null && unit != null && gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
-        {
-            gm.selectedUnit.Attack(unit);
+            if (gm.selectedUnit != null && unit != null && gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
+            {
+                gm.selectedUnit.Attack(unit);
+            }
         }
+        
     }
 
     public void Attack(Unit enemy)
@@ -193,6 +208,10 @@ public class Unit : MonoBehaviour
             if (enemy.health <= 0)
             {
                 myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].hasUnit = false;
+
+                //ESTO ES UN APAÑO QUE LE HE HECHO PARA QUE SE ELIMINE DE LA LISTA, SINO A VECES SE QUEDA LA
+
+                
                 Destroy(enemy.gameObject);
                 GetWalkableTiles();
                 myField.arrayTile[(int)enemy.transform.position.x, (int)enemy.transform.position.y].Reset();
@@ -240,15 +259,13 @@ public class Unit : MonoBehaviour
 
         reachableTileList = new List<Tile>();
 
-        if(unitType == UnitType.Flyer)
+        if(unitType != UnitType.King)
         {
             pathFinding.ReachableTilesDijkstra(this);
         }
 
-        else
-        {
-            pathFinding.ReachableTilesDijkstra(this);
-        }
+        //pathFinding.ReachableTilesDijkstra(this);
+        
         //pathFinding.ReachableTilesDijkstra(this);
 
         //ESTO ES POR SI QUEREIS VER LOS TILES QUE SE HAN A�ADIDO A LA LISTA REACHABLE TILES
@@ -457,8 +474,6 @@ public class Unit : MonoBehaviour
             }
         }
 
-        myField.arrayTile[(int) transform.position.x, (int) transform.position.y].hasUnit = true;
-
 
         hasMoved = true;
         //gm.somethingIsMoving = false;
@@ -469,7 +484,7 @@ public class Unit : MonoBehaviour
         GetEnemies();
         
         gm.somethingIsMoving = false;
-
+        myField.arrayTile[(int)transform.position.x, (int)transform.position.y].hasUnit = true;
         //SetInfluenceTiles();
         UpdateInfluenceMap();
 

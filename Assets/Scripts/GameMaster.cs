@@ -98,7 +98,7 @@ public class GameMaster : MonoBehaviour
 
             }
 
-            if (selectedUnit != null)
+            if (selectedUnit != null && selectedUnit.unitType != Unit.UnitType.King)
             {
                 //ESTO YO NO QUIERO QUE SE VEA, YO NO QUIERO ):
                 selectedUnitSquare.SetActive(true);
@@ -124,12 +124,14 @@ public class GameMaster : MonoBehaviour
             {
                 StartCoroutine(AImanager.PlayEnemyTurn());
             }
+            somethingIsMoving = false;
         }
 
         else if(playerTurn == 2)
         {
             playerTurn = 1;
             playerIndicator.sprite = player1Indicator;
+            somethingIsMoving = false;
         }
 
         if(selectedUnit != null)
@@ -158,7 +160,9 @@ public class GameMaster : MonoBehaviour
 
     public void AIendTurn()
     {
-        EndTurn();
+        
+        somethingIsMoving = false;
         GetGoldIncome(playerTurn);
+        EndTurn();
     }
 }

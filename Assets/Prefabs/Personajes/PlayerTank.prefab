@@ -2174,8 +2174,8 @@ MonoBehaviour:
   influenceAreaRadius: 4
   playerNumber: 1
   unitType: 1
-  tileSpeed: 3
-  health: 15
+  tileSpeed: 4
+  health: 10
   attackStat: 5
   defenseStat: 3
   attackRange: 1
@@ -2188,6 +2188,8 @@ MonoBehaviour:
   moveSpeed: 5
   hasAttacked: 0
   selected: 0
+  enemiesInRange: []
+  enemiesClose: []
   myField: {fileID: 0}
   reachableTileList: []
 --- !u!61 &1922037225604907616

@@ -32,8 +32,8 @@ public class Tile : MonoBehaviour
     public bool isObstacleUncreatable = false;
     public bool hasUnit = false;
 
-    public int gCost;
-    public int hCost;
+    public float gCost;
+    public float hCost;
     public Tile parent;
 
     public bool visited;
@@ -51,7 +51,7 @@ public class Tile : MonoBehaviour
         pathFinding = FindObjectOfType<Pathfinding>();
     }
 
-    public int fCost => gCost + hCost;
+    public float fCost => gCost + hCost;
 
     private void OnMouseEnter() => transform.localScale += Vector3.one * hoverAmount;
 

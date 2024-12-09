@@ -164,7 +164,7 @@ public class Pathfinding : MonoBehaviour
                         continue;
                     }
 
-                    int newCostToNeighbour = tile.gCost + GetDistance(tile, neighbour);
+                    float newCostToNeighbour = tile.gCost + GetDistance(tile, neighbour);
                     if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                     {
                         neighbour.gCost = newCostToNeighbour;
@@ -179,7 +179,77 @@ public class Pathfinding : MonoBehaviour
         }
 
     }
+    /*
+    public void FindPathMovementAI(Unit unit, Vector3 startPos, Vector3 targetPos)
+    {
+        Tile startTile = grid.arrayTile[(int)startPos.x, (int)startPos.y];
+        Tile targetTile = grid.arrayTile[(int)targetPos.x, (int)targetPos.y];
 
+        if (unit.unitType == Unit.UnitType.Flyer)
+        {
+            pathMovement = new List<Tile>();
+            pathMovement.Add(startTile);
+            pathMovement.Add(targetTile);
+        }
+
+        else
+        {
+            List<Tile> openSet = new List<Tile>();
+            HashSet<Tile> closedSet = new HashSet<Tile>();
+            openSet.Add(startTile);
+
+            while (openSet.Count > 0)
+            {
+                Tile tile = openSet[0];
+                for (int i = 1; i < openSet.Count; i++)
+                {
+                    if (openSet[i].fCost < tile.fCost || openSet[i].fCost == tile.fCost)
+                    {
+                        if (openSet[i].hCost < tile.hCost)
+                            tile = openSet[i];
+                    }
+                }
+
+                openSet.Remove(tile);
+                closedSet.Add(tile);
+
+                if (tile == targetTile)
+                {
+                    RetracePathMovement(startTile, targetTile);
+                    return;
+                }
+
+                foreach (Tile neighbour in grid.GetNeighbours(tile))
+                {
+                    if (unit.unitType == Unit.UnitType.Flyer)
+                    {
+                        if (closedSet.Contains(neighbour))
+                        {
+                            continue;
+                        }
+                    }
+
+                    else if (!neighbour.IsClear() || neighbour.hasUnit || closedSet.Contains(neighbour))
+                    {
+                        continue;
+                    }
+
+                    float newCostToNeighbour = tile.gCost * tile.influenceValue + GetDistance(tile, neighbour);
+                    if (newCostToNeighbour < neighbour.gCost * neighbour.influenceValue || !openSet.Contains(neighbour))
+                    {
+                        neighbour.gCost = newCostToNeighbour;
+                        neighbour.hCost = GetDistance(neighbour, targetTile);
+                        neighbour.parent = tile;
+
+                        if (!openSet.Contains(neighbour))
+                            openSet.Add(neighbour);
+                    }
+                }
+            }
+        }
+
+    }
+    */
     void RetracePathMovement(Tile startTile, Tile endTile)
     {
         pathMovement = new List<Tile>();

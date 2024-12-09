@@ -82,6 +82,7 @@ public class FieldObstacleGeneration : MonoBehaviour
 
         int iterationCounter = 0;
 
+
         if ((anchura > columnasGeneracionPersonajes * 2 && altura > 2))
         {
 

@@ -43,25 +43,34 @@ public class AImanager : MonoBehaviour
 
     public IEnumerator PlayEnemyTurn()
     {
-        foreach (var unit in units)
+        for(int i = 0; i < units.Count; i++)
         {
-            Unit u = unit.GetComponent<Unit>();
-            switch (u.unitType){
-                case Unit.UnitType.Tank:
-                    StartCoroutine(_tank.PlayActions(u));
-                    break;
-                case Unit.UnitType.Flyer:
-                    StartCoroutine(_tank.PlayActions(u));
-
-                    break;
-                case Unit.UnitType.Archer:
-                    StartCoroutine(_archer.PlayActions(u));
-                    break;
-                default:
-                    break;
+            if (units[i] == null)
+            {
+                units.Remove(units[i]);
+                continue;
             }
 
-            yield return new WaitUntil(() => !gm.somethingIsMoving);
+            else
+            {
+                Unit u = units[i].GetComponent<Unit>();
+                switch (u.unitType)
+                {
+                    case Unit.UnitType.Tank:
+                        StartCoroutine(_tank.PlayActions(u));
+                        break;
+                    case Unit.UnitType.Flyer:
+                        StartCoroutine(_tank.PlayActions(u));
+                        break;
+                    case Unit.UnitType.Archer:
+                        StartCoroutine(_archer.PlayActions(u));
+                        break;
+                    default:
+                        break;
+                }
+
+                yield return new WaitUntil(() => !gm.somethingIsMoving);
+            } 
         }
 
         // Antes de que termine el turno, la IA gasta el dinero de tener dinero

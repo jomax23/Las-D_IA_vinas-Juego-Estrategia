@@ -3264,7 +3264,7 @@ MonoBehaviour:
   playerNumber: 1
   unitType: 3
   tileSpeed: 3
-  health: 15
+  health: 8
   attackStat: 5
   defenseStat: 3
   attackRange: 1
