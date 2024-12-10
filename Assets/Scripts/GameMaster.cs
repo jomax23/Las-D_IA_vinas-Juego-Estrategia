@@ -162,7 +162,7 @@ public class GameMaster : MonoBehaviour
     {
         
         somethingIsMoving = false;
-        GetGoldIncome(playerTurn);
+        GetGoldIncome(1);
         EndTurn();
     }
 }
